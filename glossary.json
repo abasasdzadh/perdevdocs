@@ -1,1 +1,8 @@
-{}
+{
+  "Thread": "نخ",
+  "Hook": "هووک (Hook)",
+  "State": "وضعیت (State)",
+  "Callback": "کال‌بک (Callback)",
+  "Promise": "پرامیس (Promise)",
+  "Props": "پراپس (Props)"
+}

@@ -1,5 +1,15 @@
 {
-  "name": "devdocs-fa",
+  "name": "perdevdocs",
   "version": "1.0.0",
-  "type": "module"
+  "description": "Smart translation engine for DevDocs in Persian",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@google/genai": "^0.1.1",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5"
+  }
 }
