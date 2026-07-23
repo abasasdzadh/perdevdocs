@@ -32,9 +32,8 @@ async function runPipeline() {
 
     const translatedDbData = {};
     const pageKeys = Object.keys(dbData);
-    console.log(`📑 تعداد کل صفحات (آیتم‌ها) در db.json: ${pageKeys.length}`);
+    console.log(`📑 تعداد کل صفحات در db.json: ${pageKeys.length}`);
 
-    // پردازش صفحه‌به‌صفحه (هر صفحه = ۱ درخواست به جمنای)
     for (let index = 0; index < pageKeys.length; index++) {
       const pageKey = pageKeys[index];
       const pageHtml = dbData[pageKey];
@@ -44,12 +43,10 @@ async function runPipeline() {
       const $ = HtmlParser.parse(pageHtml);
       $('body').attr('dir', 'rtl').addClass('fa-doc');
 
-      // استخراج تمام گره‌های صفحه با حفظ ترتیب ترتیبی
       const nodes = TextExtractor.extractSequentialNodes($);
-
       const unCachedNodes = [];
 
-      // ۱. بررسی حافظه محلی برای تمام گره‌های این صفحه
+      // ۱. بررسی حافظه محلی
       for (const node of nodes) {
         const cached = await tm.get(node.maskedText);
         if (cached) {
@@ -59,14 +56,13 @@ async function runPipeline() {
         }
       }
 
-      // ۲. ارسال تمام پاراگراف‌های ترجمه‌نشده این صفحه در قالب «۱ درخواست تک» به جمنای
+      // ۲. ارسال کل پاراگراف‌های جدید صفحه در ۱ درخواست تک به gemini-1.5-flash
       if (unCachedNodes.length > 0) {
         const textsToTranslate = unCachedNodes.map(n => n.maskedText);
-        console.log(`  🌐 ارسال کل صفحه (${textsToTranslate.length} پاراگراف) در ۱ درخواست به Gemini...`);
+        console.log(`  🌐 ارسال کل صفحه (${textsToTranslate.length} پاراگراف) در ۱ درخواست به gemini-1.5-flash...`);
 
         const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
 
-        // ۳. اعتبارسنجی و ذخیره در حافظه محلی
         for (let i = 0; i < unCachedNodes.length; i++) {
           const node = unCachedNodes[i];
           const trans = (translatedArray && translatedArray[i]) ? translatedArray[i] : node.maskedText;
@@ -76,16 +72,16 @@ async function runPipeline() {
             node.translatedText = trans;
             await tm.set(node.maskedText, trans);
           } else {
-            node.translatedText = node.maskedText; // Fallback
+            node.translatedText = node.maskedText;
           }
         }
       } else {
         console.log(`  ⚡ تمام پاراگراف‌های این صفحه از حافظه محلی خوانده شد (0ms)`);
       }
 
-      // ۴. بازسازی DOM همین صفحه
+      // ۳. بازسازی DOM
       for (const node of nodes) {
-        const finalBlockHtml = TextReplacer.unmask(node.translatedText, node.placeholders);
+        const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
         node.$block.html(finalBlockHtml);
       }
 
