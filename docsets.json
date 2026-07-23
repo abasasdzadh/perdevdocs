@@ -1,0 +1,9 @@
+[
+  {
+    "id": "markdown",
+    "name": "Markdown",
+    "format": "json-db",
+    "indexUrl": "https://raw.githubusercontent.com/abasasdzadh/doc-endevdocs/main/markdown/index.json",
+    "contentUrl": "https://raw.githubusercontent.com/abasasdzadh/doc-endevdocs/main/markdown/db.json"
+  }
+]

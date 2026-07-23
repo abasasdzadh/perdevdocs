@@ -4,5 +4,9 @@
   "State": "وضعیت (State)",
   "Callback": "کال‌بک (Callback)",
   "Promise": "پرامیس (Promise)",
-  "Props": "پراپس (Props)"
+  "Props": "پراپس (Props)",
+  "Note": "نکته",
+  "Warning": "هشدار",
+  "Overview": "بررسی کلی",
+  "Philosophy": "فلسفه"
 }
