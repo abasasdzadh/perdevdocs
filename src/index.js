@@ -13,14 +13,12 @@ import { OutputBuilder } from './builders/output-builder.js';
 async function runPipeline() {
   console.log("🚀 شروع موتور هوشمند ترجمه مستندات perdevdocs...");
 
-  // ۱. مقداردهی اولیه حافظه ترجمه محلی (SQLite)
   const tm = new TranslationMemory();
   await tm.init();
 
   const translator = new GeminiTranslator();
-  const queue = new TranslationQueue(4500); // رعایت سقف رایگان
+  const queue = new TranslationQueue(3000);
 
-  // ۲. بارگذاری کاتالوگ مستندات docsets.json
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
   const docsets = JSON.parse(docsetsRaw);
 
@@ -29,7 +27,6 @@ async function runPipeline() {
     console.log(`📚 پردازش مستندات: ${doc.name} (${doc.id})`);
     console.log(`========================================`);
 
-    // ۳. دریافت مستقیم فایل db.json از گیت‌هاب (doc-endevdocs) یا فایل محلی
     const rawDbContent = await FileLoader.load(doc.contentUrl);
     const dbData = JSON.parse(rawDbContent);
 
@@ -37,53 +34,64 @@ async function runPipeline() {
     const pageKeys = Object.keys(dbData);
     console.log(`📑 تعداد کل صفحات (آیتم‌ها) در db.json: ${pageKeys.length}`);
 
-    // ۴. تفکیک صفحه‌به‌صفحه (Page-by-Page Chunking)
+    // پردازش صفحه‌به‌صفحه (هر صفحه = ۱ درخواست به جمنای)
     for (let index = 0; index < pageKeys.length; index++) {
       const pageKey = pageKeys[index];
       const pageHtml = dbData[pageKey];
 
       console.log(`\n[صفحه ${index + 1}/${pageKeys.length}] 📄 در حال پردازش کلید: "${pageKey}"`);
 
-      // پارس کردن HTML این صفحه
       const $ = HtmlParser.parse(pageHtml);
       $('body').attr('dir', 'rtl').addClass('fa-doc');
 
-      // استخراج گره‌ها با حفظ ۱۰۰٪ ترتیب ترتیبی
+      // استخراج تمام گره‌های صفحه با حفظ ترتیب ترتیبی
       const nodes = TextExtractor.extractSequentialNodes($);
 
+      const unCachedNodes = [];
+
+      // ۱. بررسی حافظه محلی برای تمام گره‌های این صفحه
       for (const node of nodes) {
-        const { $block, maskedText, placeholders } = node;
-
-        // بررسی در حافظه محلی (پیش‌ترجمه آنی)
-        let translatedText = await tm.get(maskedText);
-
-        if (translatedText) {
-          console.log(`  ⚡ خوانده شده از حافظه محلی (0ms)`);
+        const cached = await tm.get(node.maskedText);
+        if (cached) {
+          node.translatedText = cached;
         } else {
-          // ارسال به صف هوشمند جهت ترجمه با جمنای
-          console.log(`  🌐 ارسال به Gemini API...`);
-          translatedText = await queue.executeWithRetry(translator, maskedText);
-
-          // اعتبارسنجی توکن‌ها
-          const isValid = TranslationValidator.validate(placeholders, translatedText);
-          if (isValid) {
-            // ذخیره جدید در حافظه محلی جهت استفاده در صفحات بعدی
-            await tm.set(maskedText, translatedText);
-          } else {
-            translatedText = maskedText; // Fallback
-          }
+          unCachedNodes.push(node);
         }
-
-        // بازگرداندن کدها و جایگذاری در DOM همان صفحه
-        const finalBlockHtml = TextReplacer.unmask(translatedText, placeholders);
-        $block.html(finalBlockHtml);
       }
 
-      // ذخیره نتیجه صفحه در آبجکت خروجی
+      // ۲. ارسال تمام پاراگراف‌های ترجمه‌نشده این صفحه در قالب «۱ درخواست تک» به جمنای
+      if (unCachedNodes.length > 0) {
+        const textsToTranslate = unCachedNodes.map(n => n.maskedText);
+        console.log(`  🌐 ارسال کل صفحه (${textsToTranslate.length} پاراگراف) در ۱ درخواست به Gemini...`);
+
+        const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
+
+        // ۳. اعتبارسنجی و ذخیره در حافظه محلی
+        for (let i = 0; i < unCachedNodes.length; i++) {
+          const node = unCachedNodes[i];
+          const trans = (translatedArray && translatedArray[i]) ? translatedArray[i] : node.maskedText;
+          
+          const isValid = TranslationValidator.validate(node.placeholders, trans);
+          if (isValid) {
+            node.translatedText = trans;
+            await tm.set(node.maskedText, trans);
+          } else {
+            node.translatedText = node.maskedText; // Fallback
+          }
+        }
+      } else {
+        console.log(`  ⚡ تمام پاراگراف‌های این صفحه از حافظه محلی خوانده شد (0ms)`);
+      }
+
+      // ۴. بازسازی DOM همین صفحه
+      for (const node of nodes) {
+        const finalBlockHtml = TextReplacer.unmask(node.translatedText, node.placeholders);
+        node.$block.html(finalBlockHtml);
+      }
+
       translatedDbData[pageKey] = $.html();
     }
 
-    // ۵. ساخت و ذخیره فایل db.json ترجمه‌شده نهایی
     const outputPath = `./data/output/${doc.id}/db.json`;
     OutputBuilder.saveJson(outputPath, translatedDbData);
     console.log(`\n🎉 ترجمه مستندات ${doc.name} با موفقیت تمام شد و در ${outputPath} ذخیره گردید!`);
