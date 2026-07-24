@@ -17,8 +17,8 @@ async function runPipeline() {
   await tm.init();
 
   const translator = new GeminiTranslator();
-  // تاخیر ۱۳ ثانیه‌ای برای عدم برخورد به لیمیت ۵ درخواست در دقیقه
-  const queue = new TranslationQueue(13000);
+  // تاخیر کوتاه ۳ ثانیه‌ای (به لطف سیستم چرخش کلید و گراک دیگر نیازی به مکث‌های طولانی نداریم)
+  const queue = new TranslationQueue(3000);
 
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
   const docsets = JSON.parse(docsetsRaw);

@@ -3,10 +3,35 @@ import fs from 'fs';
 
 export class GeminiTranslator {
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     this.glossary = this.loadGlossary();
-    // لیست مدل‌های رایگان و فعال گوگل به ترتیب اولویت
-    this.models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+    
+    // ۱. بارگذاری کلیدهای جمنای جهت سیستم چرخش کلید
+    const keysRaw = process.env.GEMINI_API_KEYS || '';
+    this.geminiKeys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
+    this.activeKeyIndex = 0;
+    
+    // ۲. بارگذاری کلید گراک
+    this.groqKey = process.env.GROQ_API_KEY ? process.env.GROQ_API_KEY.trim() : null;
+    
+    this.initGemini();
+  }
+
+  // مقداردهی اولیه جمنای با کلید فعال فعلی
+  initGemini() {
+    if (this.geminiKeys.length > 0) {
+      const currentKey = this.geminiKeys[this.activeKeyIndex];
+      this.ai = new GoogleGenAI({ apiKey: currentKey });
+    }
+  }
+
+  // چرخاندن و سوئیچ روی کلید بعدی جمنای در صورت وقوع لیمیت
+  rotateGeminiKey() {
+    if (this.geminiKeys.length <= 1) return false;
+    
+    this.activeKeyIndex = (this.activeKeyIndex + 1) % this.geminiKeys.length;
+    console.warn(`\n🔄 کلید جمنای شماره ${this.activeKeyIndex} لیمیت شد. سوئیچ خودکار به کلید بعدی (شماره ${this.activeKeyIndex + 1})...`);
+    this.initGemini();
+    return true;
   }
 
   loadGlossary() {
@@ -20,8 +45,51 @@ export class GeminiTranslator {
     return {};
   }
 
-  async translateBatch(textsArray) {
-    if (!textsArray || textsArray.length === 0) return [];
+  // ترجمه با گراک (فوق‌سریع با مدل Llama-3 یا Gemma)
+  async translateWithGroq(textsArray) {
+    const prompt = `
+You are an expert technical translator. 
+Translate the following JSON array of documentation texts into Persian.
+Return ONLY a valid JSON object matching this schema: {"translations": ["Persian text 1", "Persian text 2", ...]}
+
+Strict Rules:
+1. Do NOT translate or modify tokens matching __CODE_TOKEN_X__ (these are code placeholders).
+2. Do NOT add any conversational explanation. Return ONLY the JSON object.
+3. Keep technical method names in English.
+    `;
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.groqKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'gemma2-9b-it', // مدل فوق‌العاده سریع، دقیق و رایگان در گراک
+        messages: [
+          { role: 'system', content: prompt },
+          { role: 'user', content: JSON.stringify(textsArray) }
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.1
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`خطای گراک (${response.status}): ${errText}`);
+    }
+
+    const data = await response.json();
+    const resultObj = JSON.parse(data.choices[0].message.content.trim());
+    return resultObj.translations;
+  }
+
+  // ترجمه بک‌آپ با جمنای
+  async translateWithGemini(textsArray) {
+    if (!this.ai) {
+      throw new Error("هیچ کلید جمنای ست نشده است.");
+    }
 
     const prompt = `
 تو یک مترجم ارشد مستندات برنامه‌نویسی هستی.
@@ -37,27 +105,47 @@ export class GeminiTranslator {
 ${JSON.stringify(textsArray)}
     `;
 
-    // تست خودکار مدل‌ها در صورت ۴۰۴ بودن
-    for (const modelName of this.models) {
-      try {
-        const response = await this.ai.models.generateContent({
-          model: modelName,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json"
-          }
-        });
+    const response = await this.ai.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json"
+      }
+    });
 
-        return JSON.parse(response.text.trim());
-      } catch (error) {
-        if (error.message && error.message.includes('404')) {
-          console.warn(`⚠️ مدل ${modelName} غیرفعال است، سوئیچ خودکار به مدل بعدی...`);
-          continue; // رفتن به مدل بعدی در صورت ۴۰۴
-        }
-        throw error; // اگر خطای سهمیه (429) بود به صف Retry برود
+    return JSON.parse(response.text.trim());
+  }
+
+  // متد اصلی ارکستر ترجمه
+  async translateBatch(textsArray) {
+    if (!textsArray || textsArray.length === 0) return [];
+
+    // ۱. اولویت اول: گراک (در صورت ست بودن کلید)
+    if (this.groqKey) {
+      try {
+        console.log("    ⚡ استفاده از موتور فوق‌سریع Groq...");
+        return await this.translateWithGroq(textsArray);
+      } catch (err) {
+        console.warn("⚠️ موتور گراک با خطا مواجه شد. سوئیچ خودکار به جمنای بک‌آپ...", err.message);
       }
     }
 
-    throw new Error("هیچ‌کدام از مدل‌های رایگان Gemini در دسترس نیستند.");
+    // ۲. اولویت دوم: جمنای با چرخش خودکار کلیدها در صورت مواجهه با محدودیت ۴۲۹
+    while (true) {
+      try {
+        return await this.translateWithGemini(textsArray);
+      } catch (err) {
+        const isQuota = err.message && (err.message.includes('429') || err.message.includes('quota'));
+        
+        if (isQuota) {
+          const rotated = this.rotateGeminiKey();
+          if (rotated) {
+            console.log("🔄 کلید جدید جمنای با موفقیت اعمال شد. تلاش مجدد برای ارسال درخواست...");
+            continue; // تلاش مجدد با کلید جدید جمنای بدون حتی ۱ ثانیه معطلی!
+          }
+        }
+        throw err; // اگر خطای دیگری بود یا تمام کلیدها به اتمام رسیده بودند
+      }
+    }
   }
 }

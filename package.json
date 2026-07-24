@@ -8,10 +8,10 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "@google/genai": "^0.2.0",
-    "cheerio": "^1.0.0-rc.12",
-    "dotenv": "^16.4.5",
-    "p-limit": "^6.0.0",
+    "@google/genai": "^1.22.0",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1",
+    "p-limit": "^7.1.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   }
