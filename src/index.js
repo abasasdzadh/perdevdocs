@@ -17,7 +17,7 @@ async function runPipeline() {
   await tm.init();
 
   const translator = new GeminiTranslator();
-  // تاخیر کوتاه ۳ ثانیه‌ای (به لطف سیستم چرخش کلید و گراک دیگر نیازی به مکث‌های طولانی نداریم)
+  // تاخیر ۳ ثانیه‌ای بین درخواست‌های کوچک گراک
   const queue = new TranslationQueue(3000);
 
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
@@ -46,7 +46,9 @@ async function runPipeline() {
 
       const nodes = TextExtractor.extractSequentialNodes($);
       const unCachedNodes = [];
+      let didTranslateThisPage = false; // پرچم تشخیص نیاز به استراحت
 
+      // ۱. بررسی حافظه محلی
       for (const node of nodes) {
         const cached = await tm.get(node.maskedText);
         if (cached) {
@@ -56,7 +58,9 @@ async function runPipeline() {
         }
       }
 
+      // ۲. ارسال پاراگراف‌ها به گراک/جمنای
       if (unCachedNodes.length > 0) {
+        didTranslateThisPage = true; // این صفحه جدید است و نیاز به ترجمه با هوش مصنوعی دارد
         const BATCH_SIZE = 30;
         console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی)...`);
 
@@ -85,12 +89,20 @@ async function runPipeline() {
         console.log(`  ⚡ تمام پاراگراف‌های این صفحه از حافظه محلی خوانده شد (0ms)`);
       }
 
+      // ۳. بازسازی DOM
       for (const node of nodes) {
         const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
         node.$block.html(finalBlockHtml);
       }
 
       translatedDbData[pageKey] = $.html();
+
+      // ۴. سیستم استراحت هوشمند موتور ترجمه جهت خنک‌سازی سهمیه‌ها
+      // فقط در صورتی که این صفحه ترجمه واقعی داشته و صفحه آخر مستندات نباشد، مکث ۲ دقیقه‌ای اعمال می‌شود
+      if (didTranslateThisPage && index < pageKeys.length - 1) {
+        console.log(`\n💤 استراحت ۲ دقیقه‌ای (۱۲۰ ثانیه) موتور ترجمه جهت بازنشانی سهمیه و خنک‌سازی API...`);
+        await new Promise(res => setTimeout(res, 120000)); // مکث ۱۲۰ ثانیه‌ای
+      }
     }
 
     const outputPath = `./data/output/${doc.id}/db.json`;

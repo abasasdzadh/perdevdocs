@@ -45,17 +45,17 @@ export class GeminiTranslator {
     return {};
   }
 
-  // ترجمه با گراک (فوق‌سریع با دستورات سخت‌گیرانه برای حفظ توکن‌ها)
+  // ترجمه با گراک (فوق‌سریع با مدل جدید و فعال Llama 3.3 70B)
   async translateWithGroq(textsArray) {
     const prompt = `
 You are an expert technical translator. 
 Translate the following JSON array of documentation texts into Persian.
 Return ONLY a valid JSON object matching this schema: {"translations": ["Persian text 1", "Persian text 2", ...]}
 
-CRITICAL RULES (MANDATORY FOR STRUCTURAL VALIDATION):
-1. NEVER translate, delete, alter, or modify tokens matching __CODE_TOKEN_X__ (such as __CODE_TOKEN_0__, __CODE_TOKEN_1__). They must appear EXACTLY in the translated Persian output at their logically correct places.
+Strict Rules:
+1. Do NOT translate or modify tokens matching __CODE_TOKEN_X__ (these are code placeholders).
 2. Do NOT add any conversational explanation. Return ONLY the JSON object.
-3. Keep technical method names, API signatures, and programming syntax in English.
+3. Keep technical method names in English.
     `;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -65,7 +65,7 @@ CRITICAL RULES (MANDATORY FOR STRUCTURAL VALIDATION):
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile', // مدل فعال، سریع و رایگان در گراک
+        model: 'llama-3.3-70b-versatile', // مدل رسمی، فوق‌العاده قوی و فعال در گراک
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(textsArray) }
@@ -116,17 +116,34 @@ ${JSON.stringify(textsArray)}
     return JSON.parse(response.text.trim());
   }
 
-  // متد اصلی ارکستر ترجمه
+  // متد اصلی ارکستر ترجمه با مدیریت لیمیت موقت گراک
   async translateBatch(textsArray) {
     if (!textsArray || textsArray.length === 0) return [];
 
-    // ۱. اولویت اول: گراک (در صورت ست بودن کلید)
+    // ۱. اولویت اول: گراک (با مدیریت هوشمند لیمیت موقت توکن)
     if (this.groqKey) {
-      try {
-        console.log("    ⚡ استفاده از موتور فوق‌سریع Groq (مدل Llama 3.3)...");
-        return await this.translateWithGroq(textsArray);
-      } catch (err) {
-        console.warn("⚠️ موتور گراک با خطا مواجه شد. سوئیچ به جمنای بک‌آپ...", err.message);
+      let groqRetries = 0;
+      const maxGroqRetries = 3;
+
+      while (groqRetries < maxGroqRetries) {
+        try {
+          console.log("    ⚡ استفاده از موتور فوق‌سریع Groq (مدل Llama 3.3)...");
+          return await this.translateWithGroq(textsArray);
+        } catch (err) {
+          const isGroqRateLimit = err.message && (err.message.includes('429') || err.message.includes('rate_limit_exceeded') || err.message.includes('Limit 12000'));
+          
+          if (isGroqRateLimit) {
+            groqRetries++;
+            // مکث ۶ ثانیه‌ای جهت آزاد شدن سهمیه توکن در دقیقه گراک
+            console.warn(`⚠️ گراک موقتاً لیمیت شد (TPM). مکث ۶ ثانیه‌ای و تلاش مجدد با خود گراک (تلاش ${groqRetries}/${maxGroqRetries})...`);
+            await new Promise(res => setTimeout(res, 6000));
+            continue; // تلاش مجدد با خود گراک
+          }
+          
+          // اگر خطای دیگری غیر از لیمیت موقت بود، از حلقه خارج شو تا جمنای کار کند
+          console.warn("⚠️ موتور گراک با خطایی غیر از لیمیت مواجه شد. سوئیچ به جمنای بک‌آپ...", err.message);
+          break;
+        }
       }
     }
 
@@ -140,11 +157,10 @@ ${JSON.stringify(textsArray)}
         
         if (isQuota) {
           geminiAttempts++;
-          // اگر تمام کلیدهای لیست یک‌دور کاملاً چرخیدند و همگی لیمیت بودند
           if (geminiAttempts >= this.geminiKeys.length) {
             console.warn(`⚠️ تمام کلیدهای جمنای شما در حال حاضر لیمیت هستند. مکث ۱۵ ثانیه‌ای جهت بازنشانی سهمیه توسط گوگل...`);
             await new Promise(res => setTimeout(res, 15000));
-            geminiAttempts = 0; // ریست شمارنده تلاش‌ها
+            geminiAttempts = 0;
           }
 
           const rotated = this.rotateGeminiKey();
