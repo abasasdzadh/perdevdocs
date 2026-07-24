@@ -17,7 +17,7 @@ async function runPipeline() {
   await tm.init();
 
   const translator = new GeminiTranslator();
-  // تاخیر ۱۳ ثانیه‌ای جهت تضمین رعایت سقف ۵ درخواست در دقیقه گوگل
+  // تاخیر ۱۳ ثانیه‌ای برای عدم برخورد به لیمیت ۵ درخواست در دقیقه
   const queue = new TranslationQueue(13000);
 
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
@@ -58,7 +58,7 @@ async function runPipeline() {
 
       if (unCachedNodes.length > 0) {
         const BATCH_SIZE = 30;
-        console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی به gemini-2.5-flash)...`);
+        console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی)...`);
 
         for (let i = 0; i < unCachedNodes.length; i += BATCH_SIZE) {
           const chunkNodes = unCachedNodes.slice(i, i + BATCH_SIZE);

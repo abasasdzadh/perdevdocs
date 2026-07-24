@@ -5,6 +5,8 @@ export class GeminiTranslator {
   constructor() {
     this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     this.glossary = this.loadGlossary();
+    // لیست مدل‌های رایگان و فعال گوگل به ترتیب اولویت
+    this.models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite'];
   }
 
   loadGlossary() {
@@ -35,14 +37,27 @@ export class GeminiTranslator {
 ${JSON.stringify(textsArray)}
     `;
 
-    const response = await this.ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json"
-      }
-    });
+    // تست خودکار مدل‌ها در صورت ۴۰۴ بودن
+    for (const modelName of this.models) {
+      try {
+        const response = await this.ai.models.generateContent({
+          model: modelName,
+          contents: prompt,
+          config: {
+            responseMimeType: "application/json"
+          }
+        });
 
-    return JSON.parse(response.text.trim());
+        return JSON.parse(response.text.trim());
+      } catch (error) {
+        if (error.message && error.message.includes('404')) {
+          console.warn(`⚠️ مدل ${modelName} غیرفعال است، سوئیچ خودکار به مدل بعدی...`);
+          continue; // رفتن به مدل بعدی در صورت ۴۰۴
+        }
+        throw error; // اگر خطای سهمیه (429) بود به صف Retry برود
+      }
+    }
+
+    throw new Error("هیچ‌کدام از مدل‌های رایگان Gemini در دسترس نیستند.");
   }
 }
