@@ -45,7 +45,7 @@ export class GeminiTranslator {
     return {};
   }
 
-  // ترجمه با گراک (فوق‌سریع با مدل جدید و فعال Llama 3.3 70B)
+  // ترجمه با گراک (اعمال سقف مجاز کلمات خروجی جهت جلوگیری از نصفه‌کاره ماندن JSON)
   async translateWithGroq(textsArray) {
     const prompt = `
 You are an expert technical translator. 
@@ -65,13 +65,14 @@ Strict Rules:
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile', // مدل رسمی، فوق‌العاده قوی و فعال در گراک
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(textsArray) }
         ],
         response_format: { type: 'json_object' },
-        temperature: 0.1
+        temperature: 0.1,
+        max_tokens: 4096 // تضمین فضای خروجی کامل و مسدود نشدن خروجی گراک
       })
     });
 
