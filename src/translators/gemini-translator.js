@@ -45,17 +45,17 @@ export class GeminiTranslator {
     return {};
   }
 
-  // ترجمه با گراک (فوق‌سریع با مدل جدید و فعال Llama 3.3 70B)
+  // ترجمه با گراک (فوق‌سریع با دستورات سخت‌گیرانه برای حفظ توکن‌ها)
   async translateWithGroq(textsArray) {
     const prompt = `
 You are an expert technical translator. 
 Translate the following JSON array of documentation texts into Persian.
 Return ONLY a valid JSON object matching this schema: {"translations": ["Persian text 1", "Persian text 2", ...]}
 
-Strict Rules:
-1. Do NOT translate or modify tokens matching __CODE_TOKEN_X__ (these are code placeholders).
+CRITICAL RULES (MANDATORY FOR STRUCTURAL VALIDATION):
+1. NEVER translate, delete, alter, or modify tokens matching __CODE_TOKEN_X__ (such as __CODE_TOKEN_0__, __CODE_TOKEN_1__). They must appear EXACTLY in the translated Persian output at their logically correct places.
 2. Do NOT add any conversational explanation. Return ONLY the JSON object.
-3. Keep technical method names in English.
+3. Keep technical method names, API signatures, and programming syntax in English.
     `;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -65,7 +65,7 @@ Strict Rules:
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile', // مدل رسمی، فوق‌العاده قوی و فعال در گراک
+        model: 'llama-3.3-70b-versatile', // مدل فعال، سریع و رایگان در گراک
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(textsArray) }
