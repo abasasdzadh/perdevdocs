@@ -45,7 +45,7 @@ export class GeminiTranslator {
     return {};
   }
 
-  // ترجمه با گراک (فوق‌سریع با مدل Llama-3 یا Gemma)
+  // ترجمه با گراک (فوق‌سریع با مدل جدید و فعال Llama 3.3 70B)
   async translateWithGroq(textsArray) {
     const prompt = `
 You are an expert technical translator. 
@@ -65,7 +65,7 @@ Strict Rules:
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gemma2-9b-it', // مدل فوق‌العاده سریع، دقیق و رایگان در گراک
+        model: 'llama-3.3-70b-versatile', // مدل رسمی، فوق‌العاده قوی و فعال در گراک
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(textsArray) }
@@ -123,14 +123,15 @@ ${JSON.stringify(textsArray)}
     // ۱. اولویت اول: گراک (در صورت ست بودن کلید)
     if (this.groqKey) {
       try {
-        console.log("    ⚡ استفاده از موتور فوق‌سریع Groq...");
+        console.log("    ⚡ استفاده از موتور فوق‌سریع Groq (مدل Llama 3.3)...");
         return await this.translateWithGroq(textsArray);
       } catch (err) {
-        console.warn("⚠️ موتور گراک با خطا مواجه شد. سوئیچ خودکار به جمنای بک‌آپ...", err.message);
+        console.warn("⚠️ موتور گراک با خطا مواجه شد. سوئیچ به جمنای بک‌آپ...", err.message);
       }
     }
 
-    // ۲. اولویت دوم: جمنای با چرخش خودکار کلیدها در صورت مواجهه با محدودیت ۴۲۹
+    // ۲. اولویت دوم: جمنای با چرخش خودکار کلیدها و کنترل لوپ بی نهایت در صورت محدودیت ۴۲۹
+    let geminiAttempts = 0;
     while (true) {
       try {
         return await this.translateWithGemini(textsArray);
@@ -138,13 +139,21 @@ ${JSON.stringify(textsArray)}
         const isQuota = err.message && (err.message.includes('429') || err.message.includes('quota'));
         
         if (isQuota) {
+          geminiAttempts++;
+          // اگر تمام کلیدهای لیست یک‌دور کاملاً چرخیدند و همگی لیمیت بودند
+          if (geminiAttempts >= this.geminiKeys.length) {
+            console.warn(`⚠️ تمام کلیدهای جمنای شما در حال حاضر لیمیت هستند. مکث ۱۵ ثانیه‌ای جهت بازنشانی سهمیه توسط گوگل...`);
+            await new Promise(res => setTimeout(res, 15000));
+            geminiAttempts = 0; // ریست شمارنده تلاش‌ها
+          }
+
           const rotated = this.rotateGeminiKey();
           if (rotated) {
-            console.log("🔄 کلید جدید جمنای با موفقیت اعمال شد. تلاش مجدد برای ارسال درخواست...");
-            continue; // تلاش مجدد با کلید جدید جمنای بدون حتی ۱ ثانیه معطلی!
+            console.log("🔄 کلید جدید جمنای اعمال شد. تلاش مجدد برای ارسال درخواست...");
+            continue; 
           }
         }
-        throw err; // اگر خطای دیگری بود یا تمام کلیدها به اتمام رسیده بودند
+        throw err; 
       }
     }
   }
