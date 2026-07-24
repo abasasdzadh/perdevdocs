@@ -35,7 +35,6 @@ export class GeminiTranslator {
 ${JSON.stringify(textsArray)}
     `;
 
-    // مدل رسمی و فعال gemini-2.5-flash
     const response = await this.ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,

@@ -17,7 +17,8 @@ async function runPipeline() {
   await tm.init();
 
   const translator = new GeminiTranslator();
-  const queue = new TranslationQueue(3000);
+  // تاخیر ۱۳ ثانیه‌ای جهت تضمین رعایت سقف ۵ درخواست در دقیقه گوگل
+  const queue = new TranslationQueue(13000);
 
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
   const docsets = JSON.parse(docsetsRaw);
@@ -46,7 +47,6 @@ async function runPipeline() {
       const nodes = TextExtractor.extractSequentialNodes($);
       const unCachedNodes = [];
 
-      // ۱. بررسی حافظه محلی
       for (const node of nodes) {
         const cached = await tm.get(node.maskedText);
         if (cached) {
@@ -56,16 +56,15 @@ async function runPipeline() {
         }
       }
 
-      // ۲. ارسال در دسته‌های ۳۰تایی به gemini-2.5-flash
       if (unCachedNodes.length > 0) {
         const BATCH_SIZE = 30;
-        console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی)...`);
+        console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی به gemini-2.5-flash)...`);
 
         for (let i = 0; i < unCachedNodes.length; i += BATCH_SIZE) {
           const chunkNodes = unCachedNodes.slice(i, i + BATCH_SIZE);
           const textsToTranslate = chunkNodes.map(n => n.maskedText);
 
-          console.log(`    📦 ارسال دسته (${i + 1} تا ${Math.min(i + BATCH_SIZE, unCachedNodes.length)} از ${unCachedNodes.length}) به gemini-2.5-flash...`);
+          console.log(`    📦 ارسال دسته (${i + 1} تا ${Math.min(i + BATCH_SIZE, unCachedNodes.length)} از ${unCachedNodes.length})...`);
 
           const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
 
@@ -86,7 +85,6 @@ async function runPipeline() {
         console.log(`  ⚡ تمام پاراگراف‌های این صفحه از حافظه محلی خوانده شد (0ms)`);
       }
 
-      // ۳. بازسازی DOM
       for (const node of nodes) {
         const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
         node.$block.html(finalBlockHtml);
