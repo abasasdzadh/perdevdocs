@@ -56,23 +56,30 @@ async function runPipeline() {
         }
       }
 
-      // ۲. ارسال کل پاراگراف‌های جدید صفحه در ۱ درخواست تک به gemini-1.5-flash
+      // ۲. ارسال در دسته‌های ۳۰تایی به gemini-2.5-flash
       if (unCachedNodes.length > 0) {
-        const textsToTranslate = unCachedNodes.map(n => n.maskedText);
-        console.log(`  🌐 ارسال کل صفحه (${textsToTranslate.length} پاراگراف) در ۱ درخواست به gemini-1.5-flash...`);
+        const BATCH_SIZE = 30;
+        console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی)...`);
 
-        const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
+        for (let i = 0; i < unCachedNodes.length; i += BATCH_SIZE) {
+          const chunkNodes = unCachedNodes.slice(i, i + BATCH_SIZE);
+          const textsToTranslate = chunkNodes.map(n => n.maskedText);
 
-        for (let i = 0; i < unCachedNodes.length; i++) {
-          const node = unCachedNodes[i];
-          const trans = (translatedArray && translatedArray[i]) ? translatedArray[i] : node.maskedText;
-          
-          const isValid = TranslationValidator.validate(node.placeholders, trans);
-          if (isValid) {
-            node.translatedText = trans;
-            await tm.set(node.maskedText, trans);
-          } else {
-            node.translatedText = node.maskedText;
+          console.log(`    📦 ارسال دسته (${i + 1} تا ${Math.min(i + BATCH_SIZE, unCachedNodes.length)} از ${unCachedNodes.length}) به gemini-2.5-flash...`);
+
+          const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
+
+          for (let j = 0; j < chunkNodes.length; j++) {
+            const node = chunkNodes[j];
+            const trans = (translatedArray && translatedArray[j]) ? translatedArray[j] : node.maskedText;
+            
+            const isValid = TranslationValidator.validate(node.placeholders, trans);
+            if (isValid) {
+              node.translatedText = trans;
+              await tm.set(node.maskedText, trans);
+            } else {
+              node.translatedText = node.maskedText;
+            }
           }
         }
       } else {

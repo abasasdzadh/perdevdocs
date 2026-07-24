@@ -23,7 +23,7 @@ export class GeminiTranslator {
 
     const prompt = `
 تو یک مترجم ارشد مستندات برنامه‌نویسی هستی.
-آرایه JSON زیر شامل تمام پاراگراف‌های یک صفحه مستندات است.
+آرایه JSON زیر شامل متون یک صفحه مستندات است.
 آرایه را ترجمه کن و دقیقاً یک آرایه JSON معتبر با همان تعداد عناصر خروجی بده.
 
 قوانین سخت‌گیرانه:
@@ -35,13 +35,12 @@ export class GeminiTranslator {
 ${JSON.stringify(textsArray)}
     `;
 
-    // استفاده از مدل پایدار gemini-1.5-flash با سهمیه ۱۵۰۰ درخواست در روز
+    // مدل رسمی و فعال gemini-2.5-flash
     const response = await this.ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
-        responseMimeType: "application/json",
-        maxOutputTokens: 8192 // اجازه تولید پاسخ‌های بسیار بلند بدون قطع شدن
+        responseMimeType: "application/json"
       }
     });
 
