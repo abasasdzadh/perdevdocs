@@ -11,14 +11,14 @@ import { TextReplacer } from './replacer/text-replacer.js';
 import { OutputBuilder } from './builders/output-builder.js';
 
 async function runPipeline() {
-  console.log("🚀 شروع موتور هوشمند ترجمه مستندات perdevdocs...");
+  console.log("🚀 شروع موتور اختصاصی ترجمه گوگل (Gemini Flash-Lite Engine)...");
 
   const tm = new TranslationMemory();
   await tm.init();
 
   const translator = new GeminiTranslator();
-  // تاخیر ۳ ثانیه‌ای بین درخواست‌های کوچک گراک
-  const queue = new TranslationQueue(3000);
+  // صف هوشمند با محدودیت ۱۴ RPM و ۴00 RPD
+  const queue = new TranslationQueue();
 
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
   const docsets = JSON.parse(docsetsRaw);
@@ -39,16 +39,15 @@ async function runPipeline() {
       const pageKey = pageKeys[index];
       const pageHtml = dbData[pageKey];
 
-      console.log(`\n[صفحه ${index + 1}/${pageKeys.length}] 📄 در حال پردازش کلید: "${pageKey}"`);
+      console.log(`\n[صفحه ${index + 1}/${pageKeys.length}] 📄 در حال پردازش: "${pageKey}"`);
 
       const $ = HtmlParser.parse(pageHtml);
       $('body').attr('dir', 'rtl').addClass('fa-doc');
 
       const nodes = TextExtractor.extractSequentialNodes($);
       const unCachedNodes = [];
-      let didTranslateThisPage = false; // پرچم تشخیص نیاز به استراحت
 
-      // ۱. بررسی حافظه محلی
+      // ۱. بررسی حافظه محلی (SQLite Cache)
       for (const node of nodes) {
         const cached = await tm.get(node.maskedText);
         if (cached) {
@@ -58,17 +57,14 @@ async function runPipeline() {
         }
       }
 
-      // ۲. ارسال پاراگراف‌ها به گراک/جمنای
+      // ۲. ارسال پاراگراف‌های جدید به گوگل
       if (unCachedNodes.length > 0) {
-        didTranslateThisPage = true; // این صفحه جدید است و نیاز به ترجمه با هوش مصنوعی دارد
         const BATCH_SIZE = 30;
-        console.log(`  🌐 تعداد کل پاراگراف‌های جدید: ${unCachedNodes.length} (ارسال در دسته‌های ${BATCH_SIZE} تایی)...`);
+        console.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در دسته‌های ${BATCH_SIZE} تایی)...`);
 
         for (let i = 0; i < unCachedNodes.length; i += BATCH_SIZE) {
           const chunkNodes = unCachedNodes.slice(i, i + BATCH_SIZE);
           const textsToTranslate = chunkNodes.map(n => n.maskedText);
-
-          console.log(`    📦 ارسال دسته (${i + 1} تا ${Math.min(i + BATCH_SIZE, unCachedNodes.length)} از ${unCachedNodes.length})...`);
 
           const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
 
@@ -96,13 +92,6 @@ async function runPipeline() {
       }
 
       translatedDbData[pageKey] = $.html();
-
-      // ۴. سیستم استراحت هوشمند موتور ترجمه جهت خنک‌سازی سهمیه‌ها
-      // فقط در صورتی که این صفحه ترجمه واقعی داشته و صفحه آخر مستندات نباشد، مکث ۲ دقیقه‌ای اعمال می‌شود
-      if (didTranslateThisPage && index < pageKeys.length - 1) {
-        console.log(`\n💤 استراحت ۲ دقیقه‌ای (۱۲۰ ثانیه) موتور ترجمه جهت بازنشانی سهمیه و خنک‌سازی API...`);
-        await new Promise(res => setTimeout(res, 120000)); // مکث ۱۲۰ ثانیه‌ای
-      }
     }
 
     const outputPath = `./data/output/${doc.id}/db.json`;

@@ -10,26 +10,27 @@ export class GeminiTranslator {
     this.geminiKeys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
     this.activeKeyIndex = 0;
     
-    // ۲. بارگذاری کلید گراک
-    this.groqKey = process.env.GROQ_API_KEY ? process.env.GROQ_API_KEY.trim() : null;
+    // ۲. تعریف مدل‌های گوگل (مدل اصلی و مدل بک‌آپ)
+    this.primaryModel = 'gemini-3.5-flash-lite';
+    this.fallbackModel = 'gemini-3.1-flash-lite';
     
     this.initGemini();
   }
 
-  // مقداردهی اولیه جمنای با کلید فعال فعلی
   initGemini() {
     if (this.geminiKeys.length > 0) {
       const currentKey = this.geminiKeys[this.activeKeyIndex];
       this.ai = new GoogleGenAI({ apiKey: currentKey });
+    } else {
+      throw new Error("❌ هیچ کلید جمنای در فایل .env یافت نشد!");
     }
   }
 
-  // چرخاندن و سوئیچ روی کلید بعدی جمنای در صورت وقوع لیمیت
   rotateGeminiKey() {
     if (this.geminiKeys.length <= 1) return false;
     
     this.activeKeyIndex = (this.activeKeyIndex + 1) % this.geminiKeys.length;
-    console.warn(`\n🔄 کلید جمنای شماره ${this.activeKeyIndex} لیمیت شد. سوئیچ خودکار به کلید بعدی (شماره ${this.activeKeyIndex + 1})...`);
+    console.warn(`\n🔄 کلید جمنای شماره ${this.activeKeyIndex} لیمیت شد. سوئیچ به کلید شماره ${this.activeKeyIndex + 1}...`);
     this.initGemini();
     return true;
   }
@@ -45,51 +46,9 @@ export class GeminiTranslator {
     return {};
   }
 
-  // ترجمه با گراک (اعمال سقف مجاز کلمات خروجی جهت جلوگیری از نصفه‌کاره ماندن JSON)
-  async translateWithGroq(textsArray) {
-    const prompt = `
-You are an expert technical translator. 
-Translate the following JSON array of documentation texts into Persian.
-Return ONLY a valid JSON object matching this schema: {"translations": ["Persian text 1", "Persian text 2", ...]}
-
-Strict Rules:
-1. Do NOT translate or modify tokens matching __CODE_TOKEN_X__ (these are code placeholders).
-2. Do NOT add any conversational explanation. Return ONLY the JSON object.
-3. Keep technical method names in English.
-    `;
-
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.groqKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: prompt },
-          { role: 'user', content: JSON.stringify(textsArray) }
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0.1,
-        max_tokens: 4096 // تضمین فضای خروجی کامل و مسدود نشدن خروجی گراک
-      })
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`خطای گراک (${response.status}): ${errText}`);
-    }
-
-    const data = await response.json();
-    const resultObj = JSON.parse(data.choices[0].message.content.trim());
-    return resultObj.translations;
-  }
-
-  // ترجمه بک‌آپ با جمنای
-  async translateWithGemini(textsArray) {
+  async translateWithGoogle(textsArray, modelName) {
     if (!this.ai) {
-      throw new Error("هیچ کلید جمنای ست نشده است.");
+      throw new Error("SDK جمنای مقداردهی نشده است.");
     }
 
     const prompt = `
@@ -107,7 +66,7 @@ ${JSON.stringify(textsArray)}
     `;
 
     const response = await this.ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: modelName,
       contents: prompt,
       config: {
         responseMimeType: "application/json"
@@ -117,61 +76,42 @@ ${JSON.stringify(textsArray)}
     return JSON.parse(response.text.trim());
   }
 
-  // متد اصلی ارکستر ترجمه با مدیریت لیمیت موقت گراک
   async translateBatch(textsArray) {
     if (!textsArray || textsArray.length === 0) return [];
 
-    // ۱. اولویت اول: گراک (با مدیریت هوشمند لیمیت موقت توکن)
-    if (this.groqKey) {
-      let groqRetries = 0;
-      const maxGroqRetries = 3;
-
-      while (groqRetries < maxGroqRetries) {
-        try {
-          console.log("    ⚡ استفاده از موتور فوق‌سریع Groq (مدل Llama 3.3)...");
-          return await this.translateWithGroq(textsArray);
-        } catch (err) {
-          const isGroqRateLimit = err.message && (err.message.includes('429') || err.message.includes('rate_limit_exceeded') || err.message.includes('Limit 12000'));
-          
-          if (isGroqRateLimit) {
-            groqRetries++;
-            // مکث ۶ ثانیه‌ای جهت آزاد شدن سهمیه توکن در دقیقه گراک
-            console.warn(`⚠️ گراک موقتاً لیمیت شد (TPM). مکث ۶ ثانیه‌ای و تلاش مجدد با خود گراک (تلاش ${groqRetries}/${maxGroqRetries})...`);
-            await new Promise(res => setTimeout(res, 6000));
-            continue; // تلاش مجدد با خود گراک
-          }
-          
-          // اگر خطای دیگری غیر از لیمیت موقت بود، از حلقه خارج شو تا جمنای کار کند
-          console.warn("⚠️ موتور گراک با خطایی غیر از لیمیت مواجه شد. سوئیچ به جمنای بک‌آپ...", err.message);
-          break;
-        }
-      }
+    let geminiAttempts = 0;
+    
+    // تلاش با مدل اصلی (Gemini 3.5 Flash-Lite)
+    try {
+      console.log(`    ⚡ ارسال به Google Gemini (${this.primaryModel})...`);
+      return await this.translateWithGoogle(textsArray, this.primaryModel);
+    } catch (err) {
+      console.warn(`⚠️ خطا در مدل ${this.primaryModel}: ${err.message}. سوئیچ به مدل جایگزین (${this.fallbackModel})...`);
     }
 
-    // ۲. اولویت دوم: جمنای با چرخش خودکار کلیدها و کنترل لوپ بی نهایت در صورت محدودیت ۴۲۹
-    let geminiAttempts = 0;
-    while (true) {
+    // تلاش با مدل جایگزین (Gemini 3.1 Flash-Lite / 2.5 Flash-Lite)
+    while (geminiAttempts < this.geminiKeys.length * 2) {
       try {
-        return await this.translateWithGemini(textsArray);
+        return await this.translateWithGoogle(textsArray, this.fallbackModel);
       } catch (err) {
         const isQuota = err.message && (err.message.includes('429') || err.message.includes('quota'));
         
         if (isQuota) {
           geminiAttempts++;
-          if (geminiAttempts >= this.geminiKeys.length) {
-            console.warn(`⚠️ تمام کلیدهای جمنای شما در حال حاضر لیمیت هستند. مکث ۱۵ ثانیه‌ای جهت بازنشانی سهمیه توسط گوگل...`);
-            await new Promise(res => setTimeout(res, 15000));
-            geminiAttempts = 0;
-          }
-
           const rotated = this.rotateGeminiKey();
           if (rotated) {
-            console.log("🔄 کلید جدید جمنای اعمال شد. تلاش مجدد برای ارسال درخواست...");
-            continue; 
+            console.log("🔄 کلید جدید جمنای اعمال شد. تلاش مجدد...");
+            continue;
+          } else {
+            console.warn(`⚠️ کلید فعلی لیمیت شد. مکث ۱۵ ثانیه‌ای...`);
+            await new Promise(res => setTimeout(res, 15000));
           }
+        } else {
+          throw err;
         }
-        throw err; 
       }
     }
+
+    return textsArray;
   }
 }
