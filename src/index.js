@@ -59,7 +59,7 @@ async function runPipeline() {
 
       // ۲. ارسال پاراگراف‌های جدید به گوگل
       if (unCachedNodes.length > 0) {
-        const BATCH_SIZE = 30;
+        const BATCH_SIZE = 10;
         console.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در دسته‌های ${BATCH_SIZE} تایی)...`);
 
         for (let i = 0; i < unCachedNodes.length; i += BATCH_SIZE) {
