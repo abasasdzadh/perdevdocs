@@ -1,9 +1,13 @@
 export class TextReplacer {
   static unmask(translatedText, placeholders) {
+    if (!translatedText) return '';
     let result = translatedText;
+
     placeholders.forEach(({ token, html }) => {
-      result = result.replace(new RegExp(token, 'g'), html);
+      // جایگزینی دقیق تمام توکن‌ها
+      result = result.split(token).join(html);
     });
+
     return result;
   }
 }

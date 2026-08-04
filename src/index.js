@@ -3,6 +3,7 @@ import fs from 'fs';
 import { FileLoader } from './loaders/file-loader.js';
 import { HtmlParser } from './parsers/html-parser.js';
 import { TextExtractor } from './extractor/text-extractor.js';
+import { StaticDictionary } from './cache/static-dictionary.js';
 import { TranslationMemory } from './cache/translation-memory.js';
 import { GeminiTranslator } from './translators/gemini-translator.js';
 import { TranslationQueue } from './queue/translation-queue.js';
@@ -11,13 +12,12 @@ import { TextReplacer } from './replacer/text-replacer.js';
 import { OutputBuilder } from './builders/output-builder.js';
 
 async function runPipeline() {
-  console.log("🚀 شروع موتور اختصاصی ترجمه گوگل (Gemini Flash-Lite Engine)...");
+  console.log("🚀 شروع موتور اختصاصی ترجمه DevDocs (تمرکز بر db.json)...");
 
   const tm = new TranslationMemory();
   await tm.init();
 
   const translator = new GeminiTranslator();
-  // صف هوشمند با محدودیت ۱۴ RPM و ۴00 RPD
   const queue = new TranslationQueue();
 
   const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
@@ -28,9 +28,11 @@ async function runPipeline() {
     console.log(`📚 پردازش مستندات: ${doc.name} (${doc.id})`);
     console.log(`========================================`);
 
+    // دریافت مستقیم db.json
     const rawDbContent = await FileLoader.load(doc.contentUrl);
     const dbData = JSON.parse(rawDbContent);
 
+    // شیء خروجی که دقیقا کلیدهای db.json اصلی را حفظ می‌کند
     const translatedDbData = {};
     const pageKeys = Object.keys(dbData);
     console.log(`📑 تعداد کل صفحات در db.json: ${pageKeys.length}`);
@@ -47,8 +49,16 @@ async function runPipeline() {
       const nodes = TextExtractor.extractSequentialNodes($);
       const unCachedNodes = [];
 
-      // ۱. بررسی حافظه محلی (SQLite Cache)
+      // ۱. بررسی کش سه‌لایه‌ای (Static Dict + SQLite TM)
       for (const node of nodes) {
+        // الف) لایه ۱: دیکشنری عبارات ثابت (0ms)
+        const staticMatch = StaticDictionary.get(node.maskedText);
+        if (staticMatch) {
+          node.translatedText = staticMatch;
+          continue;
+        }
+
+        // ب) لایه ۲: حافظه ترجمه محلی SQLite (0ms)
         const cached = await tm.get(node.maskedText);
         if (cached) {
           node.translatedText = cached;
@@ -57,15 +67,17 @@ async function runPipeline() {
         }
       }
 
-      // ۲. ارسال پاراگراف‌های جدید به گوگل
+      // ۲. دسته‌بندی هوشمند پویا و ارسال به Gemini
       if (unCachedNodes.length > 0) {
-        const BATCH_SIZE = 10;
-        console.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در دسته‌های ${BATCH_SIZE} تایی)...`);
+        // ایجاد چنک‌های پویا بر اساس حجم توکن/کاراکتر واقعی
+        const smartChunks = TextExtractor.createSmartChunks(unCachedNodes, 5000);
+        console.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در قالب ${smartChunks.length} چنک پویا)...`);
 
-        for (let i = 0; i < unCachedNodes.length; i += BATCH_SIZE) {
-          const chunkNodes = unCachedNodes.slice(i, i + BATCH_SIZE);
+        for (let chunkIdx = 0; chunkIdx < smartChunks.length; chunkIdx++) {
+          const chunkNodes = smartChunks[chunkIdx];
           const textsToTranslate = chunkNodes.map(n => n.maskedText);
 
+          console.log(`   📦 ارسال چنک ${chunkIdx + 1}/${smartChunks.length} (${textsToTranslate.length} آیتم)...`);
           const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
 
           for (let j = 0; j < chunkNodes.length; j++) {
@@ -82,21 +94,29 @@ async function runPipeline() {
           }
         }
       } else {
-        console.log(`  ⚡ تمام پاراگراف‌های این صفحه از حافظه محلی خوانده شد (0ms)`);
+        console.log(`  ⚡ تمام پاراگراف‌های این صفحه از کش محلی خوانده شد (0ms)`);
       }
 
-      // ۳. بازسازی DOM
+      // ۳. بازسازی DOM صفحه
       for (const node of nodes) {
         const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
         node.$block.html(finalBlockHtml);
       }
 
+      // حفظ ۱۰۰٪ دقیق Key صفحه در db.json
       translatedDbData[pageKey] = $.html();
+
+      // ۴. فاصله ۹۰ ثانیه‌ای بین اتمام صفحه و شروع صفحه بعد (مطابق با قانون ۱۲)
+      if (index < pageKeys.length - 1) {
+        console.log(`\n⏳ اتمام صفحه "${pageKey}". تعلیق ۹۰ ثانیه‌ای موتور قبل از شروع صفحه بعدی...`);
+        await new Promise(res => setTimeout(res, 90000));
+      }
     }
 
+    // ذخیره فایل نهایی db.json ترجمه‌شده
     const outputPath = `./data/output/${doc.id}/db.json`;
     OutputBuilder.saveJson(outputPath, translatedDbData);
-    console.log(`\n🎉 ترجمه مستندات ${doc.name} با موفقیت تمام شد و در ${outputPath} ذخیره گردید!`);
+    console.log(`\n🎉 ترجمه db.json برای ${doc.name} با موفقیت در ${outputPath} ذخیره شد!`);
   }
 }
 

@@ -3,14 +3,13 @@ import path from 'path';
 
 export class TranslationQueue {
   constructor() {
-    // ۱۴ درخواست در دقیقه یعنی حداقل ۴۳۰۰ میلی‌ثانیه تاخیر بین هر درخواست
-    this.minDelayMs = 4300; 
+    // حداقل ۶ ثانیه (۶۰۰۰ میلی‌ثانیه) تاخیر بین هر درخواست API
+    this.minDelayMs = 6000; 
     this.maxDailyRequests = 400;
     this.trackerPath = './data/usage_tracker.json';
     this.lastRequestTime = 0;
   }
 
-  // خواندن وضعیت مصرف روزانه از دیسک
   loadUsage() {
     const today = new Date().toISOString().split('T')[0];
     if (fs.existsSync(this.trackerPath)) {
@@ -19,14 +18,11 @@ export class TranslationQueue {
         if (data.date === today) {
           return data;
         }
-      } catch (e) {
-        // در صورت بروز خطای خواندن، داتا ریست می‌شود
-      }
+      } catch (e) {}
     }
     return { date: today, count: 0 };
   }
 
-  // ذخیره وضعیت جدید روی دیسک
   saveUsage(usage) {
     const dir = path.dirname(this.trackerPath);
     if (!fs.existsSync(dir)) {
@@ -36,30 +32,30 @@ export class TranslationQueue {
   }
 
   async executeBatchWithRetry(translator, textsArray, maxRetries = 3) {
-    // ۱. بررسی سقف daily limit (۴۰۰ درخواست در روز)
+    // ۱. کنترل سقف روزانه
     const usage = this.loadUsage();
     if (usage.count >= this.maxDailyRequests) {
       console.error(`\n🛑 سقف مجاز روزانه (${this.maxDailyRequests} درخواست) به پایان رسیده است.`);
-      console.error(`⏳ پردازش متوقف شد. کار فردا پس از بازنشانی سهمیه روزانه ادامه خواهد یافت.`);
-      process.exit(0); // خروج ایمن؛ با اجرا در روز بعد کار از ادامه کش خوانده می‌شود
+      console.error(`⏳ کار متوقف شد. کار فردا پس از بازنشانی سهمیه ادامه خواهد یافت.`);
+      process.exit(0);
     }
 
-    // ۲. کنترل دقیق ۱۴ درخواست در دقیقه (Rate Limiter)
+    // ۲. کنترل دقیق ۶ ثانیه فاصله بین درخواست‌ها
     const now = Date.now();
     const timeSinceLastRequest = now - this.lastRequestTime;
     if (timeSinceLastRequest < this.minDelayMs) {
-      const waitTime = this.minDelayMs - timeSinceLastRequest;
+      const waitTime = this.minDelayMs - timeSinceLastRequest + Math.floor(Math.random() * 500); // به همراه Jitter
+      console.log(`  ⏳ شکیبایی ${Math.round(waitTime / 1000)} ثانیه‌ای بین درخواست‌ها...`);
       await new Promise(res => setTimeout(res, waitTime));
     }
 
-    // ۳. ارسال درخواست به API و به روزرسانی آمار
+    // ۳. ارسال درخواست به AI
     let attempt = 0;
     while (attempt < maxRetries) {
       try {
         this.lastRequestTime = Date.now();
         const result = await translator.translateBatch(textsArray);
 
-        // افزایش شمارنده روزانه
         usage.count += 1;
         this.saveUsage(usage);
         console.log(`  📊 آمار درخواست امروز: ${usage.count}/${this.maxDailyRequests}`);
@@ -67,8 +63,8 @@ export class TranslationQueue {
         return result;
       } catch (err) {
         attempt++;
-        console.warn(`⚠️ خطا در ارسال (تلاش ${attempt}/${maxRetries}): ${err.message}`);
-        await new Promise(res => setTimeout(res, 6000));
+        console.warn(`⚠️ خطا در ارسال درخواست (تلاش ${attempt}/${maxRetries}): ${err.message}`);
+        await new Promise(res => setTimeout(res, 8000));
       }
     }
 
