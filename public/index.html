@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد ترجمه DevDocs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+  <style> body { font-family: 'Vazirmatn', sans-serif; } </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+  <div class="max-w-6xl mx-auto space-y-6">
+    
+    <!-- هدر -->
+    <header class="flex justify-between items-center bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
+      <div>
+        <h1 class="text-2xl font-bold text-emerald-400">⚡ کنترل‌پنل ترجمه DevDocs</h1>
+        <p class="text-slate-400 text-sm mt-1">مدیریت آسان موتور ترجمه از طریق وب</p>
+      </div>
+      <span id="status-badge" class="px-4 py-2 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+        ● متوقف شده
+      </span>
+    </header>
+
+    <!-- کارت‌های آمار -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+        <div class="text-slate-400 text-xs">مصرف امروز API جمنای</div>
+        <div id="stat-usage" class="text-2xl font-bold mt-2 text-indigo-400">0 / 400</div>
+        <div class="w-full bg-slate-700 h-2 rounded-full mt-3 overflow-hidden">
+          <div id="stat-usage-bar" class="bg-indigo-500 h-full w-0 transition-all"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+        <div class="text-slate-400 text-xs">مستندات فعلی</div>
+        <div id="stat-doc" class="text-lg font-bold mt-2 text-amber-400">انتخاب نشده</div>
+        <div id="stat-page" class="text-xs text-slate-400 mt-2 truncate">-</div>
+      </div>
+
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+        <div class="text-slate-400 text-xs">پیشرفت ترجمه صفحه</div>
+        <div id="stat-progress-text" class="text-2xl font-bold mt-2 text-emerald-400">0%</div>
+        <div class="w-full bg-slate-700 h-2 rounded-full mt-3 overflow-hidden">
+          <div id="stat-progress-bar" class="bg-emerald-500 h-full w-0 transition-all"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- دکمه‌ها و انتخابگر -->
+    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <label class="text-sm text-slate-300">مستندات:</label>
+        <select id="doc-select" class="bg-slate-900 border border-slate-700 text-sm rounded-lg px-4 py-2 text-white w-full md:w-64">
+          <option value="">همه موارد</option>
+        </select>
+      </div>
+
+      <div class="flex gap-3 w-full md:w-auto">
+        <button id="btn-start" onclick="startEngine()" class="flex-1 md:flex-none px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold">
+          🚀 شروع
+        </button>
+        <button id="btn-stop" onclick="stopEngine()" disabled class="flex-1 md:flex-none px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white opacity-50 cursor-not-allowed rounded-lg font-bold">
+          🛑 توقف
+        </button>
+      </div>
+    </div>
+
+    <!-- ترمینال نمایش لاگ‌ها -->
+    <div class="bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden">
+      <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+        <span class="text-xs text-slate-400">کنسول زنده لاگ‌ها</span>
+        <button onclick="document.getElementById('terminal').innerHTML=''" class="text-xs text-slate-500">پاکسازی</button>
+      </div>
+      <div id="terminal" class="p-4 font-mono text-xs md:text-sm h-80 overflow-y-auto space-y-2 text-slate-300">
+        <div class="text-slate-500">[منتظر دستور شما...]</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+
+    async function loadDocsets() {
+      const res = await fetch('/api/docsets');
+      const docsets = await res.json();
+      const select = document.getElementById('doc-select');
+      docsets.forEach(d => {
+        select.innerHTML += `<option value="${d.id}">${d.name} (${d.id})</option>`;
+      });
+    }
+
+    function initLogStream() {
+      const evtSource = new EventSource('/api/logs/stream');
+      evtSource.onmessage = (e) => {
+        const log = JSON.parse(e.data);
+        const line = document.createElement('div');
+        let color = 'text-slate-300';
+        if (log.type === 'warn') color = 'text-amber-400';
+        if (log.type === 'error') color = 'text-rose-400';
+        if (log.type === 'success') color = 'text-emerald-400';
+
+        line.className = `${color} flex gap-2`;
+        line.innerHTML = `<span class="text-slate-600">[${log.timestamp}]</span> <span>${log.message}</span>`;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+      };
+    }
+
+    async function updateStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+
+        const badge = document.getElementById('status-badge');
+        const btnStart = document.getElementById('btn-start');
+        const btnStop = document.getElementById('btn-stop');
+
+        if (data.isRunning) {
+          badge.className = "px-4 py-2 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse";
+          badge.innerText = "● در حال ترجمه...";
+          btnStart.disabled = true;
+          btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+          btnStop.disabled = false;
+          btnStop.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+          badge.className = "px-4 py-2 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30";
+          badge.innerText = "● متوقف شده";
+          btnStart.disabled = false;
+          btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnStop.disabled = true;
+          btnStop.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        document.getElementById('stat-usage').innerText = `${data.dailyUsageCount} / ${data.maxDailyLimit}`;
+        document.getElementById('stat-usage-bar').style.width = `${(data.dailyUsageCount / data.maxDailyLimit) * 100}%`;
+        document.getElementById('stat-doc').innerText = data.currentDoc || 'انتخاب نشده';
+        document.getElementById('stat-page').innerText = data.currentPage ? `صفحه: ${data.currentPage}` : '-';
+
+        if (data.progress.total > 0) {
+          const pct = Math.round((data.progress.current / data.progress.total) * 100);
+          document.getElementById('stat-progress-text').innerText = `${pct}%`;
+          document.getElementById('stat-progress-bar').style.width = `${pct}%`;
+        }
+      } catch (e) {}
+    }
+
+    async function startEngine() {
+      const docId = document.getElementById('doc-select').value;
+      await fetch('/api/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docId })
+      });
+    }
+
+    async function stopEngine() {
+      await fetch('/api/stop', { method: 'POST' });
+    }
+
+    loadDocsets();
+    initLogStream();
+    setInterval(updateStats, 2000);
+  </script>
+</body>
+</html>
