@@ -3,77 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>داشبورد ترجمه DevDocs</title>
+  <title>داشبورد پیشرفته PerDevDocs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
-  <style> body { font-family: 'Vazirmatn', sans-serif; } </style>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .term-scroll::-webkit-scrollbar { width: 6px; }
+    .term-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
-  <div class="max-w-6xl mx-auto space-y-6">
-    
-    <!-- هدر -->
-    <header class="flex justify-between items-center bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-3 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-center bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-emerald-400">⚡ کنترل‌پنل ترجمه DevDocs</h1>
-        <p class="text-slate-400 text-sm mt-1">مدیریت آسان موتور ترجمه از طریق وب</p>
+        <h1 class="text-2xl font-black text-emerald-400 flex items-center gap-2">
+          ⚡ داشبورد مدیریت PerDevDocs
+        </h1>
+        <p class="text-slate-400 text-xs mt-1">موتور هوشمند ترجمه مستندات برنامه‌نویسی به فارسی</p>
       </div>
-      <span id="status-badge" class="px-4 py-2 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
-        ● متوقف شده
-      </span>
+      <div class="flex items-center gap-3">
+        <span id="status-badge" class="px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+          ● متوقف شده
+        </span>
+      </div>
     </header>
 
-    <!-- کارت‌های آمار -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-        <div class="text-slate-400 text-xs">مصرف امروز API جمنای</div>
-        <div id="stat-usage" class="text-2xl font-bold mt-2 text-indigo-400">0 / 400</div>
-        <div class="w-full bg-slate-700 h-2 rounded-full mt-3 overflow-hidden">
+    <!-- Stats Cards (اصلاح شده) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <div class="text-slate-400 text-xs font-medium">سهمیه روزانه API (جمنای)</div>
+        <div id="stat-usage" class="text-xl font-bold mt-2 text-indigo-400">۰ از ۴۰۰</div>
+        <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
           <div id="stat-usage-bar" class="bg-indigo-500 h-full w-0 transition-all"></div>
         </div>
       </div>
 
-      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-        <div class="text-slate-400 text-xs">مستندات فعلی</div>
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <div class="text-slate-400 text-xs font-medium">مستندات جاری</div>
         <div id="stat-doc" class="text-lg font-bold mt-2 text-amber-400">انتخاب نشده</div>
-        <div id="stat-page" class="text-xs text-slate-400 mt-2 truncate">-</div>
+        <div id="stat-page" class="text-xs text-slate-500 mt-1 truncate">-</div>
       </div>
 
-      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-        <div class="text-slate-400 text-xs">پیشرفت ترجمه صفحه</div>
-        <div id="stat-progress-text" class="text-2xl font-bold mt-2 text-emerald-400">0%</div>
-        <div class="w-full bg-slate-700 h-2 rounded-full mt-3 overflow-hidden">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <div class="text-slate-400 text-xs font-medium">پیشرفت صفحات</div>
+        <div id="stat-progress-text" class="text-xl font-bold mt-2 text-emerald-400">۰٪</div>
+        <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
           <div id="stat-progress-bar" class="bg-emerald-500 h-full w-0 transition-all"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <div class="text-slate-400 text-xs font-medium">تاخیر بین درخواست‌های AI</div>
+        <div class="flex items-center gap-2 mt-2">
+          <input type="number" id="delay-input" min="0" max="300" value="90" onchange="updateDelay()" class="w-20 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-center font-bold text-amber-400 text-sm" />
+          <span class="text-xs text-slate-400">ثانیه</span>
+        </div>
+        <div class="text-[10px] text-slate-500 mt-1">کش محلی: بدون تاخیر (0ms)</div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="flex border-b border-slate-800 gap-2 overflow-x-auto">
+      <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="px-5 py-2.5 text-sm font-bold border-b-2 border-emerald-500 text-emerald-400">📊 داشبورد اصلی</button>
+      <button onclick="switchTab('preview')" id="tab-btn-preview" class="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200">👁️ پیش‌نمایش زنده HTML</button>
+      <button onclick="switchTab('glossary')" id="tab-btn-glossary" class="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200">📖 واژه‌نامه تخصصی</button>
+      <button onclick="switchTab('cache')" id="tab-btn-cache" class="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200">🗄️ جستجو در کش SQLite</button>
+      <button onclick="switchTab('download')" id="tab-btn-download" class="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200">📥 دانلود خروجی‌ها</button>
+    </div>
+
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <div class="flex items-center gap-3 w-full md:w-auto">
+          <label class="text-xs text-slate-400">مستندات:</label>
+          <select id="doc-select" class="bg-slate-950 border border-slate-800 text-sm rounded-lg px-3 py-2 text-white w-full md:w-64">
+            <option value="">همه داک‌ست‌ها</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2 w-full md:w-auto">
+          <button id="btn-start" onclick="control('start')" class="flex-1 md:flex-none px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-sm">🚀 شروع</button>
+          <button id="btn-pause" onclick="control('pause')" disabled class="flex-1 md:flex-none px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white opacity-50 cursor-not-allowed rounded-lg font-bold text-sm">⏸️ مکث</button>
+          <button id="btn-stop" onclick="control('stop')" disabled class="flex-1 md:flex-none px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white opacity-50 cursor-not-allowed rounded-lg font-bold text-sm">🛑 توقف</button>
+        </div>
+      </div>
+
+      <!-- Console Terminal -->
+      <div class="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+        <div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center text-xs">
+          <span class="text-slate-400 font-mono">کنسول زنده لاگ‌های موتور</span>
+          <button onclick="document.getElementById('terminal').innerHTML=''" class="text-slate-500 hover:text-slate-300">پاکسازی</button>
+        </div>
+        <div id="terminal" class="p-4 font-mono text-xs h-96 overflow-y-auto space-y-1.5 text-slate-300 term-scroll">
+          <div class="text-slate-600">[موتور آمادکار است...]</div>
         </div>
       </div>
     </div>
 
-    <!-- دکمه‌ها و انتخابگر -->
-    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row gap-4 items-center justify-between">
-      <div class="flex items-center gap-3 w-full md:w-auto">
-        <label class="text-sm text-slate-300">مستندات:</label>
-        <select id="doc-select" class="bg-slate-900 border border-slate-700 text-sm rounded-lg px-4 py-2 text-white w-full md:w-64">
-          <option value="">همه موارد</option>
-        </select>
+    <!-- TAB 2: LIVE PREVIEW -->
+    <div id="tab-preview" class="hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+        <span class="text-sm text-slate-300" id="preview-title">پیش‌نمایش زنده صفحه ترجمه‌شده</span>
+        <button onclick="loadPreview()" class="px-3 py-1 bg-indigo-600 text-xs text-white rounded">🔄 به‌روزرسانی</button>
       </div>
-
-      <div class="flex gap-3 w-full md:w-auto">
-        <button id="btn-start" onclick="startEngine()" class="flex-1 md:flex-none px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold">
-          🚀 شروع
-        </button>
-        <button id="btn-stop" onclick="stopEngine()" disabled class="flex-1 md:flex-none px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white opacity-50 cursor-not-allowed rounded-lg font-bold">
-          🛑 توقف
-        </button>
+      <div id="preview-frame" class="bg-white text-black p-6 rounded-xl border border-slate-800 min-h-[400px] overflow-y-auto max-h-[600px] dir-rtl">
+        در حال بارگذاری...
       </div>
     </div>
 
-    <!-- ترمینال نمایش لاگ‌ها -->
-    <div class="bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden">
-      <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
-        <span class="text-xs text-slate-400">کنسول زنده لاگ‌ها</span>
-        <button onclick="document.getElementById('terminal').innerHTML=''" class="text-xs text-slate-500">پاکسازی</button>
+    <!-- TAB 3: GLOSSARY EDITOR -->
+    <div id="tab-glossary" class="hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+        <span class="text-sm font-bold text-slate-300">ویرایش واژه‌نامه اختصاصی (glossary.json)</span>
+        <button onclick="saveGlossary()" class="px-4 py-2 bg-emerald-600 text-xs font-bold text-white rounded-lg">💾 ذخیره تغییرات</button>
       </div>
-      <div id="terminal" class="p-4 font-mono text-xs md:text-sm h-80 overflow-y-auto space-y-2 text-slate-300">
-        <div class="text-slate-500">[منتظر دستور شما...]</div>
+      <textarea id="glossary-json" rows="15" class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-4 rounded-xl text-emerald-400 focus:outline-none" dir="ltr"></textarea>
+    </div>
+
+    <!-- TAB 4: CACHE SEARCH -->
+    <div id="tab-cache" class="hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex gap-2">
+        <input type="text" id="cache-search-input" placeholder="عبارت انگلیسی یا فارسی جهت جستجو در SQLite..." class="flex-1 bg-slate-950 border border-slate-800 text-xs px-4 py-2 rounded-lg text-white" />
+        <button onclick="searchCache()" class="px-5 py-2 bg-indigo-600 text-xs font-bold text-white rounded-lg">جستجو</button>
+      </div>
+      <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-x-auto">
+        <table class="w-full text-xs text-right">
+          <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="p-3">متن انگلیسی اصلی</th>
+              <th class="p-3">ترجمه فارسی</th>
+              <th class="p-3">تاریخ ثبت</th>
+            </tr>
+          </thead>
+          <tbody id="cache-table-body" class="divide-y divide-slate-800 text-slate-300">
+            <tr><td colspan="3" class="p-4 text-center text-slate-500">برای مشاهده کش، عبارت موردنظر را جستجو کنید.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: DOWNLOADS -->
+    <div id="tab-download" class="hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <h3 class="text-sm font-bold text-slate-300 mb-3">فایل‌های db.json آماده دانلود</h3>
+        <div id="downloads-list" class="space-y-2">
+          <!-- با JS پر می‌شود -->
+        </div>
       </div>
     </div>
 
@@ -81,6 +158,20 @@
 
   <script>
     const terminal = document.getElementById('terminal');
+
+    function switchTab(tabName) {
+      ['dashboard', 'preview', 'glossary', 'cache', 'download'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`tab-btn-${t}`).className = 'px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200';
+      });
+
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      document.getElementById(`tab-btn-${tabName}`).className = 'px-5 py-2.5 text-sm font-bold border-b-2 border-emerald-500 text-emerald-400';
+
+      if (tabName === 'preview') loadPreview();
+      if (tabName === 'glossary') loadGlossary();
+      if (tabName === 'download') loadDownloads();
+    }
 
     async function loadDocsets() {
       const res = await fetch('/api/docsets');
@@ -102,10 +193,14 @@
         if (log.type === 'success') color = 'text-emerald-400';
 
         line.className = `${color} flex gap-2`;
-        line.innerHTML = `<span class="text-slate-600">[${log.timestamp}]</span> <span>${log.message}</span>`;
+        line.innerHTML = `<span class="text-slate-600 select-none">[${log.timestamp}]</span> <span>${escapeHtml(log.message)}</span>`;
         terminal.appendChild(line);
         terminal.scrollTop = terminal.scrollHeight;
       };
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     async function updateStats() {
@@ -115,48 +210,123 @@
 
         const badge = document.getElementById('status-badge');
         const btnStart = document.getElementById('btn-start');
+        const btnPause = document.getElementById('btn-pause');
         const btnStop = document.getElementById('btn-stop');
 
         if (data.isRunning) {
-          badge.className = "px-4 py-2 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse";
-          badge.innerText = "● در حال ترجمه...";
-          btnStart.disabled = true;
-          btnStart.classList.add('opacity-50', 'cursor-not-allowed');
-          btnStop.disabled = false;
-          btnStop.classList.remove('opacity-50', 'cursor-not-allowed');
+          if (data.isPaused) {
+            badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30";
+            badge.innerText = "⏸️ مکث موقت";
+          } else {
+            badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse";
+            badge.innerText = "● در حال ترجمه...";
+          }
+          btnStart.disabled = true; btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+          btnPause.disabled = false; btnPause.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnStop.disabled = false; btnStop.classList.remove('opacity-50', 'cursor-not-allowed');
         } else {
-          badge.className = "px-4 py-2 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30";
+          badge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30";
           badge.innerText = "● متوقف شده";
-          btnStart.disabled = false;
-          btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
-          btnStop.disabled = true;
-          btnStop.classList.add('opacity-50', 'cursor-not-allowed');
+          btnStart.disabled = false; btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnPause.disabled = true; btnPause.classList.add('opacity-50', 'cursor-not-allowed');
+          btnStop.disabled = true; btnStop.classList.add('opacity-50', 'cursor-not-allowed');
         }
 
-        document.getElementById('stat-usage').innerText = `${data.dailyUsageCount} / ${data.maxDailyLimit}`;
+        // اصلاح دقیق نمایش عدد سهمیه به صورت راست‌چین
+        document.getElementById('stat-usage').innerText = `${data.dailyUsageCount} از ${data.maxDailyLimit}`;
         document.getElementById('stat-usage-bar').style.width = `${(data.dailyUsageCount / data.maxDailyLimit) * 100}%`;
+
         document.getElementById('stat-doc').innerText = data.currentDoc || 'انتخاب نشده';
         document.getElementById('stat-page').innerText = data.currentPage ? `صفحه: ${data.currentPage}` : '-';
 
         if (data.progress.total > 0) {
           const pct = Math.round((data.progress.current / data.progress.total) * 100);
-          document.getElementById('stat-progress-text').innerText = `${pct}%`;
+          document.getElementById('stat-progress-text').innerText = `${pct}٪ (${data.progress.current} از ${data.progress.total})`;
           document.getElementById('stat-progress-bar').style.width = `${pct}%`;
         }
       } catch (e) {}
     }
 
-    async function startEngine() {
+    async function control(action) {
       const docId = document.getElementById('doc-select').value;
-      await fetch('/api/start', {
+      await fetch('/api/control', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ docId })
+        body: JSON.stringify({ action, docId })
       });
     }
 
-    async function stopEngine() {
-      await fetch('/api/stop', { method: 'POST' });
+    async function updateDelay() {
+      const seconds = document.getElementById('delay-input').value;
+      await fetch('/api/settings/delay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seconds })
+      });
+    }
+
+    async function loadPreview() {
+      const res = await fetch('/api/preview/current');
+      const data = await res.json();
+      document.getElementById('preview-title').innerText = `پیش‌نمایش زنده: ${data.pageKey || '-'}`;
+      document.getElementById('preview-frame').innerHTML = data.html;
+    }
+
+    async function loadGlossary() {
+      const res = await fetch('/api/glossary');
+      const data = await res.json();
+      document.getElementById('glossary-json').value = JSON.stringify(data, null, 2);
+    }
+
+    async function saveGlossary() {
+      try {
+        const body = JSON.parse(document.getElementById('glossary-json').value);
+        await fetch('/api/glossary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        alert('واژه‌نامه با موفقیت به روزرسانی شد!');
+      } catch (e) {
+        alert('فرمت JSON نامعتبر است.');
+      }
+    }
+
+    async function searchCache() {
+      const q = document.getElementById('cache-search-input').value;
+      const res = await fetch(`/api/cache/search?q=${encodeURIComponent(q)}`);
+      const rows = await res.json();
+      const tbody = document.getElementById('cache-table-body');
+      if (rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500">نتیجه‌ای یافت نشد.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td class="p-3 font-mono dir-ltr text-slate-400">${escapeHtml(r.original_text)}</td>
+          <td class="p-3 font-bold text-emerald-400">${escapeHtml(r.translated_text)}</td>
+          <td class="p-3 text-slate-500 text-[10px]">${r.created_at}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadDownloads() {
+      const res = await fetch('/api/downloads');
+      const list = await res.json();
+      const container = document.getElementById('downloads-list');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-500">هیچ خروجی ترجمه‌شده‌ای هنوز تولید نشده است.</div>';
+        return;
+      }
+      container.innerHTML = list.map(item => `
+        <div class="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
+          <div>
+            <span class="font-bold text-sm text-emerald-400">${item.id}</span>
+            <span class="text-xs text-slate-500 mr-2">(${item.sizeMb} مگابایت - ${item.updatedAt})</span>
+          </div>
+          <a href="/api/download/${item.id}" download class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs text-white rounded font-bold">📥 دانلود db.json</a>
+        </div>
+      `).join('');
     }
 
     loadDocsets();

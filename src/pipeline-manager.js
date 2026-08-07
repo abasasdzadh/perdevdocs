@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import fs from 'fs';
+import path from 'path';
 import { FileLoader } from './loaders/file-loader.js';
 import { HtmlParser } from './parsers/html-parser.js';
 import { TextExtractor } from './extractor/text-extractor.js';
@@ -15,10 +16,14 @@ export class PipelineManager extends EventEmitter {
   constructor() {
     super();
     this.isRunning = false;
+    this.isPaused = false;
     this.shouldStop = false;
+    this.apiDelaySeconds = 90; // تاخیر پیش‌فرض API به ثانیه
     this.currentDoc = null;
     this.currentPage = '';
+    this.currentPageHtml = '';
     this.progress = { current: 0, total: 0 };
+    this.tm = null;
   }
 
   log(message, type = 'info') {
@@ -28,10 +33,23 @@ export class PipelineManager extends EventEmitter {
     this.emit('log', logData);
   }
 
+  setDelay(seconds) {
+    this.apiDelaySeconds = Math.max(0, parseInt(seconds) || 0);
+    this.log(`⚙️ تاخیر API به ${this.apiDelaySeconds} ثانیه تغییر یافت.`);
+  }
+
+  togglePause() {
+    this.isPaused = !this.isPaused;
+    this.log(this.isPaused ? '⏸️ موتور متوقف موقت (Paused) شد.' : '▶️ موتور ادامه یافت (Resumed).', 'warn');
+    this.emit('statusChange', { isRunning: this.isRunning, isPaused: this.isPaused });
+    return this.isPaused;
+  }
+
   stop() {
     if (this.isRunning) {
       this.shouldStop = true;
-      this.log('🛑 دستور توقف موتور دریافت شد...', 'warn');
+      this.isPaused = false;
+      this.log('🛑 دستور توقف کامل موتور دریافت شد...', 'warn');
     }
   }
 
@@ -39,14 +57,15 @@ export class PipelineManager extends EventEmitter {
     if (this.isRunning) return;
 
     this.isRunning = true;
+    this.isPaused = false;
     this.shouldStop = false;
-    this.emit('statusChange', { isRunning: true });
+    this.emit('statusChange', { isRunning: true, isPaused: false });
 
     try {
       this.log('🚀 شروع موتور اختصاصی ترجمه DevDocs...');
 
-      const tm = new TranslationMemory();
-      await tm.init();
+      this.tm = new TranslationMemory();
+      await this.tm.init();
 
       const translator = new GeminiTranslator();
       const queue = new TranslationQueue();
@@ -77,6 +96,11 @@ export class PipelineManager extends EventEmitter {
             break;
           }
 
+          // چکینگ حالت مکث (Pause)
+          while (this.isPaused && !this.shouldStop) {
+            await new Promise(res => setTimeout(res, 500));
+          }
+
           const pageKey = pageKeys[index];
           this.currentPage = pageKey;
           this.progress.current = index + 1;
@@ -98,7 +122,7 @@ export class PipelineManager extends EventEmitter {
               continue;
             }
 
-            const cached = await tm.get(node.maskedText);
+            const cached = await this.tm.get(node.maskedText);
             if (cached) {
               node.translatedText = cached;
             } else {
@@ -106,7 +130,10 @@ export class PipelineManager extends EventEmitter {
             }
           }
 
+          let hasAiCalls = false;
+
           if (unCachedNodes.length > 0) {
+            hasAiCalls = true;
             const smartChunks = TextExtractor.createSmartChunks(unCachedNodes, 5000);
             this.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در قالب ${smartChunks.length} چنک پویا)...`);
 
@@ -126,14 +153,14 @@ export class PipelineManager extends EventEmitter {
                 const isValid = TranslationValidator.validate(node.placeholders, trans);
                 if (isValid) {
                   node.translatedText = trans;
-                  await tm.set(node.maskedText, trans);
+                  await this.tm.set(node.maskedText, trans);
                 } else {
                   node.translatedText = node.maskedText;
                 }
               }
             }
           } else {
-            this.log(`  ⚡ تمام پاراگراف‌های این صفحه از کش محلی خوانده شد (0ms)`);
+            this.log(`  ⚡ تمام پاراگراف‌های این صفحه از کش محلی خوانده شد (0ms - بدون تاخیر)`);
           }
 
           for (const node of nodes) {
@@ -141,13 +168,23 @@ export class PipelineManager extends EventEmitter {
             node.$block.html(finalBlockHtml);
           }
 
-          translatedDbData[pageKey] = $.html();
+          this.currentPageHtml = $.html();
+          translatedDbData[pageKey] = this.currentPageHtml;
 
+          // ⚡ بهینه‌سازی تاخیر: فقط اگر درخواست AI ارسال شده باشد تاخیر اعمال می‌شود!
           if (index < pageKeys.length - 1 && !this.shouldStop) {
-            this.log(`⏳ اتمام صفحه "${pageKey}". تعلیق ۹۰ ثانیه‌ای موتور...`);
-            for (let sec = 90; sec > 0; sec--) {
-              if (this.shouldStop) break;
-              await new Promise(res => setTimeout(res, 1000));
+            if (hasAiCalls && this.apiDelaySeconds > 0) {
+              this.log(`⏳ اتمام صفحه "${pageKey}". تعلیق ${this.apiDelaySeconds} ثانیه‌ای موتور برای رعایت Quota...`);
+              for (let sec = this.apiDelaySeconds; sec > 0; sec--) {
+                if (this.shouldStop) break;
+                while (this.isPaused && !this.shouldStop) {
+                  await new Promise(res => setTimeout(res, 500));
+                }
+                await new Promise(res => setTimeout(res, 1000));
+              }
+            } else {
+              // خواندن آنی و نیم‌ثانیه‌ای از کش محلی
+              await new Promise(res => setTimeout(res, 50));
             }
           }
         }
@@ -155,14 +192,15 @@ export class PipelineManager extends EventEmitter {
         if (!this.shouldStop) {
           const outputPath = `./data/output/${doc.id}/db.json`;
           OutputBuilder.saveJson(outputPath, translatedDbData);
-          this.log(`🎉 ترجمه db.json برای ${doc.name} در ${outputPath} ذخیره شد!`, 'success');
+          this.log(`🎉 ترجمه db.json برای ${doc.name} با موفقیت ذخیره شد!`, 'success');
         }
       }
     } catch (error) {
       this.log(`❌ خطا در اجرای موتور: ${error.message}`, 'error');
     } finally {
       this.isRunning = false;
-      this.emit('statusChange', { isRunning: false });
+      this.isPaused = false;
+      this.emit('statusChange', { isRunning: false, isPaused: false });
       this.log('🏁 عملیات موتور خاتمه یافت.');
     }
   }
