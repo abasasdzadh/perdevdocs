@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import fs from 'fs';
-import path from 'path';
 import { FileLoader } from './loaders/file-loader.js';
 import { HtmlParser } from './parsers/html-parser.js';
 import { TextExtractor } from './extractor/text-extractor.js';
@@ -19,7 +18,7 @@ export class PipelineManager extends EventEmitter {
     this.isPaused = false;
     this.shouldStop = false;
     this.apiDelaySeconds = 90;
-    this.selectedModel = 'gemini-2.5-flash';
+    this.modelCascade = ['gemini-2.5-flash', 'gemini-2.0-flash'];
     this.currentDoc = null;
     this.currentPage = '';
     this.currentPageHtml = '';
@@ -36,9 +35,11 @@ export class PipelineManager extends EventEmitter {
     this.emit('log', logData);
   }
 
-  setModel(model) {
-    this.selectedModel = model;
-    this.log(`⚙️ مدل هوش مصنوعی به "${model}" تغییر کرد.`);
+  setModelCascade(cascadeArray) {
+    if (Array.isArray(cascadeArray) && cascadeArray.length > 0) {
+      this.modelCascade = cascadeArray;
+      this.log(`⚙️ زنجیره مدل‌ها بهینه‌سازی شد: [ ${this.modelCascade.join(' ➔ ')} ]`);
+    }
   }
 
   setDelay(seconds) {
@@ -75,7 +76,7 @@ export class PipelineManager extends EventEmitter {
       this.tm = new TranslationMemory();
       await this.tm.init();
 
-      const translator = new GeminiTranslator(this.selectedModel);
+      const translator = new GeminiTranslator(this.modelCascade);
       const queue = new TranslationQueue();
 
       const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
@@ -187,7 +188,6 @@ export class PipelineManager extends EventEmitter {
             this.currentPageHtml = $.html();
             translatedDbData[pageKey] = this.currentPageHtml;
 
-            // حذف از لیست خطاها در صورت موفقیت
             this.failedPages = this.failedPages.filter(p => !(p.docId === doc.id && p.pageKey === pageKey));
 
             if (index < pageKeys.length - 1 && !this.shouldStop) {

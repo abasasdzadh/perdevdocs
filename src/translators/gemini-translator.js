@@ -2,10 +2,11 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 
 export class GeminiTranslator {
-  constructor(modelName = 'gemini-2.5-flash') {
+  constructor(modelCascade = ['gemini-2.5-flash', 'gemini-2.0-flash']) {
     this.glossary = this.loadGlossary();
-    this.primaryModel = modelName;
-    this.fallbackModel = 'gemini-2.0-flash';
+    this.modelCascade = Array.isArray(modelCascade) && modelCascade.length > 0 
+      ? modelCascade 
+      : ['gemini-2.5-flash', 'gemini-2.0-flash'];
     this.geminiKeys = [];
     this.activeKeyIndex = 0;
     this.reloadKeys();
@@ -18,8 +19,10 @@ export class GeminiTranslator {
     this.initGemini();
   }
 
-  setModel(modelName) {
-    this.primaryModel = modelName;
+  setModelCascade(cascadeArray) {
+    if (Array.isArray(cascadeArray) && cascadeArray.length > 0) {
+      this.modelCascade = cascadeArray;
+    }
   }
 
   initGemini() {
@@ -48,6 +51,26 @@ export class GeminiTranslator {
     return {};
   }
 
+  // 🌐 دریافت مستقیم و زنده لیست مدل‌ها از Google API
+  static async fetchLiveModels(apiKey) {
+    if (!apiKey) return [];
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+      if (!response.ok) throw new Error('خطا در دریافت لیست مدل‌ها');
+      const data = await response.json();
+      
+      if (data.models && Array.isArray(data.models)) {
+        return data.models
+          .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
+          .map(m => m.name.replace('models/', ''));
+      }
+    } catch (err) {
+      console.warn('⚠️ خطا در دریافت زنده مدل‌ها:', err.message);
+    }
+    // لیست پیش‌فرض در صورت عدم دسترسی شبکه
+    return ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
+  }
+
   static async testKey(apiKey) {
     try {
       const ai = new GoogleGenAI({ apiKey });
@@ -63,7 +86,7 @@ export class GeminiTranslator {
 
   async translateWithGoogle(textsArray, modelName) {
     if (!this.ai) {
-      throw new Error("❌ هیچ کلید فعال جمنای یافت نشد! ابتدا کلید API خود را وارد کنید.");
+      throw new Error("❌ هیچ کلید فعال جمنای یافت نشد!");
     }
 
     const prompt = `
@@ -91,25 +114,32 @@ ${JSON.stringify(textsArray)}
     return JSON.parse(rawText);
   }
 
+  // 🔄 زنجیره شکست‌ناپذیر Fallback روی مدل‌ها
   async translateBatch(textsArray) {
     if (!textsArray || textsArray.length === 0) return [];
 
-    try {
-      return await this.translateWithGoogle(textsArray, this.primaryModel);
-    } catch (err) {
-      console.warn(`⚠️ خطا در مدل ${this.primaryModel}: ${err.message}. تلاش با مدل جایگزین (${this.fallbackModel})...`);
+    // گردش روی تک تک مدل‌های زنجیره
+    for (let mIdx = 0; mIdx < this.modelCascade.length; mIdx++) {
+      const currentModel = this.modelCascade[mIdx];
+      try {
+        console.log(`    ⚡ ارسال به Gemini (مدل ${mIdx + 1}/${this.modelCascade.length}: ${currentModel})...`);
+        return await this.translateWithGoogle(textsArray, currentModel);
+      } catch (err) {
+        console.warn(`⚠️ خطا در مدل "${currentModel}": ${err.message}. سوئیچ به مدل بعدی در زنجیره...`);
+      }
     }
 
+    // چرخش کلید در صورت ناموفق بودن تمام مدل‌ها
     let attempts = 0;
     while (attempts < this.geminiKeys.length * 2) {
-      try {
-        return await this.translateWithGoogle(textsArray, this.fallbackModel);
-      } catch (err) {
-        attempts++;
-        const rotated = this.rotateGeminiKey();
-        if (!rotated) {
-          await new Promise(res => setTimeout(res, 10000));
-        }
+      attempts++;
+      const rotated = this.rotateGeminiKey();
+      if (rotated) {
+        try {
+          return await this.translateWithGoogle(textsArray, this.modelCascade[0]);
+        } catch (e) {}
+      } else {
+        await new Promise(res => setTimeout(res, 5000));
       }
     }
 

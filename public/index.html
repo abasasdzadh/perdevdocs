@@ -15,20 +15,20 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col md:flex-row">
 
-  <!-- Sidebar Navigation -->
+  <!-- Sidebar -->
   <aside class="w-full md:w-64 bg-slate-900 border-l border-slate-800 p-4 flex flex-col justify-between shrink-0">
     <div class="space-y-6">
       <div class="flex items-center gap-3 px-2">
         <span class="text-2xl">⚡</span>
         <div>
           <h1 class="font-black text-emerald-400 text-lg">PerDevDocs</h1>
-          <p class="text-[10px] text-slate-400">داشبورد مدیریت ترجمه</p>
+          <p class="text-[10px] text-slate-400">پنل فوق پیشرفته ترجمه</p>
         </div>
       </div>
 
       <nav class="space-y-1 text-xs font-medium">
         <button onclick="switchTab('dashboard')" id="side-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-bold">📊 داشبورد و آمار</button>
-        <button onclick="switchTab('keys')" id="side-keys" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">🔑 کلیدها و مدل AI</button>
+        <button onclick="switchTab('keys')" id="side-keys" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">🤖 زنجیره مدل‌ها و کلیدها</button>
         <button onclick="switchTab('docsets')" id="side-docsets" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">📚 مدیریت داک‌ست‌ها</button>
         <button onclick="switchTab('errors')" id="side-errors" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">⚠️ خطاهای ترجمه</button>
         <button onclick="switchTab('preview')" id="side-preview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">👁️ پیش‌نمایش زنده</button>
@@ -43,12 +43,11 @@
     </div>
   </aside>
 
-  <!-- Main Content Area -->
+  <!-- Main Content -->
   <main class="flex-1 p-4 md:p-6 overflow-y-auto space-y-6">
 
-    <!-- TAB 1: DASHBOARD & CHARTS -->
+    <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="space-y-6">
-      <!-- Top Bar Controls -->
       <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
         <div class="flex items-center gap-3 w-full md:w-auto">
           <label class="text-xs text-slate-400">داک‌ست هدف:</label>
@@ -63,7 +62,7 @@
         </div>
       </div>
 
-      <!-- Stats Cards -->
+      <!-- Stats -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
           <div class="text-xs text-slate-400">سهمیه API امروز</div>
@@ -80,67 +79,70 @@
         <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
           <div class="text-xs text-slate-400">تاخیر API بین صفحات</div>
           <div class="flex items-center gap-2">
-            <input type="number" id="delay-input" min="0" max="300" value="90" onchange="updateSettings()" class="w-16 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-center font-bold text-amber-400 text-xs" />
+            <input type="number" id="delay-input" min="0" max="300" value="90" onchange="updateDelay()" class="w-16 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-center font-bold text-amber-400 text-xs" />
             <span class="text-xs text-slate-400">ثانیه</span>
           </div>
         </div>
       </div>
 
-      <!-- Live Chart.js Visuals -->
+      <!-- Charts -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 h-64 flex flex-col justify-between">
-          <span class="text-xs font-bold text-slate-400">نسبت صرفه‌جویی کش (0ms) به درخواست AI</span>
-          <div class="flex-1 relative flex items-center justify-center">
-            <canvas id="chart-cache"></canvas>
-          </div>
+          <span class="text-xs font-bold text-slate-400">صرفه‌جویی کش محلی (0ms)</span>
+          <div class="flex-1 relative flex items-center justify-center"><canvas id="chart-cache"></canvas></div>
         </div>
-
         <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 h-64 flex flex-col justify-between">
-          <span class="text-xs font-bold text-slate-400">روند مصرف API جمنای</span>
-          <div class="flex-1 relative">
-            <canvas id="chart-usage"></canvas>
-          </div>
+          <span class="text-xs font-bold text-slate-400">تعداد درخواست‌های API</span>
+          <div class="flex-1 relative"><canvas id="chart-usage"></canvas></div>
         </div>
       </div>
 
       <!-- Terminal -->
       <div class="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
         <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center text-xs">
-          <span class="text-slate-400 font-mono">کنسول زنده لاگ‌های موتور</span>
+          <span class="text-slate-400 font-mono">کنسول زنده لاگ‌ها</span>
           <button onclick="document.getElementById('terminal').innerHTML=''" class="text-slate-500">پاکسازی</button>
         </div>
         <div id="terminal" class="p-4 font-mono text-xs h-64 overflow-y-auto space-y-1 text-slate-300 term-scroll">
-          <div class="text-slate-600">[موتور آماده به کار...]</div>
+          <div class="text-slate-600">[موتور آماده است...]</div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: KEYS & MODELS -->
+    <!-- TAB 2: KEYS & MULTI-MODEL CASCADE -->
     <div id="tab-keys" class="hidden space-y-6">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-4">
-        <h3 class="text-sm font-bold text-slate-300">انتخاب مدل هوش مصنوعی Gemini</h3>
-        <select id="model-select" onchange="updateSettings()" class="bg-slate-950 border border-slate-800 text-xs rounded-lg p-2.5 text-emerald-400 font-mono w-full md:w-80">
-          <option value="gemini-2.5-flash">Gemini 2.5 Flash (پیش‌فرض - بسیار سریع)</option>
-          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-          <option value="gemini-1.5-pro">Gemini 1.5 Pro (دقت بالا)</option>
-        </select>
+      <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-sm font-bold text-slate-200">🔗 زنجیره اولویت مدل‌ها (Fallback Cascade)</h3>
+            <p class="text-xs text-slate-400 mt-1">اگر مدل اول با خطا مواجه شود، موتور به‌طور خودکار روی مدل دوم و بعدی سوئیچ می‌کند.</p>
+          </div>
+          <button onclick="addModelSlot()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white rounded-lg flex items-center gap-1">
+            ➕ افزودن مدل پشتیبان
+          </button>
+        </div>
+
+        <div id="model-cascade-container" class="space-y-3">
+          <!-- اسلات‌های مدل در این بخش با JS ساخته می‌شوند -->
+        </div>
+
+        <button onclick="saveCascade()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white rounded-lg">
+          💾 ذخیره زنجیره مدل‌ها
+        </button>
       </div>
 
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-4">
-        <h3 class="text-sm font-bold text-slate-300">مدیریت کلیدهای API (GEMINI_API_KEYS)</h3>
+      <!-- API Keys -->
+      <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
+        <h3 class="text-sm font-bold text-slate-200">🔑 کلیدهای API فعال (GEMINI_API_KEYS)</h3>
         <div class="flex gap-2">
           <input type="text" id="new-key-input" placeholder="کلید جدید API را وارد کنید..." class="flex-1 bg-slate-950 border border-slate-800 text-xs px-3 py-2 rounded-lg text-white font-mono" />
           <button onclick="addKey()" class="px-4 py-2 bg-emerald-600 text-xs font-bold text-white rounded-lg">افزودن کلید</button>
         </div>
-
-        <div id="keys-list" class="space-y-2">
-          <!-- کلیدها با JS لود می‌شوند -->
-        </div>
+        <div id="keys-list" class="space-y-2"></div>
       </div>
     </div>
 
-    <!-- TAB 3: DOCSETS IMPORTER -->
+    <!-- OTHER TABS -->
     <div id="tab-docsets" class="hidden space-y-6">
       <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-4">
         <h3 class="text-sm font-bold text-slate-300">افزودن داک‌ست جدید</h3>
@@ -153,17 +155,13 @@
       </div>
     </div>
 
-    <!-- TAB 4: FAILED PAGES -->
     <div id="tab-errors" class="hidden space-y-4">
       <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-        <h3 class="text-sm font-bold text-slate-300 mb-3">صفحاتی که با خطا مواجه شده‌اند</h3>
-        <div id="failed-list" class="space-y-2">
-          <!-- لیست خطاها -->
-        </div>
+        <h3 class="text-sm font-bold text-slate-300 mb-3">صفحات دارای خطا</h3>
+        <div id="failed-list" class="space-y-2"></div>
       </div>
     </div>
 
-    <!-- OTHER TABS -->
     <div id="tab-preview" class="hidden space-y-4">
       <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
         <span class="text-xs text-slate-300">پیش‌نمایش زنده صفحه ترجمه‌شده</span>
@@ -203,25 +201,21 @@
   <script>
     const terminal = document.getElementById('terminal');
     let cacheChart, usageChart;
+    let liveModelsList = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
+    let currentCascade = ['gemini-2.5-flash', 'gemini-2.0-flash'];
 
     function initCharts() {
       const ctxCache = document.getElementById('chart-cache').getContext('2d');
       cacheChart = new Chart(ctxCache, {
         type: 'doughnut',
-        data: {
-          labels: ['کش محلی (0ms)', 'درخواست AI'],
-          datasets: [{ data: [1, 0], backgroundColor: ['#10b981', '#6366f1'] }]
-        },
+        data: { labels: ['کش محلی (0ms)', 'درخواست AI'], datasets: [{ data: [1, 0], backgroundColor: ['#10b981', '#6366f1'] }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'Vazirmatn' } } } } }
       });
 
       const ctxUsage = document.getElementById('chart-usage').getContext('2d');
       usageChart = new Chart(ctxUsage, {
         type: 'line',
-        data: {
-          labels: ['امروز'],
-          datasets: [{ label: 'تعداد درخواست', data: [0], borderColor: '#6366f1', tension: 0.3 }]
-        },
+        data: { labels: ['امروز'], datasets: [{ label: 'درخواست‌ها', data: [0], borderColor: '#6366f1', tension: 0.3 }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
     }
@@ -235,11 +229,79 @@
       document.getElementById(`tab-${tabName}`).classList.remove('hidden');
       document.getElementById(`side-${tabName}`).className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-bold';
 
-      if (tabName === 'keys') loadKeys();
+      if (tabName === 'keys') initKeysTab();
       if (tabName === 'errors') loadFailed();
       if (tabName === 'preview') loadPreview();
       if (tabName === 'glossary') loadGlossary();
       if (tabName === 'download') loadDownloads();
+    }
+
+    // 🌐 لود زنده مدل‌ها از Google API
+    async function initKeysTab() {
+      await loadKeys();
+      try {
+        const res = await fetch('/api/models/live');
+        const fetchedModels = await res.json();
+        if (fetchedModels && fetchedModels.length > 0) {
+          liveModelsList = fetchedModels;
+        }
+      } catch (e) {}
+
+      renderCascadeSlots();
+    }
+
+    function renderCascadeSlots() {
+      const container = document.getElementById('model-cascade-container');
+      container.innerHTML = '';
+
+      currentCascade.forEach((modelName, idx) => {
+        const slot = document.createElement('div');
+        slot.className = 'flex items-center gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800';
+        
+        let optionsHtml = liveModelsList.map(m => `<option value="${m}" ${m === modelName ? 'selected' : ''}>${m}</option>`).join('');
+        const isCustom = !liveModelsList.includes(modelName);
+
+        slot.innerHTML = `
+          <span class="text-xs font-bold text-slate-500 w-16">اولیت ${idx + 1}:</span>
+          <select onchange="updateSlotValue(${idx}, this.value)" class="bg-slate-900 text-xs border border-slate-800 rounded-lg p-2 text-emerald-400 font-mono flex-1">
+            ${optionsHtml}
+            <option value="__custom__" ${isCustom ? 'selected' : ''}>-- مدل سفارشی (تایپ دستی) --</option>
+          </select>
+          <input type="text" placeholder="نام مدل اختصاصی..." value="${isCustom ? modelName : ''}" onchange="updateSlotValue(${idx}, this.value)" class="${isCustom ? '' : 'hidden'} bg-slate-900 border border-slate-800 text-xs p-2 rounded text-amber-400 font-mono w-48" id="custom-input-${idx}" />
+          ${currentCascade.length > 1 ? `<button onclick="removeModelSlot(${idx})" class="text-rose-500 hover:text-rose-400 p-2">🗑️</button>` : ''}
+        `;
+        container.appendChild(slot);
+      });
+    }
+
+    function addModelSlot() {
+      currentCascade.push(liveModelsList[0] || 'gemini-2.5-flash');
+      renderCascadeSlots();
+    }
+
+    function removeModelSlot(idx) {
+      currentCascade.splice(idx, 1);
+      renderCascadeSlots();
+    }
+
+    function updateSlotValue(idx, val) {
+      const customInput = document.getElementById(`custom-input-${idx}`);
+      if (val === '__custom__') {
+        customInput.classList.remove('hidden');
+        currentCascade[idx] = customInput.value || 'gemini-custom';
+      } else {
+        if (customInput) customInput.classList.add('hidden');
+        currentCascade[idx] = val;
+      }
+    }
+
+    async function saveCascade() {
+      await fetch('/api/settings/cascade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cascade: currentCascade })
+      });
+      alert('زنجیره مدل‌ها ذخیره شد!');
     }
 
     async function updateStats() {
@@ -256,7 +318,8 @@
           document.getElementById('stat-progress-bar').style.width = `${pct}%`;
         }
 
-        // اپدیت چارت‌ها
+        if (data.modelCascade) currentCascade = data.modelCascade;
+
         if (cacheChart && data.stats) {
           cacheChart.data.datasets[0].data = [data.stats.cacheHits || 1, data.stats.aiCalls || 0];
           cacheChart.update();
@@ -295,8 +358,8 @@
       alert('در حال تست کلید...');
       const res = await fetch('/api/keys/test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
       const data = await res.json();
-      if (data.success) alert('✅ کلید کاملاً سالم و فعال است!');
-      else alert('❌ خطا در تست کلید: ' + data.error);
+      if (data.success) alert('✅ کلید فعال است!');
+      else alert('❌ خطا: ' + data.error);
     }
 
     async function deleteKey(key) {
@@ -304,10 +367,9 @@
       loadKeys();
     }
 
-    async function updateSettings() {
-      const delay = document.getElementById('delay-input').value;
-      const model = document.getElementById('model-select').value;
-      await fetch('/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ delay, model }) });
+    async function updateDelay() {
+      const seconds = document.getElementById('delay-input').value;
+      await fetch('/api/settings/delay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ seconds }) });
     }
 
     async function addDocset() {
@@ -315,7 +377,7 @@
       const name = document.getElementById('doc-name').value;
       const contentUrl = document.getElementById('doc-url').value;
       await fetch('/api/docsets/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, name, contentUrl }) });
-      alert('داک‌ست ذخیره شد.');
+      alert('داک‌ست اضافه شد.');
     }
 
     async function loadFailed() {

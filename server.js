@@ -16,7 +16,24 @@ const pipeline = new PipelineManager();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// دریافت آمار
+// دریافت لیست زنده مدل‌ها مستقیم از Google API
+app.get('/api/models/live', async (req, res) => {
+  const keysRaw = process.env.GEMINI_API_KEYS || '';
+  const firstKey = keysRaw.split(',')[0]?.trim();
+  const models = await GeminiTranslator.fetchLiveModels(firstKey);
+  res.json(models);
+});
+
+// تنظیم زنجیره چند سطحی مدل‌ها
+app.post('/api/settings/cascade', (req, res) => {
+  const { cascade } = req.body;
+  if (Array.isArray(cascade)) {
+    pipeline.setModelCascade(cascade);
+  }
+  res.json({ success: true, modelCascade: pipeline.modelCascade });
+});
+
+// آمار کلی
 app.get('/api/stats', (req, res) => {
   let dailyUsage = { date: '', count: 0 };
   try {
@@ -29,7 +46,7 @@ app.get('/api/stats', (req, res) => {
     isRunning: pipeline.isRunning,
     isPaused: pipeline.isPaused,
     apiDelaySeconds: pipeline.apiDelaySeconds,
-    selectedModel: pipeline.selectedModel,
+    modelCascade: pipeline.modelCascade,
     currentDoc: pipeline.currentDoc,
     currentPage: pipeline.currentPage,
     progress: pipeline.progress,
@@ -44,17 +61,12 @@ app.get('/api/stats', (req, res) => {
 app.get('/api/keys', (req, res) => {
   const keysRaw = process.env.GEMINI_API_KEYS || '';
   const keys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
-  res.json(keys.map((k, i) => ({
-    id: i,
-    masked: k.length > 8 ? `${k.substring(0, 4)}...${k.substring(k.length - 4)}` : '***',
-    key: k
-  })));
+  res.json(keys.map((k, i) => ({ id: i, masked: k.length > 8 ? `${k.substring(0, 4)}...${k.substring(k.length - 4)}` : '***', key: k })));
 });
 
 app.post('/api/keys/add', (req, res) => {
   const { key } = req.body;
-  if (!key) return res.status(400).json({ error: 'کلید خالی است.' });
-
+  if (!key) return res.status(400).json({ error: 'خالی است' });
   const keysRaw = process.env.GEMINI_API_KEYS || '';
   const keys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
   if (!keys.includes(key)) {
@@ -72,98 +84,62 @@ app.post('/api/keys/test', async (req, res) => {
 
 app.post('/api/keys/delete', (req, res) => {
   const { key } = req.body;
-  let keysRaw = process.env.GEMINI_API_KEYS || '';
-  let keys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
+  let keys = (process.env.GEMINI_API_KEYS || '').split(',').map(k => k.trim()).filter(Boolean);
   keys = keys.filter(k => k !== key);
   process.env.GEMINI_API_KEYS = keys.join(',');
   res.json({ success: true });
 });
 
-// تنظیم مدل و تاخیر
-app.post('/api/settings', (req, res) => {
-  const { delay, model } = req.body;
-  if (delay !== undefined) pipeline.setDelay(delay);
-  if (model !== undefined) pipeline.setModel(model);
+app.post('/api/settings/delay', (req, res) => {
+  pipeline.setDelay(req.body.seconds);
   res.json({ success: true });
 });
 
-// افزودن داک‌ست جدید
 app.post('/api/docsets/add', (req, res) => {
   const { id, name, contentUrl } = req.body;
-  if (!id || !name || !contentUrl) return res.status(400).json({ error: 'اطلاعات ناقص است' });
-
   try {
-    const raw = fs.readFileSync('./docsets.json', 'utf8');
-    const docsets = JSON.parse(raw);
+    const docsets = JSON.parse(fs.readFileSync('./docsets.json', 'utf8'));
     docsets.push({ id, name, format: 'json-db', contentUrl });
     fs.writeFileSync('./docsets.json', JSON.stringify(docsets, null, 2), 'utf8');
     res.json({ success: true });
-  } catch (e) {
-    res.status(500).json({ error: 'خطا در افزودن داک‌ست' });
-  }
+  } catch (e) { res.status(500).json({ error: 'خطا' }); }
 });
 
-// صفحات دارای خطا
-app.get('/api/failed-pages', (req, res) => {
-  res.json(pipeline.failedPages);
-});
-
+app.get('/api/failed-pages', (req, res) => res.json(pipeline.failedPages));
 app.post('/api/retry-failed', (req, res) => {
-  const { docId, pageKey } = req.body;
-  pipeline.start(docId, pageKey);
-  res.json({ message: 'تلاش مجدد آغاز شد.' });
+  pipeline.start(req.body.docId, req.body.pageKey);
+  res.json({ message: 'تلاش مجدد' });
 });
 
-// سایر اندپینت‌ها
 app.post('/api/control', (req, res) => {
   const { action, docId } = req.body;
   if (action === 'start') {
-    if (pipeline.isRunning) return res.status(400).json({ error: 'موتور روشن است.' });
+    if (pipeline.isRunning) return res.status(400).json({ error: 'روشن است' });
     pipeline.start(docId);
-    return res.json({ message: 'شروع شد' });
+    return res.json({ message: 'شروع' });
   }
-  if (action === 'pause') {
-    const isPaused = pipeline.togglePause();
-    return res.json({ isPaused });
-  }
-  if (action === 'stop') {
-    pipeline.stop();
-    return res.json({ message: 'توقف ارسال شد' });
-  }
-  res.status(400).json({ error: 'دستور نامعتبر' });
+  if (action === 'pause') return res.json({ isPaused: pipeline.togglePause() });
+  if (action === 'stop') { pipeline.stop(); return res.json({ message: 'توقف' }); }
+  res.status(400).json({ error: 'نامعتبر' });
 });
 
 app.get('/api/preview/current', (req, res) => {
-  res.json({
-    pageKey: pipeline.currentPage,
-    html: pipeline.currentPageHtml || '<div style="padding:20px;text-align:center;">هنوز صفحه‌ای پردازش نشده است.</div>'
-  });
+  res.json({ pageKey: pipeline.currentPage, html: pipeline.currentPageHtml || '<div style="padding:20px;text-align:center;">صفحه‌ای نیست.</div>' });
 });
 
 app.get('/api/glossary', (req, res) => {
-  try {
-    if (fs.existsSync('./glossary.json')) {
-      return res.json(JSON.parse(fs.readFileSync('./glossary.json', 'utf8')));
-    }
-    res.json({});
-  } catch (e) { res.status(500).json({}); }
+  try { res.json(JSON.parse(fs.readFileSync('./glossary.json', 'utf8'))); } catch (e) { res.json({}); }
 });
 
 app.post('/api/glossary', (req, res) => {
-  try {
-    fs.writeFileSync('./glossary.json', JSON.stringify(req.body, null, 2), 'utf8');
-    res.json({ success: true });
-  } catch (e) { res.status(500).json({}); }
+  try { fs.writeFileSync('./glossary.json', JSON.stringify(req.body, null, 2), 'utf8'); res.json({ success: true }); } catch (e) { res.status(500).json({}); }
 });
 
 app.get('/api/cache/search', async (req, res) => {
-  const query = req.query.q || '';
+  const q = req.query.q || '';
   try {
     if (!pipeline.tm || !pipeline.tm.db) return res.json([]);
-    const rows = await pipeline.tm.db.all(
-      'SELECT original_text, translated_text, created_at FROM memory WHERE original_text LIKE ? OR translated_text LIKE ? LIMIT 50',
-      [`%${query}%`, `%${query}%`]
-    );
+    const rows = await pipeline.tm.db.all('SELECT original_text, translated_text, created_at FROM memory WHERE original_text LIKE ? OR translated_text LIKE ? LIMIT 50', [`%${q}%`, `%${q}%`]);
     res.json(rows);
   } catch (e) { res.json([]); }
 });
@@ -171,17 +147,12 @@ app.get('/api/cache/search', async (req, res) => {
 app.get('/api/downloads', (req, res) => {
   const outputDir = './data/output';
   if (!fs.existsSync(outputDir)) return res.json([]);
-  const folders = fs.readdirSync(outputDir);
   const result = [];
-  for (const f of folders) {
+  for (const f of fs.readdirSync(outputDir)) {
     const filePath = path.join(outputDir, f, 'db.json');
     if (fs.existsSync(filePath)) {
       const stats = fs.statSync(filePath);
-      result.push({
-        id: f,
-        sizeMb: (stats.size / (1024 * 1024)).toFixed(2),
-        updatedAt: stats.mtime.toLocaleTimeString('fa-IR')
-      });
+      result.push({ id: f, sizeMb: (stats.size / (1024 * 1024)).toFixed(2), updatedAt: stats.mtime.toLocaleTimeString('fa-IR') });
     }
   }
   res.json(result);
@@ -203,11 +174,7 @@ app.get('/api/logs/stream', (req, res) => {
 });
 
 app.get('/api/docsets', (req, res) => {
-  try {
-    res.json(JSON.parse(fs.readFileSync('./docsets.json', 'utf8')));
-  } catch (e) { res.status(500).json([]); }
+  try { res.json(JSON.parse(fs.readFileSync('./docsets.json', 'utf8'))); } catch (e) { res.json([]); }
 });
 
-app.listen(PORT, () => {
-  console.log(`🌐 داشبورد فوق پیشرفته DevDocs آنلاین شد: http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`🌐 داشبورد فوق پیشرفته DevDocs آنلاین شد: http://localhost:${PORT}`));
