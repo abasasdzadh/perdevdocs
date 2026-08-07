@@ -18,11 +18,14 @@ export class PipelineManager extends EventEmitter {
     this.isRunning = false;
     this.isPaused = false;
     this.shouldStop = false;
-    this.apiDelaySeconds = 90; // تاخیر پیش‌فرض API به ثانیه
+    this.apiDelaySeconds = 90;
+    this.selectedModel = 'gemini-2.5-flash';
     this.currentDoc = null;
     this.currentPage = '';
     this.currentPageHtml = '';
     this.progress = { current: 0, total: 0 };
+    this.stats = { cacheHits: 0, aiCalls: 0 };
+    this.failedPages = [];
     this.tm = null;
   }
 
@@ -33,6 +36,11 @@ export class PipelineManager extends EventEmitter {
     this.emit('log', logData);
   }
 
+  setModel(model) {
+    this.selectedModel = model;
+    this.log(`⚙️ مدل هوش مصنوعی به "${model}" تغییر کرد.`);
+  }
+
   setDelay(seconds) {
     this.apiDelaySeconds = Math.max(0, parseInt(seconds) || 0);
     this.log(`⚙️ تاخیر API به ${this.apiDelaySeconds} ثانیه تغییر یافت.`);
@@ -40,7 +48,7 @@ export class PipelineManager extends EventEmitter {
 
   togglePause() {
     this.isPaused = !this.isPaused;
-    this.log(this.isPaused ? '⏸️ موتور متوقف موقت (Paused) شد.' : '▶️ موتور ادامه یافت (Resumed).', 'warn');
+    this.log(this.isPaused ? '⏸️ موتور متوقف موقت شد.' : '▶️ موتور ادامه یافت.', 'warn');
     this.emit('statusChange', { isRunning: this.isRunning, isPaused: this.isPaused });
     return this.isPaused;
   }
@@ -53,7 +61,7 @@ export class PipelineManager extends EventEmitter {
     }
   }
 
-  async start(selectedDocId = null) {
+  async start(selectedDocId = null, targetPageKey = null) {
     if (this.isRunning) return;
 
     this.isRunning = true;
@@ -67,7 +75,7 @@ export class PipelineManager extends EventEmitter {
       this.tm = new TranslationMemory();
       await this.tm.init();
 
-      const translator = new GeminiTranslator();
+      const translator = new GeminiTranslator(this.selectedModel);
       const queue = new TranslationQueue();
 
       const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
@@ -87,7 +95,12 @@ export class PipelineManager extends EventEmitter {
         const dbData = JSON.parse(rawDbContent);
 
         const translatedDbData = {};
-        const pageKeys = Object.keys(dbData);
+        let pageKeys = Object.keys(dbData);
+
+        if (targetPageKey) {
+          pageKeys = pageKeys.filter(k => k === targetPageKey);
+        }
+
         this.progress = { current: 0, total: pageKeys.length };
 
         for (let index = 0; index < pageKeys.length; index++) {
@@ -96,7 +109,6 @@ export class PipelineManager extends EventEmitter {
             break;
           }
 
-          // چکینگ حالت مکث (Pause)
           while (this.isPaused && !this.shouldStop) {
             await new Promise(res => setTimeout(res, 500));
           }
@@ -109,99 +121,111 @@ export class PipelineManager extends EventEmitter {
           const pageHtml = dbData[pageKey];
           this.log(`[صفحه ${index + 1}/${pageKeys.length}] 📄 در حال پردازش: "${pageKey}"`);
 
-          const $ = HtmlParser.parse(pageHtml);
-          $('body').attr('dir', 'rtl').addClass('fa-doc');
+          try {
+            const $ = HtmlParser.parse(pageHtml);
+            $('body').attr('dir', 'rtl').addClass('fa-doc');
 
-          const nodes = TextExtractor.extractSequentialNodes($);
-          const unCachedNodes = [];
+            const nodes = TextExtractor.extractSequentialNodes($);
+            const unCachedNodes = [];
 
-          for (const node of nodes) {
-            const staticMatch = StaticDictionary.get(node.maskedText);
-            if (staticMatch) {
-              node.translatedText = staticMatch;
-              continue;
-            }
+            for (const node of nodes) {
+              const staticMatch = StaticDictionary.get(node.maskedText);
+              if (staticMatch) {
+                node.translatedText = staticMatch;
+                this.stats.cacheHits++;
+                continue;
+              }
 
-            const cached = await this.tm.get(node.maskedText);
-            if (cached) {
-              node.translatedText = cached;
-            } else {
-              unCachedNodes.push(node);
-            }
-          }
-
-          let hasAiCalls = false;
-
-          if (unCachedNodes.length > 0) {
-            hasAiCalls = true;
-            const smartChunks = TextExtractor.createSmartChunks(unCachedNodes, 5000);
-            this.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در قالب ${smartChunks.length} چنک پویا)...`);
-
-            for (let chunkIdx = 0; chunkIdx < smartChunks.length; chunkIdx++) {
-              if (this.shouldStop) break;
-
-              const chunkNodes = smartChunks[chunkIdx];
-              const textsToTranslate = chunkNodes.map(n => n.maskedText);
-
-              this.log(`   📦 ارسال چنک ${chunkIdx + 1}/${smartChunks.length} (${textsToTranslate.length} آیتم)...`);
-              const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
-
-              for (let j = 0; j < chunkNodes.length; j++) {
-                const node = chunkNodes[j];
-                const trans = (translatedArray && translatedArray[j]) ? translatedArray[j] : node.maskedText;
-
-                const isValid = TranslationValidator.validate(node.placeholders, trans);
-                if (isValid) {
-                  node.translatedText = trans;
-                  await this.tm.set(node.maskedText, trans);
-                } else {
-                  node.translatedText = node.maskedText;
-                }
+              const cached = await this.tm.get(node.maskedText);
+              if (cached) {
+                node.translatedText = cached;
+                this.stats.cacheHits++;
+              } else {
+                unCachedNodes.push(node);
               }
             }
-          } else {
-            this.log(`  ⚡ تمام پاراگراف‌های این صفحه از کش محلی خوانده شد (0ms - بدون تاخیر)`);
-          }
 
-          for (const node of nodes) {
-            const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
-            node.$block.html(finalBlockHtml);
-          }
+            let hasAiCalls = false;
 
-          this.currentPageHtml = $.html();
-          translatedDbData[pageKey] = this.currentPageHtml;
+            if (unCachedNodes.length > 0) {
+              hasAiCalls = true;
+              this.stats.aiCalls += unCachedNodes.length;
 
-          // ⚡ بهینه‌سازی تاخیر: فقط اگر درخواست AI ارسال شده باشد تاخیر اعمال می‌شود!
-          if (index < pageKeys.length - 1 && !this.shouldStop) {
-            if (hasAiCalls && this.apiDelaySeconds > 0) {
-              this.log(`⏳ اتمام صفحه "${pageKey}". تعلیق ${this.apiDelaySeconds} ثانیه‌ای موتور برای رعایت Quota...`);
-              for (let sec = this.apiDelaySeconds; sec > 0; sec--) {
+              const smartChunks = TextExtractor.createSmartChunks(unCachedNodes, 5000);
+              this.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در قالب ${smartChunks.length} چنک)...`);
+
+              for (let chunkIdx = 0; chunkIdx < smartChunks.length; chunkIdx++) {
                 if (this.shouldStop) break;
-                while (this.isPaused && !this.shouldStop) {
-                  await new Promise(res => setTimeout(res, 500));
+
+                const chunkNodes = smartChunks[chunkIdx];
+                const textsToTranslate = chunkNodes.map(n => n.maskedText);
+
+                const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
+
+                for (let j = 0; j < chunkNodes.length; j++) {
+                  const node = chunkNodes[j];
+                  const trans = (translatedArray && translatedArray[j]) ? translatedArray[j] : node.maskedText;
+
+                  const isValid = TranslationValidator.validate(node.placeholders, trans);
+                  if (isValid) {
+                    node.translatedText = trans;
+                    await this.tm.set(node.maskedText, trans);
+                  } else {
+                    node.translatedText = node.maskedText;
+                  }
                 }
-                await new Promise(res => setTimeout(res, 1000));
               }
             } else {
-              // خواندن آنی و نیم‌ثانیه‌ای از کش محلی
-              await new Promise(res => setTimeout(res, 50));
+              this.log(`  ⚡ تمام پاراگراف‌ها از کش محلی خوانده شد (0ms)`);
+            }
+
+            for (const node of nodes) {
+              const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
+              node.$block.html(finalBlockHtml);
+            }
+
+            this.currentPageHtml = $.html();
+            translatedDbData[pageKey] = this.currentPageHtml;
+
+            // حذف از لیست خطاها در صورت موفقیت
+            this.failedPages = this.failedPages.filter(p => !(p.docId === doc.id && p.pageKey === pageKey));
+
+            if (index < pageKeys.length - 1 && !this.shouldStop) {
+              if (hasAiCalls && this.apiDelaySeconds > 0) {
+                this.log(`⏳ تعلیق ${this.apiDelaySeconds} ثانیه‌ای موتور...`);
+                for (let sec = this.apiDelaySeconds; sec > 0; sec--) {
+                  if (this.shouldStop) break;
+                  while (this.isPaused && !this.shouldStop) {
+                    await new Promise(res => setTimeout(res, 500));
+                  }
+                  await new Promise(res => setTimeout(res, 1000));
+                }
+              } else {
+                await new Promise(res => setTimeout(res, 50));
+              }
+            }
+
+          } catch (pageErr) {
+            this.log(`❌ خطا در ترجمه صفحه "${pageKey}": ${pageErr.message}`, 'error');
+            if (!this.failedPages.some(p => p.docId === doc.id && p.pageKey === pageKey)) {
+              this.failedPages.push({ docId: doc.id, docName: doc.name, pageKey, error: pageErr.message, time: new Date().toLocaleTimeString('fa-IR') });
             }
           }
         }
 
-        if (!this.shouldStop) {
+        if (!this.shouldStop && !targetPageKey) {
           const outputPath = `./data/output/${doc.id}/db.json`;
           OutputBuilder.saveJson(outputPath, translatedDbData);
           this.log(`🎉 ترجمه db.json برای ${doc.name} با موفقیت ذخیره شد!`, 'success');
         }
       }
     } catch (error) {
-      this.log(`❌ خطا در اجرای موتور: ${error.message}`, 'error');
+      this.log(`❌ خطا در موتور: ${error.message}`, 'error');
     } finally {
       this.isRunning = false;
       this.isPaused = false;
       this.emit('statusChange', { isRunning: false, isPaused: false });
-      this.log('🏁 عملیات موتور خاتمه یافت.');
+      this.log('🏁 عملیات خروج.');
     }
   }
 }

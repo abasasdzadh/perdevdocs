@@ -2,18 +2,24 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 
 export class GeminiTranslator {
-  constructor() {
+  constructor(modelName = 'gemini-2.5-flash') {
     this.glossary = this.loadGlossary();
-    
+    this.primaryModel = modelName;
+    this.fallbackModel = 'gemini-2.0-flash';
+    this.geminiKeys = [];
+    this.activeKeyIndex = 0;
+    this.reloadKeys();
+  }
+
+  reloadKeys() {
     const keysRaw = process.env.GEMINI_API_KEYS || '';
     this.geminiKeys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
     this.activeKeyIndex = 0;
-    
-    // مدل‌های مشخص‌شده پروژه
-    this.primaryModel = 'gemini-3.5-flash-lite';
-    this.fallbackModel = 'gemini-3.1-flash-lite';
-    
     this.initGemini();
+  }
+
+  setModel(modelName) {
+    this.primaryModel = modelName;
   }
 
   initGemini() {
@@ -21,13 +27,12 @@ export class GeminiTranslator {
       const currentKey = this.geminiKeys[this.activeKeyIndex];
       this.ai = new GoogleGenAI({ apiKey: currentKey });
     } else {
-      throw new Error("❌ هیچ کلید جمنای در فایل .env (کلید GEMINI_API_KEYS) یافت نشد!");
+      this.ai = null;
     }
   }
 
   rotateGeminiKey() {
     if (this.geminiKeys.length <= 1) return false;
-    
     this.activeKeyIndex = (this.activeKeyIndex + 1) % this.geminiKeys.length;
     console.warn(`\n🔄 سوئیچ به کلید جمنای شماره ${this.activeKeyIndex + 1}...`);
     this.initGemini();
@@ -39,15 +44,26 @@ export class GeminiTranslator {
       if (fs.existsSync('./glossary.json')) {
         return JSON.parse(fs.readFileSync('./glossary.json', 'utf8'));
       }
-    } catch (e) {
-      console.warn("⚠️ واژه‌نامه بارگذاری نشد.");
-    }
+    } catch (e) {}
     return {};
+  }
+
+  static async testKey(apiKey) {
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: 'سلام، تست ارتباط API'
+      });
+      return { success: true, text: response.text };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
   }
 
   async translateWithGoogle(textsArray, modelName) {
     if (!this.ai) {
-      throw new Error("SDK جمنای مقداردهی نشده است.");
+      throw new Error("❌ هیچ کلید فعال جمنای یافت نشد! ابتدا کلید API خود را وارد کنید.");
     }
 
     const prompt = `
@@ -68,9 +84,7 @@ ${JSON.stringify(textsArray)}
     const response = await this.ai.models.generateContent({
       model: modelName,
       contents: prompt,
-      config: {
-        responseMimeType: "application/json"
-      }
+      config: { responseMimeType: "application/json" }
     });
 
     const rawText = response.text.trim();
@@ -80,31 +94,21 @@ ${JSON.stringify(textsArray)}
   async translateBatch(textsArray) {
     if (!textsArray || textsArray.length === 0) return [];
 
-    // تلاش با مدل اصلی (Gemini 3.5 Flash-Lite)
     try {
-      console.log(`    ⚡ ارسال به Gemini (${this.primaryModel})...`);
       return await this.translateWithGoogle(textsArray, this.primaryModel);
     } catch (err) {
-      console.warn(`⚠️ خطا در مدل ${this.primaryModel}: ${err.message}. سوئیچ به مدل جایگزین (${this.fallbackModel})...`);
+      console.warn(`⚠️ خطا در مدل ${this.primaryModel}: ${err.message}. تلاش با مدل جایگزین (${this.fallbackModel})...`);
     }
 
-    // تلاش با مدل جایگزین (Gemini 3.1 Flash-Lite) و چرخش کلیدها
     let attempts = 0;
     while (attempts < this.geminiKeys.length * 2) {
       try {
         return await this.translateWithGoogle(textsArray, this.fallbackModel);
       } catch (err) {
-        const isQuota = err.message && (err.message.includes('429') || err.message.includes('quota'));
-        
-        if (isQuota) {
-          attempts++;
-          const rotated = this.rotateGeminiKey();
-          if (!rotated) {
-            console.warn(`⚠️ تمام کلیدها محدود شده‌اند. مکث ۱۵ ثانیه‌ای...`);
-            await new Promise(res => setTimeout(res, 15000));
-          }
-        } else {
-          throw err;
+        attempts++;
+        const rotated = this.rotateGeminiKey();
+        if (!rotated) {
+          await new Promise(res => setTimeout(res, 10000));
         }
       }
     }
