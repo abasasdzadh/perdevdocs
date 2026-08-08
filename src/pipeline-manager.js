@@ -19,7 +19,7 @@ export class PipelineManager extends EventEmitter {
     this.isPaused = false;
     this.shouldStop = false;
     this.apiDelaySeconds = 90;
-    this.modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
+    this.modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']; // مدل‌های شما دست‌نخورده
     this.currentDoc = null;
     this.currentPage = '';
     this.currentPageHtml = '';
@@ -29,6 +29,53 @@ export class PipelineManager extends EventEmitter {
     this.tm = null;
     this.ruleEngine = new RuleEngine();
     this.maxCharsPerBatch = 100000;
+    
+    this.settingsPath = './settings.json';
+    this.geminiKeys = [];
+    this.loadSettings();
+  }
+
+  loadSettings() {
+    try {
+      if (fs.existsSync(this.settingsPath)) {
+        const s = JSON.parse(fs.readFileSync(this.settingsPath, 'utf8'));
+        this.apiDelaySeconds = s.apiDelaySeconds ?? this.apiDelaySeconds;
+        this.modelCascade = s.modelCascade ?? this.modelCascade;
+        this.maxCharsPerBatch = s.maxCharsPerBatch ?? this.maxCharsPerBatch;
+        this.geminiKeys = s.geminiKeys ?? [];
+        process.env.GEMINI_API_KEYS = this.geminiKeys.join(',');
+      }
+    } catch (e) { console.warn('⚠️ Error loading settings.json'); }
+  }
+
+  saveSettings() {
+    try {
+      const s = {
+        apiDelaySeconds: this.apiDelaySeconds,
+        modelCascade: this.modelCascade,
+        maxCharsPerBatch: this.maxCharsPerBatch,
+        geminiKeys: this.geminiKeys
+      };
+      fs.writeFileSync(this.settingsPath, JSON.stringify(s, null, 2), 'utf8');
+    } catch (e) { console.warn('⚠️ Error saving settings.json'); }
+  }
+
+  addKey(key) {
+    if (!this.geminiKeys.includes(key)) {
+      this.geminiKeys.push(key);
+      process.env.GEMINI_API_KEYS = this.geminiKeys.join(',');
+      this.saveSettings();
+    }
+  }
+
+  deleteKey(key) {
+    this.geminiKeys = this.geminiKeys.filter(k => k !== key);
+    process.env.GEMINI_API_KEYS = this.geminiKeys.join(',');
+    this.saveSettings();
+  }
+
+  getKeys() {
+    return this.geminiKeys.map((k, i) => ({ id: i, masked: k.length > 8 ? `${k.substring(0, 4)}...${k.substring(k.length - 4)}` : '***', key: k }));
   }
 
   log(message, type = 'info') {
@@ -48,6 +95,7 @@ export class PipelineManager extends EventEmitter {
 
   setChunkSize(size) {
     this.maxCharsPerBatch = Math.max(1000, parseInt(size) || 100000);
+    this.saveSettings();
     this.log(`⚙️ سقف کاراکتر برای هر درخواست به ${this.maxCharsPerBatch} تغییر یافت.`);
   }
 
@@ -59,12 +107,14 @@ export class PipelineManager extends EventEmitter {
   setModelCascade(cascadeArray) {
     if (Array.isArray(cascadeArray) && cascadeArray.length > 0) {
       this.modelCascade = cascadeArray;
+      this.saveSettings();
       this.log(`⚙️ زنجیره مدل‌ها بهینه‌سازی شد: [ ${this.modelCascade.join(' ➔ ')} ]`);
     }
   }
 
   setDelay(seconds) {
     this.apiDelaySeconds = Math.max(0, parseInt(seconds) || 0);
+    this.saveSettings();
     this.log(`⚙️ تاخیر API به ${this.apiDelaySeconds} ثانیه تغییر یافت.`);
   }
 
@@ -151,7 +201,6 @@ export class PipelineManager extends EventEmitter {
             const unCachedNodes = [];
 
             for (const node of nodes) {
-              // ۱. بررسی دیکشنری استاتیک
               const staticMatch = StaticDictionary.get(node.maskedText);
               if (staticMatch) {
                 node.translatedText = staticMatch;
@@ -159,14 +208,12 @@ export class PipelineManager extends EventEmitter {
                 continue;
               }
 
-              // ۲. بررسی موتور قوانین (Bypass)
               if (this.ruleEngine.isNeverTranslate(node.maskedText)) {
                 node.translatedText = node.maskedText;
                 this.stats.cacheHits++;
                 continue;
               }
 
-              // ۳. بررسی دیتابیس SQLite
               const cached = await this.tm.get(node.maskedText);
               if (cached) {
                 node.translatedText = cached;
@@ -191,26 +238,30 @@ export class PipelineManager extends EventEmitter {
                 const chunkNodes = smartChunks[chunkIdx];
                 const textsToTranslate = chunkNodes.map(n => n.maskedText);
 
-                const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
+                try {
+                  const translatedArray = await queue.executeBatchWithRetry(translator, textsToTranslate);
 
-                for (let j = 0; j < chunkNodes.length; j++) {
-                  const node = chunkNodes[j];
-                  const trans = (translatedArray && translatedArray[j]) ? translatedArray[j] : node.maskedText;
+                  for (let j = 0; j < chunkNodes.length; j++) {
+                    const node = chunkNodes[j];
+                    const trans = (translatedArray && translatedArray[j]) ? translatedArray[j] : node.maskedText;
 
-                  const isValid = TranslationValidator.validate(node.placeholders, trans);
-                  if (isValid) {
-                    node.translatedText = trans;
-                    await this.tm.set(node.maskedText, trans);
-                  } else {
-                    node.translatedText = node.maskedText;
+                    const isValid = TranslationValidator.validate(node.placeholders, trans);
+                    if (isValid) {
+                      node.translatedText = trans;
+                      await this.tm.set(node.maskedText, trans);
+                    } else {
+                      node.translatedText = node.maskedText;
+                    }
                   }
+                } catch (apiErr) {
+                  this.log(`❌ خطای API در این بخش: ${apiErr.message}`, 'error');
+                  chunkNodes.forEach(node => { node.translatedText = node.maskedText; });
                 }
               }
             } else {
               this.log(`  ⚡ تمام پاراگراف‌ها از کش یا قوانین خوانده شد (0ms)`);
             }
 
-            // بازسازی DOM صفحه با امنیت کامل
             for (const node of nodes) {
               let finalHtml;
               if (node.translatedText) {

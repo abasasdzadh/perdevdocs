@@ -3,7 +3,6 @@ import path from 'path';
 
 export class TranslationQueue {
   constructor() {
-    // حداقل ۶ ثانیه (۶۰۰۰ میلی‌ثانیه) تاخیر بین هر درخواست API
     this.minDelayMs = 6000; 
     this.maxDailyRequests = 400;
     this.trackerPath = './data/usage_tracker.json';
@@ -15,9 +14,7 @@ export class TranslationQueue {
     if (fs.existsSync(this.trackerPath)) {
       try {
         const data = JSON.parse(fs.readFileSync(this.trackerPath, 'utf8'));
-        if (data.date === today) {
-          return data;
-        }
+        if (data.date === today) return data;
       } catch (e) {}
     }
     return { date: today, count: 0 };
@@ -32,25 +29,21 @@ export class TranslationQueue {
   }
 
   async executeBatchWithRetry(translator, textsArray, maxRetries = 3) {
-    // ۱. کنترل سقف روزانه
     const usage = this.loadUsage();
     if (usage.count >= this.maxDailyRequests) {
-      console.error(`\n🛑 سقف مجاز روزانه (${this.maxDailyRequests} درخواست) به پایان رسیده است.`);
-      console.error(`⏳ کار متوقف شد. کار فردا پس از بازنشانی سهمیه ادامه خواهد یافت.`);
-      process.exit(0);
+      throw new Error("🛑 سقف مجاز روزانه (400 درخواست) پر شده است. موتور متوقف شد.");
     }
 
-    // ۲. کنترل دقیق ۶ ثانیه فاصله بین درخواست‌ها
     const now = Date.now();
     const timeSinceLastRequest = now - this.lastRequestTime;
     if (timeSinceLastRequest < this.minDelayMs) {
-      const waitTime = this.minDelayMs - timeSinceLastRequest + Math.floor(Math.random() * 500); // به همراه Jitter
-      console.log(`  ⏳ شکیبایی ${Math.round(waitTime / 1000)} ثانیه‌ای بین درخواست‌ها...`);
+      const waitTime = this.minDelayMs - timeSinceLastRequest + Math.floor(Math.random() * 500);
       await new Promise(res => setTimeout(res, waitTime));
     }
 
-    // ۳. ارسال درخواست به AI
     let attempt = 0;
+    let lastError = null;
+    
     while (attempt < maxRetries) {
       try {
         this.lastRequestTime = Date.now();
@@ -62,12 +55,20 @@ export class TranslationQueue {
 
         return result;
       } catch (err) {
+        lastError = err;
         attempt++;
-        console.warn(`⚠️ خطا در ارسال درخواست (تلاش ${attempt}/${maxRetries}): ${err.message}`);
-        await new Promise(res => setTimeout(res, 8000));
+        
+        const errStr = err.message.toLowerCase();
+        if (errStr.includes('400') || errStr.includes('403') || errStr.includes('invalid')) {
+          throw new Error(`خطای غیرقابل بازیابی API: ${err.message}`);
+        }
+
+        if (attempt < maxRetries) {
+          await new Promise(res => setTimeout(res, 3000));
+        }
       }
     }
 
-    return textsArray;
+    throw new Error(`❌ تلاش ناموفق پس از ۳ بار: ${lastError.message}`);
   }
 }

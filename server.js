@@ -31,7 +31,6 @@ app.post('/api/settings/cascade', (req, res) => {
   res.json({ success: true, modelCascade: pipeline.modelCascade });
 });
 
-// --- New API Endpoints for Rules ---
 app.get('/api/rules/stats', (req, res) => {
   res.json(pipeline.getRulesStats());
 });
@@ -45,7 +44,6 @@ app.post('/api/rules/reload', (req, res) => {
   pipeline.reloadRules();
   res.json({ success: true });
 });
-// ---------------------------------
 
 app.get('/api/stats', (req, res) => {
   let dailyUsage = { date: '', count: 0 };
@@ -59,6 +57,7 @@ app.get('/api/stats', (req, res) => {
     isRunning: pipeline.isRunning,
     isPaused: pipeline.isPaused,
     apiDelaySeconds: pipeline.apiDelaySeconds,
+    maxCharsPerBatch: pipeline.maxCharsPerBatch,
     modelCascade: pipeline.modelCascade,
     currentDoc: pipeline.currentDoc,
     currentPage: pipeline.currentPage,
@@ -70,21 +69,12 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
-app.get('/api/keys', (req, res) => {
-  const keysRaw = process.env.GEMINI_API_KEYS || '';
-  const keys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
-  res.json(keys.map((k, i) => ({ id: i, masked: k.length > 8 ? `${k.substring(0, 4)}...${k.substring(k.length - 4)}` : '***', key: k })));
-});
+app.get('/api/keys', (req, res) => res.json(pipeline.getKeys()));
 
 app.post('/api/keys/add', (req, res) => {
   const { key } = req.body;
   if (!key) return res.status(400).json({ error: 'خالی است' });
-  const keysRaw = process.env.GEMINI_API_KEYS || '';
-  const keys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);
-  if (!keys.includes(key)) {
-    keys.push(key);
-    process.env.GEMINI_API_KEYS = keys.join(',');
-  }
+  pipeline.addKey(key);
   res.json({ success: true });
 });
 
@@ -96,9 +86,7 @@ app.post('/api/keys/test', async (req, res) => {
 
 app.post('/api/keys/delete', (req, res) => {
   const { key } = req.body;
-  let keys = (process.env.GEMINI_API_KEYS || '').split(',').map(k => k.trim()).filter(Boolean);
-  keys = keys.filter(k => k !== key);
-  process.env.GEMINI_API_KEYS = keys.join(',');
+  pipeline.deleteKey(key);
   res.json({ success: true });
 });
 
@@ -180,6 +168,8 @@ app.get('/api/logs/stream', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no'); // رفع مشکل تاخیر در چاپ لاگ‌ها
+  
   const onLog = (data) => res.write(`data: ${JSON.stringify(data)}\n\n`);
   pipeline.on('log', onLog);
   req.on('close', () => pipeline.removeListener('log', onLog));

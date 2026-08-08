@@ -10,46 +10,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #000000;
-      --bg-surface: #0a0a0a;
-      --bg-card: #111111;
-      --bg-hover: #1a1a1a;
-      --border-color: #1f1f1f;
-      --border-active: #2a2a2a;
-      --text-main: #ffffff;
-      --text-muted: #888888;
-      --text-dim: #555555;
-      --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.1);
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
+      --bg-main: #000000; --bg-surface: #0a0a0a; --bg-card: #111111; --bg-hover: #1a1a1a;
+      --border-color: #1f1f1f; --border-active: #2a2a2a; --text-main: #ffffff; --text-muted: #888888;
+      --text-dim: #555555; --accent: #3b82f6; --accent-glow: rgba(59, 130, 246, 0.1);
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
     }
-    
     [data-theme='light'] {
-      --bg-main: #f8fafc;
-      --bg-surface: #f1f5f9;
-      --bg-card: #ffffff;
-      --bg-hover: #e2e8f0;
-      --border-color: #e2e8f0;
-      --border-active: #cbd5e1;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --text-dim: #94a3b8;
-      --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.1);
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
+      --bg-main: #f8fafc; --bg-surface: #f1f5f9; --bg-card: #ffffff; --bg-hover: #e2e8f0;
+      --border-color: #e2e8f0; --border-active: #cbd5e1; --text-main: #0f172a; --text-muted: #64748b;
+      --text-dim: #94a3b8; --accent: #3b82f6; --accent-glow: rgba(59, 130, 246, 0.1);
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
     }
-
     * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Vazirmatn', 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; }
+    body { font-family: 'Vazirmatn', 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; transition: background-color 0.1s ease, color 0.1s ease; }
     .font-mono { font-family: 'Inter', monospace; font-feature-settings: "tnum"; }
-    
     .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; transition: all 0.3s ease; }
     .card:hover { border-color: var(--border-active); }
-    
     .btn { transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.875rem; cursor: pointer; border: 1px solid transparent; font-family: 'Inter', sans-serif; white-space: nowrap; }
     .btn-primary { background-color: var(--text-main); color: var(--bg-main); }
     .btn-primary:hover { box-shadow: 0 0 20px var(--accent-glow); }
@@ -61,22 +37,17 @@
     .btn-danger:hover { background-color: rgba(239, 68, 68, 0.2); }
     .btn-ghost { background-color: transparent; color: var(--text-muted); border-color: var(--border-color); }
     .btn-ghost:hover { background-color: var(--bg-hover); color: var(--text-main); }
-    
     .input { background-color: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.875rem; width: 100%; transition: all 0.2s; }
     .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-    
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: all 0.15s ease; cursor: pointer; border: 1px solid transparent; }
     .nav-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
     .nav-item.active { background-color: var(--bg-hover); color: var(--text-main); border-color: var(--border-color); }
     .nav-item svg { width: 18px; height: 18px; stroke-width: 1.5; flex-shrink: 0; }
-    
     .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .status-running { background-color: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
     .status-paused { background-color: var(--warning); }
     .status-stopped { background-color: var(--danger); }
-    
     .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-family: 'Inter', monospace; background-color: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border-color); }
-    
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     .term-scroll::-webkit-scrollbar { width: 4px; }
     .term-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -84,7 +55,6 @@
     .toast { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
     @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .chart-container { position: relative; height: 220px; width: 100%; }
-    
     #sidebar { transition: transform 0.3s ease-in-out, background-color 0.3s ease; }
     @media (max-width: 767px) {
       #sidebar { position: fixed; top: 0; right: 0; bottom: 0; transform: translateX(100%); z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
@@ -97,8 +67,7 @@
   <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden md:hidden" onclick="toggleSidebar()"></div>
   
   <div class="flex w-full">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-[260px] shrink-0 border-l border-[var(--border-color)] flex flex-col h-screen md:sticky top-0 p-4 bg-[var(--bg-surface)]/95 backdrop-blur-xl">
+    <aside id="sidebar" class="w-[260px] shrink-0 border-l border-[var(--border-color)] flex flex-col h-screen md:sticky top-0 p-4 bg-[var(--bg-surface)]/95">
       <div class="flex items-center justify-between gap-3 px-2 py-4 mb-4">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-lg bg-[var(--accent)] flex items-center justify-center text-white font-bold text-lg">P</div>
@@ -124,9 +93,8 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 min-h-screen flex flex-col w-full">
-      <header class="h-16 border-b border-[var(--border-color)] flex items-center justify-between px-4 md:px-8 gap-2 sticky top-0 bg-[var(--bg-main)]/80 backdrop-blur-xl z-40">
+      <header class="h-16 border-b border-[var(--border-color)] flex items-center justify-between px-4 md:px-8 gap-2 sticky top-0 z-40" style="background-color: var(--bg-main)">
         <div class="flex items-center gap-3 min-w-0">
           <button onclick="toggleSidebar()" class="md:hidden btn btn-ghost !p-2">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
@@ -138,9 +106,7 @@
             <svg id="icon-moon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
             <svg id="icon-sun" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
           </button>
-          <select id="doc-select" class="input w-28 md:w-48 !py-2 text-xs hidden sm:block">
-            <option value="">All Docsets</option>
-          </select>
+          <select id="doc-select" class="input w-28 md:w-48 !py-2 text-xs hidden sm:block"><option value="">All Docsets</option></select>
           <button id="btn-start" onclick="control('start')" class="btn btn-success !py-2 !px-3 md:!px-4">Start</button>
           <button id="btn-pause" onclick="control('pause')" disabled class="btn btn-ghost !py-2 !px-3 md:!px-4 hidden sm:flex">Pause</button>
           <button id="btn-stop" onclick="control('stop')" disabled class="btn btn-danger !py-2 !px-3 md:!px-4">Stop</button>
@@ -148,8 +114,6 @@
       </header>
 
       <div class="flex-1 p-4 md:p-8 overflow-y-auto w-full">
-        
-        <!-- TAB: DASHBOARD -->
         <div id="tab-dashboard" class="space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <div class="card p-5 md:p-6">
@@ -161,21 +125,15 @@
                 <span id="stat-usage" class="text-2xl md:text-3xl font-bold font-mono" style="color: var(--text-main)">0</span>
                 <span class="text-sm mb-1" style="color: var(--text-muted)">/ 400</span>
               </div>
-              <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bg-hover)">
-                <div id="stat-usage-bar" class="h-full w-0 transition-all duration-500 rounded-full" style="background-color: var(--accent)"></div>
-              </div>
+              <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bg-hover)"><div id="stat-usage-bar" class="h-full w-0 transition-all duration-500 rounded-full" style="background-color: var(--accent)"></div></div>
             </div>
             <div class="card p-5 md:p-6">
               <div class="flex justify-between items-center mb-4">
                 <span class="text-xs uppercase tracking-wider" style="color: var(--text-dim)">Translation Progress</span>
                 <span class="text-xs font-mono" style="color: var(--success)">ACTIVE</span>
               </div>
-              <div class="flex items-end gap-2 mb-3">
-                <span id="stat-progress-text" class="text-2xl md:text-3xl font-bold font-mono" style="color: var(--text-main)">0%</span>
-              </div>
-              <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bg-hover)">
-                <div id="stat-progress-bar" class="h-full w-0 transition-all duration-500 rounded-full" style="background-color: var(--success)"></div>
-              </div>
+              <div class="flex items-end gap-2 mb-3"><span id="stat-progress-text" class="text-2xl md:text-3xl font-bold font-mono" style="color: var(--text-main)">0%</span></div>
+              <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bg-hover)"><div id="stat-progress-bar" class="h-full w-0 transition-all duration-500 rounded-full" style="background-color: var(--success)"></div></div>
             </div>
             <div class="card p-5 md:p-6 sm:col-span-2 lg:col-span-1">
               <div class="flex justify-between items-center mb-4">
@@ -213,7 +171,6 @@
           </div>
         </div>
 
-        <!-- TAB: KEYS -->
         <div id="tab-keys" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
             <div class="flex flex-wrap justify-between items-center mb-6 gap-2 border-b border-[var(--border-color)] pb-4">
@@ -235,7 +192,6 @@
           </div>
         </div>
 
-        <!-- TAB: DOCSETS -->
         <div id="tab-docsets" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Register New Docset</h3>
@@ -248,7 +204,6 @@
           </div>
         </div>
 
-        <!-- TAB: RULES & ENGINE -->
         <div id="tab-rules" class="hidden space-y-6">
           <div class="card p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">آمار قوانین Bypass</h3>
@@ -284,7 +239,6 @@
           </div>
         </div>
 
-        <!-- TAB: ERRORS -->
         <div id="tab-errors" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Failed Translations</h3>
@@ -292,7 +246,6 @@
           </div>
         </div>
 
-        <!-- TAB: PREVIEW -->
         <div id="tab-preview" class="hidden space-y-6">
           <div class="card p-4">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
@@ -303,7 +256,6 @@
           </div>
         </div>
 
-        <!-- TAB: GLOSSARY -->
         <div id="tab-glossary" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-4 mb-4">
@@ -314,7 +266,6 @@
           </div>
         </div>
 
-        <!-- TAB: CACHE -->
         <div id="tab-cache" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Translation Memory (SQLite)</h3>
@@ -325,10 +276,7 @@
             <div class="overflow-x-auto rounded-lg border border-[var(--border-color)]">
               <table class="w-full text-xs text-right min-w-[400px]">
                 <thead class="border-b border-[var(--border-color)]" style="background-color: var(--bg-surface); color: var(--text-dim)">
-                  <tr>
-                    <th class="p-4 font-medium">Original Text</th>
-                    <th class="p-4 font-medium">Translated Text</th>
-                  </tr>
+                  <tr><th class="p-4 font-medium">Original Text</th><th class="p-4 font-medium">Translated Text</th></tr>
                 </thead>
                 <tbody id="cache-table-body" class="divide-y divide-[var(--border-color)]"></tbody>
               </table>
@@ -336,7 +284,6 @@
           </div>
         </div>
 
-        <!-- TAB: DOWNLOADS -->
         <div id="tab-download" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Generated Output Files</h3>
@@ -351,10 +298,8 @@
   <script>
     const terminal = document.getElementById('terminal');
     let cacheChart, usageChart;
-    
-    // سخت‌گیرانه محدود شده به فقط فلش‌لایت‌ها
-    const liveModelsList = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
-    let currentCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
+    const liveModelsList = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']; // مدل‌های شما دست‌نخورده
+    let currentCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']; // مدل‌های شما دست‌نخورده
 
     const svgIcons = {
       dashboard: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h5v8H4V5zM14 4h5a1 1 0 011 1v7h-6V4zM14 13h6v5a1 1 0 01-1 1h-5v-6zM4 13h6v6H5a1 1 0 01-1-1v-5z" /></svg>',
@@ -382,11 +327,7 @@
 
     function renderMenu() {
       const nav = document.getElementById('nav-menu');
-      nav.innerHTML = menuItems.map(m => `
-        <div onclick="switchTab('${m.id}')" id="side-${m.id}" class="nav-item">
-          ${svgIcons[m.id]} <span>${m.label}</span>
-        </div>
-      `).join('');
+      nav.innerHTML = menuItems.map(m => `<div onclick="switchTab('${m.id}')" id="side-${m.id}" class="nav-item">${svgIcons[m.id]} <span>${m.label}</span></div>`).join('');
     }
 
     function toggleTheme() {
@@ -401,10 +342,8 @@
     }
 
     function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('hidden');
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
     }
 
     function showToast(msg, type = 'success') {
@@ -413,11 +352,7 @@
       toast.className = `toast ${colors[type]} text-white px-5 py-3 rounded-lg shadow-2xl flex items-center justify-center gap-3 text-sm font-medium text-center`;
       toast.innerHTML = `<span>${msg}</span>`;
       document.getElementById('toast-container').appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(-20px)';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-20px)'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
     async function api(url, method = 'GET', body = null) {
@@ -427,31 +362,20 @@
         const res = await fetch(url, opts);
         if (!res.ok) throw new Error(`Server Error: ${res.status}`);
         return await res.json();
-      } catch (err) {
-        showToast('خطا در ارتباط با سرور', 'error');
-        return null;
-      }
+      } catch (err) { showToast('خطا در ارتباط با سرور', 'error'); return null; }
     }
 
     function getThemeColors() {
       const style = getComputedStyle(document.documentElement);
-      return {
-        text: style.getPropertyValue('--text-muted').trim(),
-        grid: style.getPropertyValue('--border-color').trim()
-      };
+      return { text: style.getPropertyValue('--text-muted').trim(), grid: style.getPropertyValue('--border-color').trim() };
     }
 
     function updateChartColors() {
       const colors = getThemeColors();
-      if (cacheChart) {
-        cacheChart.options.plugins.legend.labels.color = colors.text;
-        cacheChart.update('none');
-      }
+      if (cacheChart) { cacheChart.options.plugins.legend.labels.color = colors.text; cacheChart.update('none'); }
       if (usageChart) {
-        usageChart.options.scales.x.ticks.color = colors.text;
-        usageChart.options.scales.y.ticks.color = colors.text;
-        usageChart.options.scales.x.grid.color = colors.grid;
-        usageChart.options.scales.y.grid.color = colors.grid;
+        usageChart.options.scales.x.ticks.color = colors.text; usageChart.options.scales.y.ticks.color = colors.text;
+        usageChart.options.scales.x.grid.color = colors.grid; usageChart.options.scales.y.grid.color = colors.grid;
         usageChart.update('none');
       }
     }
@@ -480,20 +404,13 @@
         if (tab) tab.classList.add('hidden');
         if (side) side.classList.remove('active');
       });
-      
       const activeTab = document.getElementById(`tab-${tabName}`);
       const activeSide = document.getElementById(`side-${tabName}`);
       const menuItem = menuItems.find(m => m.id === tabName);
-      
       activeTab.classList.remove('hidden');
       activeSide.classList.add('active');
       document.getElementById('page-title').innerText = menuItem.title;
-      
-      if (window.innerWidth < 768) {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebar-overlay').classList.add('hidden');
-      }
-
+      if (window.innerWidth < 768) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.add('hidden'); }
       if (tabName === 'keys') initKeysTab();
       if (tabName === 'rules') loadRulesStats();
       if (tabName === 'errors') loadFailed();
@@ -502,13 +419,11 @@
       if (tabName === 'download') loadDownloads();
     }
 
-    // --- Rules & Engine ---
     async function loadRulesStats() {
       const data = await api('/api/rules/stats');
       if (!data) return;
       document.getElementById('rules-never-translate').innerText = data.neverTranslateCount.toLocaleString('en-US');
       document.getElementById('rules-cache-once').innerText = data.cacheOnceCount.toLocaleString('en-US');
-      
       const tagsContainer = document.getElementById('rules-ignored-tags');
       const tags = data.ignoredTags.split(',').map(t => t.trim()).filter(Boolean);
       tagsContainer.innerHTML = tags.map(t => `<span class="badge">${t}</span>`).join('');
@@ -517,10 +432,7 @@
     async function reloadRules() {
       showToast('در حال بارگذاری مجدد قوانین...', 'info');
       const res = await api('/api/rules/reload', 'POST');
-      if (res) {
-        showToast('قوانین با موفقیت آپدیت شدند.', 'success');
-        loadRulesStats();
-      }
+      if (res) { showToast('قوانین با موفقیت آپدیت شدند.', 'success'); loadRulesStats(); }
     }
 
     async function saveChunkSize() {
@@ -529,11 +441,7 @@
       if (res) showToast('سقف کاراکتر بروزرسانی شد.', 'success');
     }
 
-    // --- Models & Keys ---
-    async function initKeysTab() {
-      await loadKeys();
-      renderCascadeSlots();
-    }
+    async function initKeysTab() { await loadKeys(); renderCascadeSlots(); }
 
     function renderCascadeSlots() {
       const container = document.getElementById('model-cascade-container');
@@ -542,14 +450,10 @@
         const slot = document.createElement('div');
         slot.className = 'flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)]';
         slot.style.backgroundColor = 'var(--bg-main)';
-        
         let optionsHtml = liveModelsList.map(m => `<option value="${m}" ${m === modelName ? 'selected' : ''}>${m}</option>`).join('');
-        
         slot.innerHTML = `
           <span class="text-xs font-bold w-8 font-mono" style="color: var(--text-dim)">${idx + 1}.</span>
-          <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] font-mono" style="color: var(--success)">
-            ${optionsHtml}
-          </select>
+          <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] font-mono" style="color: var(--success)">${optionsHtml}</select>
           ${currentCascade.length > 1 ? `<button onclick="removeModelSlot(${idx})" class="btn btn-danger !p-2"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" /></svg></button>` : ''}
         `;
         container.appendChild(slot);
@@ -599,14 +503,11 @@
       if (res) { loadKeys(); showToast('Key deleted', 'success'); }
     }
 
-    // --- Stats & Logs ---
     async function updateStats() {
       const data = await api('/api/stats');
       if (!data) return;
-
       const statusDot = document.getElementById('status-dot');
       const statusText = document.getElementById('status-text');
-      
       if (data.isRunning) {
         statusDot.className = 'status-dot ' + (data.isPaused ? 'status-paused' : 'status-running');
         statusText.innerText = data.isPaused ? 'Paused' : 'Running';
@@ -616,11 +517,9 @@
         statusText.innerText = 'Idle';
         statusText.style.color = 'var(--text-muted)';
       }
-
       document.getElementById('current-page-info').innerText = data.currentPage || 'No active task';
       document.getElementById('stat-usage').innerText = data.dailyUsageCount;
       document.getElementById('stat-usage-bar').style.width = `${(data.dailyUsageCount / data.maxDailyLimit) * 100}%`;
-
       if (data.progress.total > 0) {
         const pct = Math.round((data.progress.current / data.progress.total) * 100);
         document.getElementById('stat-progress-text').innerText = `${pct}%`;
@@ -631,47 +530,32 @@
       }
 
       if (data.modelCascade) currentCascade = data.modelCascade;
+      // آپدیت کردن فیلدهای تنظیمات با مقادیر ذخیره شده در سرور
+      if (data.apiDelaySeconds !== undefined) document.getElementById('delay-input').value = data.apiDelaySeconds;
+      if (data.maxCharsPerBatch !== undefined) document.getElementById('chunk-size-input').value = data.maxCharsPerBatch;
 
       const btnStart = document.getElementById('btn-start');
       const btnPause = document.getElementById('btn-pause');
       const btnStop = document.getElementById('btn-stop');
-      
-      btnStart.disabled = data.isRunning;
-      btnStart.classList.toggle('opacity-30', data.isRunning);
-      btnPause.disabled = !data.isRunning;
-      btnPause.classList.toggle('opacity-30', !data.isRunning);
-      btnStop.disabled = !data.isRunning;
-      btnStop.classList.toggle('opacity-30', !data.isRunning);
+      btnStart.disabled = data.isRunning; btnStart.classList.toggle('opacity-30', data.isRunning);
+      btnPause.disabled = !data.isRunning; btnPause.classList.toggle('opacity-30', !data.isRunning);
+      btnStop.disabled = !data.isRunning; btnStop.classList.toggle('opacity-30', !data.isRunning);
 
-      // آپدیت نمودار حلقوی کش
       if (cacheChart && data.stats) {
         const hits = data.stats.cacheHits || 0;
         const calls = data.stats.aiCalls || 0;
-        
-        // جلوگیری از خطای چارت وقتی هر دو صفر هستند
         cacheChart.data.datasets[0].data = [hits === 0 && calls === 0 ? 1 : hits, calls];
         cacheChart.update();
       }
-      
-      // آپدیت نمودار خطی API (اضافه کردن تاریخچه)
       if (usageChart) {
         const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
         const currentCount = data.dailyUsageCount;
-        
-        // اگر در حال اجراست، یک نقطه جدید به نمودار اضافه کن
         if (data.isRunning) {
           const lastDataPoint = usageChart.data.datasets[0].data[usageChart.data.datasets[0].data.length - 1];
-          
-          // فقط اگر درخواست جدیدی رفته باشد نقطه اضافه کن
           if (lastDataPoint !== currentCount || usageChart.data.labels.length === 0) {
             usageChart.data.labels.push(now);
             usageChart.data.datasets[0].data.push(currentCount);
-            
-            // فقط 15 نقطه آخر را نگه دار تا نمودار شلوغ نشود
-            if (usageChart.data.labels.length > 15) {
-              usageChart.data.labels.shift();
-              usageChart.data.datasets[0].data.shift();
-            }
+            if (usageChart.data.labels.length > 15) { usageChart.data.labels.shift(); usageChart.data.datasets[0].data.shift(); }
             usageChart.update();
           }
         }
@@ -692,20 +576,13 @@
       };
     }
 
-    // --- Misc ---
     async function loadDocsets() {
       const docsets = await api('/api/docsets');
       const select = document.getElementById('doc-select');
-      if (docsets) {
-        docsets.forEach(d => { select.innerHTML += `<option value="${d.id}">${d.name}</option>`; });
-      }
+      if (docsets) { docsets.forEach(d => { select.innerHTML += `<option value="${d.id}">${d.name}</option>`; }); }
     }
 
-    async function updateDelay() {
-      const seconds = document.getElementById('delay-input').value;
-      await api('/api/settings/delay', 'POST', { seconds });
-      showToast('Delay updated', 'info');
-    }
+    async function updateDelay() { const seconds = document.getElementById('delay-input').value; await api('/api/settings/delay', 'POST', { seconds }); showToast('Delay updated', 'info'); }
 
     async function addDocset() {
       const id = document.getElementById('doc-id').value;
@@ -730,11 +607,7 @@
       `).join('');
     }
 
-    async function retryFailed(docId, pageKey) {
-      await api('/api/retry-failed', 'POST', { docId, pageKey });
-      showToast('Retry initiated', 'success');
-      switchTab('dashboard');
-    }
+    async function retryFailed(docId, pageKey) { await api('/api/retry-failed', 'POST', { docId, pageKey }); showToast('Retry initiated', 'success'); switchTab('dashboard'); }
 
     async function control(action) {
       const docId = document.getElementById('doc-select').value;
@@ -742,25 +615,9 @@
       if (res) showToast(`Engine ${action} command sent`, 'info');
     }
 
-    async function loadPreview() {
-      const data = await api('/api/preview/current');
-      if (data && data.html) {
-        document.getElementById('preview-frame').srcdoc = data.html;
-      }
-    }
-
-    async function loadGlossary() {
-      const data = await api('/api/glossary');
-      if (data) document.getElementById('glossary-json').value = JSON.stringify(data, null, 2);
-    }
-
-    async function saveGlossary() {
-      try {
-        const json = JSON.parse(document.getElementById('glossary-json').value);
-        const res = await api('/api/glossary', 'POST', json);
-        if (res) showToast('Glossary saved', 'success');
-      } catch (e) { showToast('Invalid JSON format', 'error'); }
-    }
+    async function loadPreview() { const data = await api('/api/preview/current'); if (data && data.html) document.getElementById('preview-frame').srcdoc = data.html; }
+    async function loadGlossary() { const data = await api('/api/glossary'); if (data) document.getElementById('glossary-json').value = JSON.stringify(data, null, 2); }
+    async function saveGlossary() { try { const json = JSON.parse(document.getElementById('glossary-json').value); const res = await api('/api/glossary', 'POST', json); if (res) showToast('Glossary saved', 'success'); } catch (e) { showToast('Invalid JSON format', 'error'); } }
 
     async function searchCache() {
       const q = document.getElementById('cache-search-input').value;
@@ -785,13 +642,11 @@
       `).join('');
     }
 
-    // --- Init ---
     window.onload = () => {
       const savedTheme = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
       document.getElementById('icon-sun').classList.toggle('hidden', savedTheme === 'dark');
       document.getElementById('icon-moon').classList.toggle('hidden', savedTheme === 'light');
-
       renderMenu();
       initCharts();
       loadDocsets();
