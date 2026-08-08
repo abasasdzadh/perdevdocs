@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -25,14 +25,34 @@
       --warning: #f59e0b;
       --danger: #ef4444;
     }
+    
+    [data-theme='light'] {
+      --bg-main: #f8fafc;
+      --bg-surface: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-hover: #e2e8f0;
+      --border-color: #e2e8f0;
+      --border-active: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.1);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
     * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Vazirmatn', 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); background-image: radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 40%); overflow-x: hidden; }
+    body { font-family: 'Vazirmatn', 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; }
     .font-mono { font-family: 'Inter', monospace; font-feature-settings: "tnum"; }
-    .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; transition: border-color 0.2s ease; }
+    
+    .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; transition: all 0.3s ease; }
     .card:hover { border-color: var(--border-active); }
+    
     .btn { transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.875rem; cursor: pointer; border: 1px solid transparent; font-family: 'Inter', sans-serif; white-space: nowrap; }
-    .btn-primary { background-color: #fff; color: #000; }
-    .btn-primary:hover { background-color: #eee; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+    .btn-primary { background-color: var(--text-main); color: var(--bg-main); }
+    .btn-primary:hover { box-shadow: 0 0 20px var(--accent-glow); }
     .btn-accent { background-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
     .btn-accent:hover { background-color: #2563eb; }
     .btn-success { background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2); }
@@ -41,24 +61,31 @@
     .btn-danger:hover { background-color: rgba(239, 68, 68, 0.2); }
     .btn-ghost { background-color: transparent; color: var(--text-muted); border-color: var(--border-color); }
     .btn-ghost:hover { background-color: var(--bg-hover); color: var(--text-main); }
+    
     .input { background-color: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.875rem; width: 100%; transition: all 0.2s; }
     .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    
     .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: all 0.15s ease; cursor: pointer; border: 1px solid transparent; }
     .nav-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
     .nav-item.active { background-color: var(--bg-hover); color: var(--text-main); border-color: var(--border-color); }
     .nav-item svg { width: 18px; height: 18px; stroke-width: 1.5; flex-shrink: 0; }
+    
     .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .status-running { background-color: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
     .status-paused { background-color: var(--warning); }
     .status-stopped { background-color: var(--danger); }
+    
+    .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-family: 'Inter', monospace; background-color: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border-color); }
+    
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     .term-scroll::-webkit-scrollbar { width: 4px; }
     .term-scroll::-webkit-scrollbar-track { background: transparent; }
-    .term-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .term-scroll::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 2px; }
     .toast { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
     @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .chart-container { position: relative; height: 220px; width: 100%; }
-    #sidebar { transition: transform 0.3s ease-in-out; }
+    
+    #sidebar { transition: transform 0.3s ease-in-out, background-color 0.3s ease; }
     @media (max-width: 767px) {
       #sidebar { position: fixed; top: 0; right: 0; bottom: 0; transform: translateX(100%); z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
       #sidebar.open { transform: translateX(0); }
@@ -68,41 +95,49 @@
 <body class="min-h-screen flex">
   <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] space-y-3 w-[90%] max-w-sm"></div>
   <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden md:hidden" onclick="toggleSidebar()"></div>
+  
   <div class="flex w-full">
+    <!-- Sidebar -->
     <aside id="sidebar" class="w-[260px] shrink-0 border-l border-[var(--border-color)] flex flex-col h-screen md:sticky top-0 p-4 bg-[var(--bg-surface)]/95 backdrop-blur-xl">
       <div class="flex items-center justify-between gap-3 px-2 py-4 mb-4">
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-white flex items-center justify-center text-black font-bold text-lg">P</div>
+          <div class="w-9 h-9 rounded-lg bg-[var(--accent)] flex items-center justify-center text-white font-bold text-lg">P</div>
           <div>
-            <h1 class="font-bold text-sm text-white tracking-tight">PerDevDocs</h1>
-            <p class="text-[10px] text-[var(--text-dim)] font-mono">Engine v1.0.0</p>
+            <h1 class="font-bold text-sm tracking-tight" style="color: var(--text-main)">PerDevDocs</h1>
+            <p class="text-[10px] font-mono" style="color: var(--text-dim)">Engine v1.0.0</p>
           </div>
         </div>
-        <button class="md:hidden text-[var(--text-muted)]" onclick="toggleSidebar()">
+        <button class="md:hidden" style="color: var(--text-muted)" onclick="toggleSidebar()">
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
       <nav id="nav-menu" class="flex-1 space-y-1 overflow-y-auto term-scroll"></nav>
       <div class="mt-auto p-3 border border-[var(--border-color)] rounded-xl bg-[var(--bg-surface)]">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs text-[var(--text-dim)]">Engine Status</span>
+          <span class="text-xs" style="color: var(--text-dim)">Engine Status</span>
           <div class="flex items-center gap-2">
             <span id="status-dot" class="status-dot status-stopped"></span>
-            <span id="status-text" class="text-xs font-medium text-[var(--text-muted)]">Idle</span>
+            <span id="status-text" class="text-xs font-medium" style="color: var(--text-muted)">Idle</span>
           </div>
         </div>
-        <div class="text-[10px] text-[var(--text-dim)] font-mono truncate" id="current-page-info">No active task</div>
+        <div class="text-[10px] font-mono truncate" id="current-page-info" style="color: var(--text-dim)">No active task</div>
       </div>
     </aside>
+
+    <!-- Main Content -->
     <main class="flex-1 min-h-screen flex flex-col w-full">
       <header class="h-16 border-b border-[var(--border-color)] flex items-center justify-between px-4 md:px-8 gap-2 sticky top-0 bg-[var(--bg-main)]/80 backdrop-blur-xl z-40">
         <div class="flex items-center gap-3 min-w-0">
-          <button onclick="toggleSidebar()" class="md:hidden btn btn-ghost !p-2 !border-[var(--border-color)]">
+          <button onclick="toggleSidebar()" class="md:hidden btn btn-ghost !p-2">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
           </button>
-          <h2 id="page-title" class="text-base md:text-lg font-semibold text-white truncate">داشبورد عملکرد</h2>
+          <h2 id="page-title" class="text-base md:text-lg font-semibold truncate" style="color: var(--text-main)">داشبورد عملکرد</h2>
         </div>
         <div class="flex items-center gap-2 md:gap-3">
+          <button onclick="toggleTheme()" class="btn btn-ghost !p-2">
+            <svg id="icon-moon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+            <svg id="icon-sun" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+          </button>
           <select id="doc-select" class="input w-28 md:w-48 !py-2 text-xs hidden sm:block">
             <option value="">All Docsets</option>
           </select>
@@ -111,6 +146,7 @@
           <button id="btn-stop" onclick="control('stop')" disabled class="btn btn-danger !py-2 !px-3 md:!px-4">Stop</button>
         </div>
       </header>
+
       <div class="flex-1 p-4 md:p-8 overflow-y-auto w-full">
         
         <!-- TAB: DASHBOARD -->
@@ -118,61 +154,61 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <div class="card p-5 md:p-6">
               <div class="flex justify-between items-center mb-4">
-                <span class="text-xs text-[var(--text-dim)] uppercase tracking-wider">API Quota</span>
-                <span class="text-[var(--accent)] text-xs font-mono">DAILY LIMIT</span>
+                <span class="text-xs uppercase tracking-wider" style="color: var(--text-dim)">API Quota</span>
+                <span class="text-xs font-mono" style="color: var(--accent)">DAILY LIMIT</span>
               </div>
               <div class="flex items-end gap-2 mb-3">
-                <span id="stat-usage" class="text-2xl md:text-3xl font-bold text-white font-mono">0</span>
-                <span class="text-sm text-[var(--text-muted)] mb-1">/ 400</span>
+                <span id="stat-usage" class="text-2xl md:text-3xl font-bold font-mono" style="color: var(--text-main)">0</span>
+                <span class="text-sm mb-1" style="color: var(--text-muted)">/ 400</span>
               </div>
-              <div class="w-full bg-[var(--bg-hover)] h-1.5 rounded-full overflow-hidden">
-                <div id="stat-usage-bar" class="bg-[var(--accent)] h-full w-0 transition-all duration-500 rounded-full"></div>
+              <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bg-hover)">
+                <div id="stat-usage-bar" class="h-full w-0 transition-all duration-500 rounded-full" style="background-color: var(--accent)"></div>
               </div>
             </div>
             <div class="card p-5 md:p-6">
               <div class="flex justify-between items-center mb-4">
-                <span class="text-xs text-[var(--text-dim)] uppercase tracking-wider">Translation Progress</span>
-                <span class="text-[var(--success)] text-xs font-mono">ACTIVE</span>
+                <span class="text-xs uppercase tracking-wider" style="color: var(--text-dim)">Translation Progress</span>
+                <span class="text-xs font-mono" style="color: var(--success)">ACTIVE</span>
               </div>
               <div class="flex items-end gap-2 mb-3">
-                <span id="stat-progress-text" class="text-2xl md:text-3xl font-bold text-white font-mono">0%</span>
+                <span id="stat-progress-text" class="text-2xl md:text-3xl font-bold font-mono" style="color: var(--text-main)">0%</span>
               </div>
-              <div class="w-full bg-[var(--bg-hover)] h-1.5 rounded-full overflow-hidden">
-                <div id="stat-progress-bar" class="bg-[var(--success)] h-full w-0 transition-all duration-500 rounded-full"></div>
+              <div class="w-full h-1.5 rounded-full overflow-hidden" style="background-color: var(--bg-hover)">
+                <div id="stat-progress-bar" class="h-full w-0 transition-all duration-500 rounded-full" style="background-color: var(--success)"></div>
               </div>
             </div>
             <div class="card p-5 md:p-6 sm:col-span-2 lg:col-span-1">
               <div class="flex justify-between items-center mb-4">
-                <span class="text-xs text-[var(--text-dim)] uppercase tracking-wider">Page Delay</span>
-                <span class="text-[var(--warning)] text-xs font-mono">RATE LIMIT</span>
+                <span class="text-xs uppercase tracking-wider" style="color: var(--text-dim)">Page Delay</span>
+                <span class="text-xs font-mono" style="color: var(--warning)">RATE LIMIT</span>
               </div>
               <div class="flex items-center gap-2 mb-3">
                 <input type="number" id="delay-input" min="0" max="300" value="90" onchange="updateDelay()" class="input w-20 text-center font-mono !text-lg !py-1" />
-                <span class="text-sm text-[var(--text-muted)]">Seconds</span>
+                <span class="text-sm" style="color: var(--text-muted)">Seconds</span>
               </div>
-              <p class="text-[10px] text-[var(--text-dim)]">Prevents API block & simulates human</p>
+              <p class="text-[10px]" style="color: var(--text-dim)">Prevents API block & simulates human</p>
             </div>
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <div class="card p-5 md:p-6">
-              <h3 className="text-sm font-medium text-white mb-4">Cache Performance</h3>
+              <h3 className="text-sm font-medium mb-4" style="color: var(--text-main)">Cache Performance</h3>
               <div class="chart-container"><canvas id="chart-cache"></canvas></div>
             </div>
             <div class="card p-5 md:p-6">
-              <h3 className="text-sm font-medium text-white mb-4">API Usage History</h3>
+              <h3 className="text-sm font-medium mb-4" style="color: var(--text-main)">API Usage History</h3>
               <div class="chart-container"><canvas id="chart-usage"></canvas></div>
             </div>
           </div>
           <div class="card overflow-hidden">
-            <div class="bg-[var(--bg-surface)] px-5 py-3 border-b border-[var(--border-color)] flex justify-between items-center">
+            <div class="px-5 py-3 border-b border-[var(--border-color)] flex justify-between items-center" style="background-color: var(--bg-surface)">
               <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-white">Live Logs</span>
-                <span class="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse"></span>
+                <span class="text-sm font-medium" style="color: var(--text-main)">Live Logs</span>
+                <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--success)"></span>
               </div>
-              <button onclick="document.getElementById('terminal').innerHTML=''" class="text-[10px] text-[var(--text-dim)] hover:text-white transition">Clear</button>
+              <button onclick="document.getElementById('terminal').innerHTML=''" class="text-[10px] transition hover:opacity-80" style="color: var(--text-dim)">Clear</button>
             </div>
-            <div id="terminal" class="p-4 font-mono text-xs h-64 md:h-72 overflow-y-auto space-y-1 text-[var(--text-muted)] term-scroll bg-[var(--bg-main)]">
-              <div class="text-[var(--text-dim)]">[System] Engine ready. Waiting for commands...</div>
+            <div id="terminal" class="p-4 font-mono text-xs h-64 md:h-72 overflow-y-auto space-y-1 term-scroll" style="color: var(--text-muted); background-color: var(--bg-main)">
+              <div style="color: var(--text-dim)">[System] Engine ready. Waiting for commands...</div>
             </div>
           </div>
         </div>
@@ -182,8 +218,8 @@
           <div class="card p-5 md:p-6">
             <div class="flex flex-wrap justify-between items-center mb-6 gap-2">
               <div>
-                <h3 className="text-base font-semibold text-white">AI Model Cascade</h3>
-                <p class="text-xs text-[var(--text-muted)] mt-1">If primary fails, engine switches automatically.</p>
+                <h3 className="text-base font-semibold" style="color: var(--text-main)">AI Model Cascade</h3>
+                <p class="text-xs mt-1" style="color: var(--text-muted)">If primary fails, engine switches automatically.</p>
               </div>
               <button onclick="addModelSlot()" class="btn btn-ghost text-xs">Add Model</button>
             </div>
@@ -191,7 +227,7 @@
             <button onclick="saveCascade()" class="btn btn-accent mt-6 w-full">Save Cascade Configuration</button>
           </div>
           <div class="card p-5 md:p-6">
-            <h3 className="text-base font-semibold text-white mb-4">API Keys (Gemini)</h3>
+            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">API Keys (Gemini)</h3>
             <div class="flex flex-col sm:flex-row gap-2 mb-6">
               <input type="text" id="new-key-input" placeholder="AIza..." class="input flex-1 font-mono" />
               <button onclick="addKey()" class="btn btn-primary">Add Key</button>
@@ -203,7 +239,7 @@
         <!-- TAB: DOCSETS -->
         <div id="tab-docsets" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
-            <h3 className="text-base font-semibold text-white mb-4">Register New Docset</h3>
+            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">Register New Docset</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <input type="text" id="doc-id" placeholder="ID (e.g., react)" class="input font-mono" />
               <input type="text" id="doc-name" placeholder="Name (e.g., React)" class="input" />
@@ -216,34 +252,34 @@
         <!-- TAB: RULES & ENGINE -->
         <div id="tab-rules" class="hidden space-y-6">
           <div className="card p-6">
-            <h3 className="text-base font-semibold text-white mb-4">آمار قوانین Bypass</h3>
+            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">آمار قوانین Bypass</h3>
             <div className="space-y-3">
-              <div className="flex justify-between items-center bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
-                <span className="text-sm text-[var(--text-muted)]">کلمات مستثنی شده (هرگز ترجمه نشود):</span>
-                <span id="rules-never-translate" className="font-mono text-sm text-[var(--danger)]">0</span>
+              <div className="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+                <span className="text-sm" style="color: var(--text-muted)">کلمات مستثنی شده (هرگز ترجمه نشود):</span>
+                <span id="rules-never-translate" className="font-mono text-sm" style="color: var(--danger)">0</span>
               </div>
-              <div className="flex justify-between items-center bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
-                <span className="text-sm text-[var(--text-muted)]">متون تکراری (کش یک‌بار مصرف):</span>
-                <span id="rules-cache-once" className="font-mono text-sm text-[var(--success)]">0</span>
+              <div className="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+                <span className="text-sm" style="color: var(--text-muted)">متون تکراری (کش یک‌بار مصرف):</span>
+                <span id="rules-cache-once" className="font-mono text-sm" style="color: var(--success)">0</span>
               </div>
-              <div className="flex flex-col gap-2 bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
-                <span className="text-sm text-[var(--text-muted)]">تگ‌های مستثنی شده (SKIP_SUBTREE):</span>
-                <span id="rules-ignored-tags" className="font-mono text-[10px] text-[var(--warning)] break-all"></span>
+              <div className="flex flex-col gap-2 p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+                <span className="text-sm mb-2" style="color: var(--text-muted)">تگ‌های مستثنی شده (SKIP_SUBTREE):</span>
+                <div id="rules-ignored-tags" className="flex flex-wrap gap-2"></div>
               </div>
             </div>
             <button onclick="reloadRules()" className="btn btn-accent mt-6 w-full">🔄 بارگذاری مجدد فایل‌های JSON</button>
           </div>
           <div className="card p-6">
-            <h3 className="text-base font-semibold text-white mb-4">استراتژی درخواست به هوش مصنوعی</h3>
-            <p className="text-xs text-[var(--text-muted)] mb-4">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
+            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">استراتژی درخواست به هوش مصنوعی</h3>
+            <p className="text-xs mb-4" style="color: var(--text-muted)">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs text-[var(--text-dim)] uppercase tracking-wider mb-2 block">حداکثر کاراکتر هر درخواست</label>
+                <label className="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">حداکثر کاراکتر هر درخواست</label>
                 <div className="flex gap-2">
                   <input type="number" id="chunk-size-input" min="1000" max="500000" step="1000" value="100000" className="input flex-1 font-mono" />
                   <button onclick="saveChunkSize()" className="btn btn-primary">ذخیره</button>
                 </div>
-                <p className="text-[10px] text-[var(--text-dim)] mt-2">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن)</p>
+                <p className="text-[10px] mt-2" style="color: var(--text-dim)">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن)</p>
               </div>
             </div>
           </div>
@@ -252,7 +288,7 @@
         <!-- TAB: ERRORS -->
         <div id="tab-errors" class="hidden space-y-4">
           <div className="card p-5 md:p-6">
-            <h3 className="text-base font-semibold text-white mb-4">Failed Translations</h3>
+            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">Failed Translations</h3>
             <div id="failed-list" className="space-y-2"></div>
           </div>
         </div>
@@ -260,7 +296,7 @@
         <!-- TAB: PREVIEW -->
         <div id="tab-preview" class="hidden space-y-4">
           <div className="card p-4 flex justify-between items-center">
-            <h3 className="text-base font-semibold text-white">Live HTML Preview</h3>
+            <h3 className="text-base font-semibold" style="color: var(--text-main)">Live HTML Preview</h3>
             <button onclick="loadPreview()" class="btn btn-ghost text-xs">Refresh</button>
           </div>
           <iframe id="preview-frame" className="card w-full min-h-[600px] bg-white rounded-xl" sandbox="allow-same-origin"></iframe>
@@ -270,10 +306,10 @@
         <div id="tab-glossary" class="hidden space-y-4">
           <div className="card p-5 md:p-6 space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-base font-semibold text-white">Technical Glossary</h3>
+              <h3 className="text-base font-semibold" style="color: var(--text-main)">Technical Glossary</h3>
               <button onclick="saveGlossary()" className="btn btn-success text-xs">Save Changes</button>
             </div>
-            <textarea id="glossary-json" rows="15" className="input font-mono text-xs text-[var(--success)] !bg-[var(--bg-main)]" dir="ltr" placeholder='{"Word": "Translation"}'></textarea>
+            <textarea id="glossary-json" rows="15" className="input font-mono text-xs !bg-[var(--bg-main)]" style="color: var(--success)" dir="ltr" placeholder='{"Word": "Translation"}'></textarea>
           </div>
         </div>
 
@@ -286,7 +322,7 @@
           <div className="card overflow-hidden">
             <div class="overflow-x-auto">
               <table className="w-full text-xs text-right min-w-[400px]">
-                <thead className="bg-[var(--bg-surface)] text-[var(--text-dim)] border-b border-[var(--border-color)]">
+                <thead className="border-b border-[var(--border-color)]" style="background-color: var(--bg-surface); color: var(--text-dim)">
                   <tr>
                     <th className="p-4 font-medium">Original Text</th>
                     <th className="p-4 font-medium">Translated Text</th>
@@ -301,7 +337,7 @@
         <!-- TAB: DOWNLOADS -->
         <div id="tab-download" class="hidden space-y-4">
           <div className="card p-5 md:p-6">
-            <h3 className="text-base font-semibold text-white mb-4">Generated Output Files</h3>
+            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">Generated Output Files</h3>
             <div id="downloads-list" className="space-y-2"></div>
           </div>
         </div>
@@ -349,6 +385,17 @@
       `).join('');
     }
 
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.getElementById('icon-sun').classList.toggle('hidden', next === 'dark');
+      document.getElementById('icon-moon').classList.toggle('hidden', next === 'light');
+      updateChartColors();
+    }
+
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebar-overlay');
@@ -382,19 +429,43 @@
       }
     }
 
+    function getThemeColors() {
+      const style = getComputedStyle(document.documentElement);
+      return {
+        text: style.getPropertyValue('--text-muted').trim(),
+        grid: style.getPropertyValue('--border-color').trim()
+      };
+    }
+
+    function updateChartColors() {
+      const colors = getThemeColors();
+      if (cacheChart) {
+        cacheChart.options.plugins.legend.labels.color = colors.text;
+        cacheChart.update('none');
+      }
+      if (usageChart) {
+        usageChart.options.scales.x.ticks.color = colors.text;
+        usageChart.options.scales.y.ticks.color = colors.text;
+        usageChart.options.scales.x.grid.color = colors.grid;
+        usageChart.options.scales.y.grid.color = colors.grid;
+        usageChart.update('none');
+      }
+    }
+
     function initCharts() {
+      const colors = getThemeColors();
       const ctxCache = document.getElementById('chart-cache').getContext('2d');
       cacheChart = new Chart(ctxCache, {
         type: 'doughnut',
         data: { labels: ['Cache Hits', 'AI Calls'], datasets: [{ data: [1, 0], backgroundColor: ['#10b981', '#3b82f6'], borderWidth: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#888', font: { family: 'Inter' } } } } }
+        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: colors.text, font: { family: 'Inter' } } } } }
       });
 
       const ctxUsage = document.getElementById('chart-usage').getContext('2d');
       usageChart = new Chart(ctxUsage, {
         type: 'line',
         data: { labels: ['Today'], datasets: [{ label: 'Requests', data: [0], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#1a1a1a' }, ticks: { color: '#555' } }, x: { grid: { display: false }, ticks: { color: '#555' } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { color: colors.text } }, x: { grid: { display: false }, ticks: { color: colors.text } } } }
       });
     }
 
@@ -433,7 +504,11 @@
       if (!data) return;
       document.getElementById('rules-never-translate').innerText = data.neverTranslateCount.toLocaleString('en-US');
       document.getElementById('rules-cache-once').innerText = data.cacheOnceCount.toLocaleString('en-US');
-      document.getElementById('rules-ignored-tags').innerText = data.ignoredTags;
+      
+      // Render tags as badges
+      const tagsContainer = document.getElementById('rules-ignored-tags');
+      const tags = data.ignoredTags.split(',').map(t => t.trim()).filter(Boolean);
+      tagsContainer.innerHTML = tags.map(t => `<span class="badge">${t}</span>`).join('');
     }
 
     async function reloadRules() {
@@ -465,17 +540,18 @@
       currentCascade.forEach((modelName, idx) => {
         const isCustom = !liveModelsList.includes(modelName);
         const slot = document.createElement('div');
-        slot.className = 'flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]';
+        slot.className = 'flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 p-3 rounded-lg border border-[var(--border-color)]';
+        slot.style.backgroundColor = 'var(--bg-main)';
         let optionsHtml = liveModelsList.map(m => `<option value="${m}" ${m === modelName ? 'selected' : ''}>${m}</option>`).join('');
         slot.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-[var(--text-dim)] w-8 font-mono">${idx + 1}.</span>
-            <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] text-[var(--success)] font-mono">
+            <span class="text-xs font-bold w-8 font-mono" style="color: var(--text-dim)">${idx + 1}.</span>
+            <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] font-mono" style="color: var(--success)">
               ${optionsHtml}
               <option value="__custom__" ${isCustom ? 'selected' : ''}>Custom Model</option>
             </select>
           </div>
-          <input type="text" placeholder="custom-model-name" value="${isCustom ? modelName : ''}" onchange="updateSlotValue(${idx}, this.value)" class="${isCustom ? '' : 'hidden'} input w-full sm:w-48 !bg-[var(--bg-card)] text-[var(--warning)] font-mono" id="custom-input-${idx}" />
+          <input type="text" placeholder="custom-model-name" value="${isCustom ? modelName : ''}" onchange="updateSlotValue(${idx}, this.value)" class="${isCustom ? '' : 'hidden'} input w-full sm:w-48 !bg-[var(--bg-card)] font-mono" style="color: var(--warning)" id="custom-input-${idx}" />
           ${currentCascade.length > 1 ? `<button onclick="removeModelSlot(${idx})" class="btn btn-danger !p-2"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" /></svg></button>` : ''}
         `;
         container.appendChild(slot);
@@ -500,8 +576,8 @@
       const container = document.getElementById('keys-list');
       if (!keys) return;
       container.innerHTML = keys.map(k => `
-        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
-          <span class="font-mono text-xs text-[var(--success)] truncate">${k.masked}</span>
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+          <span class="font-mono text-xs truncate" style="color: var(--success)">${k.masked}</span>
           <div class="flex gap-2 shrink-0">
             <button onclick="testKey('${k.key}')" class="btn btn-ghost text-[10px] !py-1.5 !px-3 flex-1 sm:flex-none">Test</button>
             <button onclick="deleteKey('${k.key}')" class="btn btn-danger text-[10px] !py-1.5 !px-3 flex-1 sm:flex-none">Delete</button>
@@ -548,7 +624,6 @@
       }
 
       document.getElementById('current-page-info').innerText = data.currentPage || 'No active task';
-
       document.getElementById('stat-usage').innerText = data.dailyUsageCount;
       document.getElementById('stat-usage-bar').style.width = `${(data.dailyUsageCount / data.maxDailyLimit) * 100}%`;
 
@@ -589,9 +664,10 @@
       evtSource.onmessage = (e) => {
         const log = JSON.parse(e.data);
         const line = document.createElement('div');
-        const color = log.type === 'error' ? 'text-rose-400' : log.type === 'success' ? 'text-emerald-400' : log.type === 'warn' ? 'text-amber-400' : 'text-slate-400';
-        line.className = `flex gap-2 ${color}`;
-        line.innerHTML = `<span class="text-slate-700 shrink-0">[${log.timestamp}]</span> <span class="break-words">${log.message}</span>`;
+        const color = log.type === 'error' ? 'var(--danger)' : log.type === 'success' ? 'var(--success)' : log.type === 'warn' ? 'var(--warning)' : 'var(--text-muted)';
+        line.className = `flex gap-2`;
+        line.style.color = color;
+        line.innerHTML = `<span class="shrink-0" style="color: var(--text-dim)">[${log.timestamp}]</span> <span class="break-words">${log.message}</span>`;
         terminal.appendChild(line);
         terminal.scrollTop = terminal.scrollHeight;
       };
@@ -623,12 +699,12 @@
     async function loadFailed() {
       const list = await api('/api/failed-pages');
       const container = document.getElementById('failed-list');
-      if (!list || list.length === 0) { container.innerHTML = '<div class="text-sm text-[var(--text-dim)] text-center py-8">No errors found. Everything is clean.</div>'; return; }
+      if (!list || list.length === 0) { container.innerHTML = `<div class="text-sm text-center py-8" style="color: var(--text-dim)">No errors found. Everything is clean.</div>`; return; }
       container.innerHTML = list.map(item => `
-        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 bg-[var(--bg-main)] p-4 rounded-lg border border-[var(--border-color)]">
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 p-4 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
           <div class="min-w-0">
-            <span class="font-medium text-sm text-white font-mono break-all">${item.docName} / ${item.pageKey}</span>
-            <div class="text-[10px] text-rose-400 mt-1 font-mono break-all">${item.error}</div>
+            <span class="font-medium text-sm font-mono break-all" style="color: var(--text-main)">${item.docName} / ${item.pageKey}</span>
+            <div class="text-[10px] mt-1 font-mono break-all" style="color: var(--danger)">${item.error}</div>
           </div>
           <button onclick="retryFailed('${item.docId}', '${item.pageKey}')" class="btn btn-ghost text-xs shrink-0">Retry</button>
         </div>
@@ -671,19 +747,19 @@
       const q = document.getElementById('cache-search-input').value;
       const rows = await api(`/api/cache/search?q=${encodeURIComponent(q)}`);
       const tbody = document.getElementById('cache-table-body');
-      if (!rows || rows.length === 0) { tbody.innerHTML = '<tr><td colspan="2" class="p-8 text-center text-[var(--text-dim)]">No results found</td></tr>'; return; }
-      tbody.innerHTML = rows.map(r => `<tr class="hover:bg-[var(--bg-surface)] transition"><td class="p-4 text-[var(--text-muted)] font-mono break-words">${r.original_text}</td><td class="p-4 text-[var(--success)] font-mono break-words">${r.translated_text}</td></tr>`).join('');
+      if (!rows || rows.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-8 text-center" style="color: var(--text-dim)">No results found</td></tr>`; return; }
+      tbody.innerHTML = rows.map(r => `<tr class="transition" style="background-color: var(--bg-card)"><td class="p-4 font-mono break-words" style="color: var(--text-muted)">${r.original_text}</td><td class="p-4 font-mono break-words" style="color: var(--success)">${r.translated_text}</td></tr>`).join('');
     }
 
     async function loadDownloads() {
       const list = await api('/api/downloads');
       const container = document.getElementById('downloads-list');
-      if (!list || list.length === 0) { container.innerHTML = '<div class="text-sm text-[var(--text-dim)] text-center py-8">No output files generated yet.</div>'; return; }
+      if (!list || list.length === 0) { container.innerHTML = `<div class="text-sm text-center py-8" style="color: var(--text-dim)">No output files generated yet.</div>`; return; }
       container.innerHTML = list.map(f => `
-        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 bg-[var(--bg-main)] p-4 rounded-lg border border-[var(--border-color)]">
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 p-4 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
           <div>
-            <span class="font-medium text-sm text-white font-mono break-all">${f.id}/db.json</span>
-            <div class="text-[10px] text-[var(--text-dim)] mt-1 font-mono">Size: ${f.sizeMb} MB | Updated: ${f.updatedAt}</div>
+            <span class="font-medium text-sm font-mono break-all" style="color: var(--text-main)">${f.id}/db.json</span>
+            <div class="text-[10px] mt-1 font-mono" style="color: var(--text-dim)">Size: ${f.sizeMb} MB | Updated: ${f.updatedAt}</div>
           </div>
           <a href="/api/download/${f.id}" class="btn btn-accent text-xs shrink-0">Download</a>
         </div>
@@ -692,6 +768,12 @@
 
     // --- Init ---
     window.onload = () => {
+      // Theme Init
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('icon-sun').classList.toggle('hidden', savedTheme === 'dark');
+      document.getElementById('icon-moon').classList.toggle('hidden', savedTheme === 'light');
+
       renderMenu();
       initCharts();
       loadDocsets();
