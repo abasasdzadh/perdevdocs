@@ -29,6 +29,7 @@ export class PipelineManager extends EventEmitter {
     this.tm = null;
     this.ruleEngine = new RuleEngine();
     this.maxCharsPerBatch = 100000;
+    this.useKeyRotation = false; // قابلیت چرخش کلیدها
     
     this.settingsPath = './settings.json';
     this.geminiKeys = [];
@@ -42,6 +43,7 @@ export class PipelineManager extends EventEmitter {
         this.apiDelaySeconds = s.apiDelaySeconds ?? this.apiDelaySeconds;
         this.modelCascade = s.modelCascade ?? this.modelCascade;
         this.maxCharsPerBatch = s.maxCharsPerBatch ?? this.maxCharsPerBatch;
+        this.useKeyRotation = s.useKeyRotation ?? this.useKeyRotation;
         this.geminiKeys = s.geminiKeys ?? [];
         process.env.GEMINI_API_KEYS = this.geminiKeys.join(',');
       }
@@ -54,6 +56,7 @@ export class PipelineManager extends EventEmitter {
         apiDelaySeconds: this.apiDelaySeconds,
         modelCascade: this.modelCascade,
         maxCharsPerBatch: this.maxCharsPerBatch,
+        useKeyRotation: this.useKeyRotation,
         geminiKeys: this.geminiKeys
       };
       fs.writeFileSync(this.settingsPath, JSON.stringify(s, null, 2), 'utf8');
@@ -97,6 +100,12 @@ export class PipelineManager extends EventEmitter {
     this.maxCharsPerBatch = Math.max(1000, parseInt(size) || 100000);
     this.saveSettings();
     this.log(`⚙️ سقف کاراکتر برای هر درخواست به ${this.maxCharsPerBatch} تغییر یافت.`);
+  }
+
+  setKeyRotation(enabled) {
+    this.useKeyRotation = !!enabled;
+    this.saveSettings();
+    this.log(`⚙️ چرخش کلیدها (Load Balancing) ${this.useKeyRotation ? 'فعال شد' : 'غیرفعال شد'}.`);
   }
 
   reloadRules() {
@@ -147,7 +156,7 @@ export class PipelineManager extends EventEmitter {
       this.tm = new TranslationMemory();
       await this.tm.init();
 
-      const translator = new GeminiTranslator(this.modelCascade);
+      const translator = new GeminiTranslator(this.modelCascade, this.useKeyRotation);
       const queue = new TranslationQueue();
 
       const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');

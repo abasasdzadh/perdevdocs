@@ -2,13 +2,14 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 
 export class GeminiTranslator {
-  constructor(modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']) {
+  constructor(modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'], useKeyRotation = false) {
     this.glossary = this.loadGlossary();
     this.modelCascade = Array.isArray(modelCascade) && modelCascade.length > 0 
       ? modelCascade 
       : ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
     this.geminiKeys = [];
     this.activeKeyIndex = 0;
+    this.useKeyRotation = useKeyRotation; // قابلیت چرخش کلیدها
     this.reloadKeys();
   }
 
@@ -51,7 +52,6 @@ export class GeminiTranslator {
     return {};
   }
 
-  // 🌐 دریافت مستقیم و زنده لیست مدل‌ها از Google API
   static async fetchLiveModels(apiKey) {
     if (!apiKey) return [];
     try {
@@ -67,8 +67,7 @@ export class GeminiTranslator {
     } catch (err) {
       console.warn('⚠️ خطا در دریافت زنده مدل‌ها:', err.message);
     }
-    // لیست پیش‌فرض در صورت عدم دسترسی شبکه
-    return ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
+    return ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
   }
 
   static async testKey(apiKey) {
@@ -114,9 +113,15 @@ ${JSON.stringify(textsArray)}
     return JSON.parse(rawText);
   }
 
-  // 🔄 زنجیره شکست‌ناپذیر Fallback روی مدل‌ها
   async translateBatch(textsArray) {
     if (!textsArray || textsArray.length === 0) return [];
+
+    // ۱. چرخش پیش‌فعال کلید (Load Balancing)
+    if (this.useKeyRotation && this.geminiKeys.length > 1) {
+      this.activeKeyIndex = (this.activeKeyIndex + 1) % this.geminiKeys.length;
+      this.initGemini();
+      console.log(`🔄 چرخش کلید: استفاده از کلید شماره ${this.activeKeyIndex + 1}/${this.geminiKeys.length}`);
+    }
 
     // گردش روی تک تک مدل‌های زنجیره
     for (let mIdx = 0; mIdx < this.modelCascade.length; mIdx++) {

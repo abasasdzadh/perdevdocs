@@ -224,6 +224,18 @@
             <button onclick="reloadRules()" class="btn btn-accent mt-6 w-full">🔄 بارگذاری مجدد فایل‌های JSON</button>
           </div>
           <div class="card p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">استراتژی کلیدهای API</h3>
+            <div class="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+              <div>
+                <span class="text-sm" style="color: var(--text-muted)">چرخش خودکار کلیدها (Load Balancing):</span>
+                <p class="text-[10px] mt-1" style="color: var(--text-dim)">با فعال سازی، موتور برای هر درخواست به کلید بعدی سوییچ می‌کند (تا ۱۰ کلید).</p>
+              </div>
+              <button id="btn-rotation" onclick="toggleKeyRotation()" class="btn btn-ghost text-xs">
+                <span id="rotation-status">غیرفعال</span>
+              </button>
+            </div>
+          </div>
+          <div class="card p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">استراتژی درخواست به هوش مصنوعی</h3>
             <p class="text-xs mb-4" style="color: var(--text-muted)">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
             <div class="space-y-4">
@@ -441,6 +453,27 @@
       if (res) showToast('سقف کاراکتر بروزرسانی شد.', 'success');
     }
 
+    async function toggleKeyRotation() {
+      const current = document.getElementById('rotation-status').innerText === 'فعال';
+      const newState = !current;
+      await api('/api/settings/key-rotation', 'POST', { enabled: newState });
+      updateRotationUI(newState);
+    }
+
+    function updateRotationUI(state) {
+      const btn = document.getElementById('btn-rotation');
+      const status = document.getElementById('rotation-status');
+      if (state) {
+        btn.classList.remove('btn-ghost');
+        btn.classList.add('btn-success');
+        status.innerText = 'فعال';
+      } else {
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-ghost');
+        status.innerText = 'غیرفعال';
+      }
+    }
+
     async function initKeysTab() { await loadKeys(); renderCascadeSlots(); }
 
     function renderCascadeSlots() {
@@ -530,9 +563,9 @@
       }
 
       if (data.modelCascade) currentCascade = data.modelCascade;
-      // آپدیت کردن فیلدهای تنظیمات با مقادیر ذخیره شده در سرور
       if (data.apiDelaySeconds !== undefined) document.getElementById('delay-input').value = data.apiDelaySeconds;
       if (data.maxCharsPerBatch !== undefined) document.getElementById('chunk-size-input').value = data.maxCharsPerBatch;
+      if (data.useKeyRotation !== undefined) updateRotationUI(data.useKeyRotation);
 
       const btnStart = document.getElementById('btn-start');
       const btnPause = document.getElementById('btn-pause');

@@ -45,6 +45,11 @@ app.post('/api/rules/reload', (req, res) => {
   res.json({ success: true });
 });
 
+app.post('/api/settings/key-rotation', (req, res) => {
+  pipeline.setKeyRotation(req.body.enabled);
+  res.json({ success: true });
+});
+
 app.get('/api/stats', (req, res) => {
   let dailyUsage = { date: '', count: 0 };
   try {
@@ -59,6 +64,7 @@ app.get('/api/stats', (req, res) => {
     apiDelaySeconds: pipeline.apiDelaySeconds,
     maxCharsPerBatch: pipeline.maxCharsPerBatch,
     modelCascade: pipeline.modelCascade,
+    useKeyRotation: pipeline.useKeyRotation, // اضافه شدن وضعیت چرخش کلیدها
     currentDoc: pipeline.currentDoc,
     currentPage: pipeline.currentPage,
     progress: pipeline.progress,
