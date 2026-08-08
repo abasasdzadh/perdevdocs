@@ -1,0 +1,2847 @@
+{
+  "metadata": {
+    "description": "قوانین ترجمه تگ‌های HTML برای موتور ترجمه فارسی DevDocs",
+    "total_pages": 3099,
+    "total_size_mb": 52.19,
+    "unique_tags": 77,
+    "generated_at": "2026-08-06 16:03:12"
+  },
+  "summary": {
+    "translate": 17,
+    "never_translate": 33,
+    "conditional": 2,
+    "structural": 25
+  },
+  "tag_rules": {
+    "translate": {
+      "a": {
+        "tag": "a",
+        "total_occurrences": 145838,
+        "self_closing": 0,
+        "non_self_closing": 145838,
+        "direct_translatable": 44906,
+        "direct_translatable_ratio": 0.308,
+        "all_translatable": 77131,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "li": 48183,
+          "code": 31836,
+          "p": 19841,
+          "a": 9753,
+          "span": 9426,
+          "dt": 7804,
+          "td": 4875,
+          "br": 4686
+        },
+        "attributes_found": {
+          "href": 145442,
+          "class": 48695,
+          "title": 24997,
+          "target": 9383,
+          "data-glean-id": 5438,
+          "rel": 3861,
+          "id": 418,
+          "data-href": 396,
+          "role": 318,
+          "aria-current": 39
+        },
+        "direct_text_samples": [
+          "learn web development core modules",
+          "Your first website: Creating the content",
+          "Structuring content with HTML",
+          "HTML forms",
+          "HTML guides"
+        ],
+        "all_text_samples": [
+          "learn web development core modules",
+          "Your first website: Creating the content",
+          "Structuring content with HTML",
+          "HTML forms",
+          "HTML guides"
+        ],
+        "reason": "تحلیل: 31% متن مستقیم قابل ترجمه",
+        "translation_rule": "TRANSLATE_TEXT"
+      },
+      "td": {
+        "tag": "td",
+        "total_occurrences": 98342,
+        "self_closing": 0,
+        "non_self_closing": 98342,
+        "direct_translatable": 6204,
+        "direct_translatable_ratio": 0.063,
+        "all_translatable": 13297,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "abbr": 37146,
+          "td": 34442,
+          "code": 11191,
+          "tr": 7919,
+          "a": 3229,
+          "p": 1649,
+          "th": 1377,
+          "summary": 407
+        },
+        "attributes_found": {
+          "class": 77108,
+          "style": 292,
+          "align": 150,
+          "rowspan": 119,
+          "colspan": 55,
+          "id": 52,
+          "title": 18,
+          "width": 6
+        },
+        "direct_text_samples": [
+          "None, both the starting and ending tag are mandatory.",
+          "Any element that accepts , or any element that accepts .",
+          "Text that is not inter-element .",
+          "Both opening and closing tags are required. Note that leaving off should cause the browser to ignore the rest of the page.",
+          "A </a> element that contains no other element."
+        ],
+        "all_text_samples": [
+          "Flow content, phrasing content.",
+          "Phrasing content.",
+          "None, both the starting and ending tag are mandatory.",
+          "Any element that accepts phrasing content, or any element that accepts flow content.",
+          "No corresponding role"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "p": {
+        "tag": "p",
+        "total_occurrences": 80747,
+        "self_closing": 0,
+        "non_self_closing": 80747,
+        "direct_translatable": 70765,
+        "direct_translatable_ratio": 0.876,
+        "all_translatable": 74911,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "dd": 17830,
+          "div": 12711,
+          "code": 11399,
+          "td": 6435,
+          "pre": 5806,
+          "h3": 5495,
+          "p": 4360,
+          "h2": 3541
+        },
+        "attributes_found": {
+          "class": 4446,
+          "id": 585,
+          "role": 3,
+          "dir": 1
+        },
+        "direct_text_samples": [
+          "(HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content. Other technologies besides HTML are generally used to describe a web page'",
+          "\"Hypertext\" refers to links that connect web pages to one another, either within a single website or between websites. Links are a fundamental aspect of the Web. By uploading content to the Internet a",
+          "HTML uses \"markup\" to annotate text, images, and other content for display in a Web browser. HTML markup includes special \"elements\" such as </a>, </a>, </a>, </a>, </a>, </a>, </a>, </a>, </a>, </a>,",
+          "An HTML element is set off from other text in a document by \"tags\", which consist of the element name surrounded by and . The name of an element inside a tag is case-insensitive. That is, it can be wr",
+          "The articles below can help you learn more about HTML."
+        ],
+        "all_text_samples": [
+          "HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content. Other technologies besides HTML are generally used to describe a web ",
+          "\"Hypertext\" refers to links that connect web pages to one another, either within a single website or between websites. Links are a fundamental aspect of the Web. By uploading content to the Internet a",
+          "HTML uses \"markup\" to annotate text, images, and other content for display in a Web browser. HTML markup includes special \"elements\" such as <head>, <title>, <body>, <header>, <footer>, <article>, <se",
+          "An HTML element is set off from other text in a document by \"tags\", which consist of the element name surrounded by < and >. The name of an element inside a tag is case-insensitive. That is, it can be",
+          "The articles below can help you learn more about HTML."
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "li": {
+        "tag": "li",
+        "total_occurrences": 56332,
+        "self_closing": 0,
+        "non_self_closing": 56332,
+        "direct_translatable": 10297,
+        "direct_translatable_ratio": 0.183,
+        "all_translatable": 47412,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "a": 25776,
+          "code": 16865,
+          "ul": 11596,
+          "li": 901,
+          "em": 288,
+          "strong": 251,
+          "span": 230,
+          "ol": 222
+        },
+        "attributes_found": {
+          "class": 7726,
+          "id": 5
+        },
+        "direct_text_samples": [
+          "HTML </a> element",
+          "Avoid one- or two-word titles. Use a descriptive phrase, or a term-definition pairing for glossary or reference-style pages.",
+          "Search engines typically display about the first 55–60 characters of a page title. Text beyond that may be lost, so try not to have titles longer than that. If you must use a longer title, make sure t",
+          "Don't use \"keyword blobs.\" If your title is just a list of words, algorithms often reduce your page's position in the search results.",
+          "Try to make sure your titles are as unique as possible within your own site. Duplicate—or near-duplicate—titles can contribute to inaccurate search results."
+        ],
+        "all_text_samples": [
+          "Learn more",
+          "See full compatibility",
+          "Report feedback",
+          "HTML <div> element",
+          "Learn more"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "th": {
+        "tag": "th",
+        "total_occurrences": 54911,
+        "self_closing": 0,
+        "non_self_closing": 54911,
+        "direct_translatable": 17237,
+        "direct_translatable_ratio": 0.314,
+        "all_translatable": 21105,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "th": 37446,
+          "tr": 16947,
+          "p": 345,
+          "code": 83,
+          "a": 65,
+          "em": 13,
+          "td": 4,
+          "strong": 4
+        },
+        "attributes_found": {
+          "scope": 5998,
+          "colspan": 5881,
+          "class": 652,
+          "rowspan": 14,
+          "align": 12
+        },
+        "direct_text_samples": [
+          "Permitted content",
+          "Tag omission",
+          "Permitted parents",
+          "Implicit ARIA role",
+          "Permitted ARIA roles"
+        ],
+        "all_text_samples": [
+          "Content categories",
+          "Permitted content",
+          "Tag omission",
+          "Permitted parents",
+          "Implicit ARIA role"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "dt": {
+        "tag": "dt",
+        "total_occurrences": 20169,
+        "self_closing": 0,
+        "non_self_closing": 20169,
+        "direct_translatable": 227,
+        "direct_translatable_ratio": 0.011,
+        "all_translatable": 13662,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "dl": 13587,
+          "code": 3421,
+          "p": 2288,
+          "a": 465,
+          "span": 141,
+          "em": 119,
+          "strong": 65,
+          "pre": 23
+        },
+        "attributes_found": {
+          "id": 18968,
+          "class": 11598
+        },
+        "direct_text_samples": [
+          "(empty string) or no value</a>",
+          "or (the empty string)</a>",
+          "(default value)</a>",
+          "</a> (plus , , , , and )",
+          "</a> (and the alias)"
+        ],
+        "all_text_samples": [
+          "Your first website: Creating the content",
+          "Structuring content with HTML",
+          "HTML forms",
+          "HTML cheatsheet for syntax and common tasks",
+          "Using HTML comments <!-- … -->"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "dd": {
+        "tag": "dd",
+        "total_occurrences": 19398,
+        "self_closing": 0,
+        "non_self_closing": 19398,
+        "direct_translatable": 11577,
+        "direct_translatable_ratio": 0.597,
+        "all_translatable": 18632,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "code": 17611,
+          "span": 1008,
+          "a": 429,
+          "dt": 182,
+          "strong": 98,
+          "em": 70
+        },
+        "attributes_found": {
+          "class": 189
+        },
+        "direct_text_samples": [
+          "</a> and </a> elements allow you to play audio and video media natively within your content without the need for external software support.</p>",
+          "attributes allow us to store extra information on standard, semantic HTML elements.</p>",
+          ", such as </a> or </a>, have a attribute ( property), which lets you configure the CORS requests for the element's fetched data.</p>",
+          ". This means that any non-standard elements must still permit these attributes, even though those elements make the document HTML5-noncompliant.</p>",
+          "Sites that automatically play audio (or videos with an audio track) can be an unpleasant experience for users, so should be avoided when possible. If you must offer autoplay functionality, you should "
+        ],
+        "all_text_samples": [
+          "This article provides a brief tour of what HTML is and how to use it, aimed at people who are completely new to web development.",
+          "This module covers the basics of the HTML language, before looking at key areas such as document structure, links, lists, images, forms, and more.",
+          "Forms are a very important part of the Web — these provide much of the functionality you need for interacting with websites, e.g., registering and logging in, sending feedback, buying products, and mo",
+          "Quick reference for common HTML syntax and tasks.",
+          "HTML comments are used to add explanatory notes to the markup or to prevent the browser from interpreting specific parts of the document."
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "h2": {
+        "tag": "h2",
+        "total_occurrences": 18429,
+        "self_closing": 0,
+        "non_self_closing": 18429,
+        "direct_translatable": 8832,
+        "direct_translatable_ratio": 0.479,
+        "all_translatable": 8850,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "section": 16004,
+          "span": 714,
+          "code": 538,
+          "a": 307,
+          "br": 229,
+          "abbr": 174,
+          "pre": 135,
+          "iframe": 134
+        },
+        "attributes_found": {
+          "id": 17023,
+          "class": 16995
+        },
+        "direct_text_samples": [
+          "Beginner's tutorials",
+          "Related topics",
+          "Technical summary",
+          "Browser compatibility",
+          "See also"
+        ],
+        "all_text_samples": [
+          "Beginner's tutorials",
+          "Related topics",
+          "Technical summary",
+          "Browser compatibility",
+          "See also"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "h3": {
+        "tag": "h3",
+        "total_occurrences": 9844,
+        "self_closing": 0,
+        "non_self_closing": 9844,
+        "direct_translatable": 7009,
+        "direct_translatable_ratio": 0.712,
+        "all_translatable": 7085,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "section": 8525,
+          "span": 420,
+          "code": 258,
+          "h2": 152,
+          "iframe": 125,
+          "a": 117,
+          "pre": 95,
+          "p": 59
+        },
+        "attributes_found": {
+          "id": 8619,
+          "class": 8592
+        },
+        "direct_text_samples": [
+          "Attributes by element",
+          "Attribute values",
+          "Page titles and SEO",
+          "Styling with CSS",
+          "Detecting addition and removal of tracks"
+        ],
+        "all_text_samples": [
+          "Attributes by element",
+          "Attribute values",
+          "Page titles and SEO",
+          "Styling with CSS",
+          "Detecting addition and removal of tracks"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "summary": {
+        "tag": "summary",
+        "total_occurrences": 5255,
+        "self_closing": 0,
+        "non_self_closing": 5255,
+        "direct_translatable": 3,
+        "direct_translatable_ratio": 0.001,
+        "all_translatable": 2089,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "details": 5255
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "Non-standard values",
+          "Remaining page properties",
+          "Page-margin properties"
+        ],
+        "all_text_samples": [
+          "Baseline  Widely available",
+          "Baseline  Widely available",
+          "Baseline  Widely available  *",
+          "Baseline  Widely available",
+          "Baseline  Widely available"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "h4": {
+        "tag": "h4",
+        "total_occurrences": 3259,
+        "self_closing": 0,
+        "non_self_closing": 3259,
+        "direct_translatable": 487,
+        "direct_translatable_ratio": 0.149,
+        "all_translatable": 509,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "pre": 1469,
+          "code": 638,
+          "h3": 303,
+          "p": 201,
+          "section": 101,
+          "a": 86,
+          "span": 68,
+          "iframe": 33
+        },
+        "attributes_found": {
+          "id": 3006,
+          "class": 96
+        },
+        "direct_text_samples": [
+          ":required and :optional CSS pseudo-classes",
+          ":placeholder-shown CSS pseudo-class",
+          ":valid :invalid CSS pseudo-classes",
+          "Leap years",
+          "Starting the download"
+        ],
+        "all_text_samples": [
+          ":required and :optional CSS pseudo-classes",
+          ":placeholder-shown CSS pseudo-class",
+          ":valid :invalid CSS pseudo-classes",
+          "Leap years",
+          "Starting the download"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "h1": {
+        "tag": "h1",
+        "total_occurrences": 3099,
+        "self_closing": 0,
+        "non_self_closing": 3099,
+        "direct_translatable": 2619,
+        "direct_translatable_ratio": 0.845,
+        "all_translatable": 2658,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "span": 416
+        },
+        "attributes_found": {
+          "id": 2
+        },
+        "direct_text_samples": [
+          "HTML: HyperText Markup Language",
+          "HTML content span element",
+          "HTML document title element",
+          "HTML embed audio element",
+          "HTML document metadata (header) element"
+        ],
+        "all_text_samples": [
+          "HTML: HyperText Markup Language",
+          "<span> HTML content span element",
+          "<title> HTML document title element",
+          "<audio> HTML embed audio element",
+          "<head> HTML document metadata (header) element"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "h5": {
+        "tag": "h5",
+        "total_occurrences": 82,
+        "self_closing": 0,
+        "non_self_closing": 82,
+        "direct_translatable": 24,
+        "direct_translatable_ratio": 0.293,
+        "all_translatable": 24,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "pre": 26,
+          "code": 16,
+          "p": 11,
+          "h4": 4,
+          "section": 4,
+          "span": 3,
+          "iframe": 1,
+          "a": 1
+        },
+        "attributes_found": {
+          "id": 75
+        },
+        "direct_text_samples": [
+          "Using the cite element",
+          "Styling the cite element",
+          "Recipient type",
+          "Digital contact tokens",
+          "Other tokens"
+        ],
+        "all_text_samples": [
+          "Using the cite element",
+          "Styling the cite element",
+          "Recipient type",
+          "Digital contact tokens",
+          "Other tokens"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "tspan": {
+        "tag": "tspan",
+        "total_occurrences": 54,
+        "self_closing": 0,
+        "non_self_closing": 54,
+        "direct_translatable": 22,
+        "direct_translatable_ratio": 0.407,
+        "all_translatable": 22,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "text": 37,
+          "tspan": 17
+        },
+        "attributes_found": {
+          "x": 54,
+          "y": 54,
+          "style": 2
+        },
+        "direct_text_samples": [
+          "Logger flow",
+          "Logging call in user",
+          "logger.info(...)",
+          "Does a filter attached",
+          "to logger reject the"
+        ],
+        "all_text_samples": [
+          "Logger flow",
+          "Logging call in user",
+          "logger.info(...)",
+          "Does a filter attached",
+          "to logger reject the"
+        ],
+        "reason": "تحلیل: 41% متن مستقیم قابل ترجمه",
+        "translation_rule": "TRANSLATE_TEXT"
+      },
+      "blockquote": {
+        "tag": "blockquote",
+        "total_occurrences": 20,
+        "self_closing": 0,
+        "non_self_closing": 20,
+        "direct_translatable": 11,
+        "direct_translatable_ratio": 0.55,
+        "all_translatable": 19,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "p": 8,
+          "code": 8,
+          "a": 3,
+          "em": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "is the web browser created by the Mozilla Foundation.</p>",
+          "value is specified but is omitted, the element's inner display type defaults to flow.\"</p>",
+          "value is specified but is omitted, the element's outer display type defaults to block—except for ruby, which defaults to inline.\"</p>",
+          "</a>, </a>, and </a> properties. It is defined primarily in terms of its inline base direction and block flow direction.\"</p>",
+          "on a flex item causes it to become a , producing an effect similar to on a table-row or table-column: the collapsed flex item is removed from rendering entirely, but leaves behind a \"strut\" that keeps"
+        ],
+        "all_text_samples": [
+          "Blue (Adjective)  Of a color like the sky in a sunny day. \"The clear blue sky\"",
+          "Firefox is the web browser created by the Mozilla Foundation.",
+          "…for a long, straight shadow edge, this should create a color transition the length of the blur distance that is perpendicular to and centered on the shadow's edge, and that ranges from the full shado",
+          "\"In a block formatting context, boxes are laid out one after the other, vertically, beginning at the top of a containing block. The vertical distance between two sibling boxes is determined by the 'ma",
+          "\"In an inline formatting context, boxes are laid out horizontally, one after the other, beginning at the top of a containing block. Horizontal margins, borders, and padding are respected between these"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "caption": {
+        "tag": "caption",
+        "total_occurrences": 16,
+        "self_closing": 0,
+        "non_self_closing": 16,
+        "direct_translatable": 14,
+        "direct_translatable_ratio": 0.875,
+        "all_translatable": 16,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "table": 16
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "Inline elements: usage and examples",
+          "Example HTML date and time strings",
+          "The months of the year and their lengths in days",
+          "Examples of valid strings",
+          "Examples of valid global date and time strings"
+        ],
+        "all_text_samples": [
+          "Inline elements: usage and examples",
+          "Example HTML date and time strings",
+          "The months of the year and their lengths in days",
+          "Examples of valid datetime-local strings",
+          "Examples of valid global date and time strings"
+        ],
+        "reason": "تگ متنی - متن مستقیم ترجمه شود",
+        "translation_rule": "TRANSLATE_TEXT - فرزندان فنی (code, kbd, ...) مستثنی"
+      },
+      "b": {
+        "tag": "b",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 1,
+        "direct_translatable_ratio": 1.0,
+        "all_translatable": 1,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "Last updated on: Mar 06, 2025 (06:47 UTC)."
+        ],
+        "all_text_samples": [
+          "Last updated on: Mar 06, 2025 (06:47 UTC)."
+        ],
+        "reason": "تحلیل: 100% متن مستقیم قابل ترجمه",
+        "translation_rule": "TRANSLATE_TEXT"
+      }
+    },
+    "never_translate": {
+      "code": {
+        "tag": "code",
+        "total_occurrences": 174229,
+        "self_closing": 0,
+        "non_self_closing": 174229,
+        "direct_translatable": 57334,
+        "direct_translatable_ratio": 0.329,
+        "all_translatable": 59550,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "a": 73673,
+          "code": 46101,
+          "p": 21402,
+          "dt": 11612,
+          "th": 6056,
+          "li": 4047,
+          "em": 3571,
+          "td": 2561
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "loading=\"lazy\"",
+          "Access-Control-Allow-Origin:",
+          "use-credentials",
+          "Access-Control-Allow-Credentials:",
+          "x-webkit-airplay=\"deny\""
+        ],
+        "all_text_samples": [
+          "<audio></audio>",
+          "loading=\"lazy\"",
+          "Access-Control-Allow-Origin:",
+          "use-credentials",
+          "Access-Control-Allow-Credentials:"
+        ],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "pre": {
+        "tag": "pre",
+        "total_occurrences": 19708,
+        "self_closing": 0,
+        "non_self_closing": 19708,
+        "direct_translatable": 17601,
+        "direct_translatable_ratio": 0.893,
+        "all_translatable": 19096,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "div": 14218,
+          "code": 2140,
+          "p": 1850,
+          "h2": 832,
+          "em": 312,
+          "span": 124,
+          "a": 62,
+          "pre": 52
+        },
+        "attributes_found": {
+          "data-language": 18921,
+          "class": 701,
+          "id": 18
+        },
+        "direct_text_samples": [
+          "<p>\n  Add the <span class=\"ingredient\">basil</span>,\n  <span class=\"ingredient\">pine nuts</span> and\n  <span class=\"ingredient\">garlic</span> to a blender and blend into a paste.\n</p>\n\n<p>\n  Gradually",
+          "span.ingredient {\n  color: red;\n}",
+          "<p><span>Some text</span></p>",
+          "<li>\n  <span>\n    <a href=\"portfolio.html\" target=\"_blank\">See my portfolio</a>\n  </span>\n</li>",
+          "li span {\n  background: gold;\n}"
+        ],
+        "all_text_samples": [
+          "<p>\n  Add the <span class=\"ingredient\">basil</span>,\n  <span class=\"ingredient\">pine nuts</span> and\n  <span class=\"ingredient\">garlic</span> to a blender and blend into a paste.\n</p>\n\n<p>\n  Gradually",
+          "span.ingredient {\n  color: red;\n}",
+          "<p><span>Some text</span></p>",
+          "<li>\n  <span>\n    <a href=\"portfolio.html\" target=\"_blank\">See my portfolio</a>\n  </span>\n</li>",
+          "li span {\n  background: gold;\n}"
+        ],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "iframe": {
+        "tag": "iframe",
+        "total_occurrences": 2091,
+        "self_closing": 0,
+        "non_self_closing": 2091,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "div": 2083,
+          "code": 4,
+          "p": 2,
+          "pre": 1,
+          "a": 1
+        },
+        "attributes_found": {
+          "src": 2091,
+          "loading": 2091,
+          "class": 2083,
+          "id": 2083,
+          "data-live-path": 2083,
+          "data-live-id": 2083,
+          "sandbox": 2083,
+          "title": 2062,
+          "height": 1719,
+          "width": 1440
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mo": {
+        "tag": "mo",
+        "total_occurrences": 913,
+        "self_closing": 0,
+        "non_self_closing": 913,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 294,
+          "mi": 265,
+          "mn": 148,
+          "mrow": 115,
+          "mtd": 71,
+          "mtext": 9,
+          "msub": 5,
+          "munder": 2
+        },
+        "attributes_found": {
+          "stretchy": 233,
+          "lspace": 78,
+          "rspace": 78,
+          "movablelimits": 1,
+          "form": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mtd": {
+        "tag": "mtd",
+        "total_occurrences": 653,
+        "self_closing": 0,
+        "non_self_closing": 653,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 15,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mn": 332,
+          "mtr": 204,
+          "mo": 66,
+          "mi": 51
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "z⋅sin(a)+xy(1−cos(a))",
+          "−y⋅sin(a)+xz(1−cos(a))",
+          "−z⋅sin(a)+xy(1−cos(a))",
+          "x⋅sin(a)+yz(1−cos(a))",
+          "y⋅sin(a)+xz(1−cos(a))"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mn": {
+        "tag": "mn",
+        "total_occurrences": 646,
+        "self_closing": 0,
+        "non_self_closing": 646,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mtd": 473,
+          "mo": 75,
+          "mi": 72,
+          "msqrt": 6,
+          "mrow": 6,
+          "msup": 6,
+          "mn": 5,
+          "mfrac": 2
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mi": {
+        "tag": "mi",
+        "total_occurrences": 493,
+        "self_closing": 0,
+        "non_self_closing": 493,
+        "direct_translatable": 2,
+        "direct_translatable_ratio": 0.004,
+        "all_translatable": 2,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 223,
+          "mtd": 96,
+          "msup": 45,
+          "mi": 30,
+          "mrow": 30,
+          "msub": 27,
+          "mtext": 13,
+          "mfrac": 12
+        },
+        "attributes_found": {
+          "mathvariant": 16
+        },
+        "direct_text_samples": [
+          "stroke-miterlimit",
+          "stroke-width"
+        ],
+        "all_text_samples": [
+          "stroke-miterlimit",
+          "stroke-width"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "kbd": {
+        "tag": "kbd",
+        "total_occurrences": 277,
+        "self_closing": 0,
+        "non_self_closing": 277,
+        "direct_translatable": 2,
+        "direct_translatable_ratio": 0.007,
+        "all_translatable": 2,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "kbd": 152,
+          "p": 43,
+          "code": 33,
+          "li": 20,
+          "td": 16,
+          "a": 5,
+          "em": 3,
+          "strong": 2
+        },
+        "attributes_found": {
+          "class": 129
+        },
+        "direct_text_samples": [
+          "Page Down",
+          "Page Down"
+        ],
+        "all_text_samples": [
+          "Page Down",
+          "Page Down"
+        ],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mtr": {
+        "tag": "mtr",
+        "total_occurrences": 204,
+        "self_closing": 0,
+        "non_self_closing": 204,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 29,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mn": 97,
+          "mtable": 67,
+          "mi": 33,
+          "mo": 7
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "cos(a)-sin(a)",
+          "sin(a)cos(a)",
+          "cos(a)-sin(a)0",
+          "sin(a)cos(a)0",
+          "cos(a)-sin(a)0"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mrow": {
+        "tag": "mrow",
+        "total_occurrences": 185,
+        "self_closing": 0,
+        "non_self_closing": 185,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 23,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "semantics": 106,
+          "mo": 22,
+          "mfrac": 11,
+          "mrow": 11,
+          "mi": 10,
+          "msqrt": 9,
+          "mspace": 9,
+          "math": 4
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "<width>2+<height>2",
+          "<width>2+<height>2",
+          "(cos(a)-sin(a)sin(a)cos(a))",
+          "(cos(a)-sin(a)0sin(a)cos(a)0001)",
+          "(cos(a)-sin(a)0sin(a)cos(a)0001)"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "math": {
+        "tag": "math",
+        "total_occurrences": 126,
+        "self_closing": 0,
+        "non_self_closing": 126,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 106,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "figure": 99,
+          "p": 9,
+          "td": 7,
+          "code": 5,
+          "annotation": 4,
+          "mo": 1,
+          "em": 1
+        },
+        "attributes_found": {
+          "display": 99
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "(acbd)\\begin{pmatrix} a & c \\\\ b & d \\end{pmatrix}",
+          "(actxbdty001)\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "(actxbdty001)\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "(ac0txbd0ty00100001)\\left( \\begin{array}{cccc} a & c & 0 & tx \\\\ b & d & 0 & ty \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "(a1a2a3a4b1b2b3b4c1c2c3c4d1d2d3d4)\\left( \\begin{array}{cccc} a1 & a2 & a3 & a4 \\\\ b1 & b2 & b3 & b4 \\\\ c1 & c2 & c3 & c4 \\\\ d1 & d2 & d3 & d4 \\\\ \\end{array} \\right)"
+        ],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "semantics": {
+        "tag": "semantics",
+        "total_occurrences": 116,
+        "self_closing": 0,
+        "non_self_closing": 116,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 101,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "math": 116
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "(acbd)\\begin{pmatrix} a & c \\\\ b & d \\end{pmatrix}",
+          "(actxbdty001)\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "(actxbdty001)\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "(ac0txbd0ty00100001)\\left( \\begin{array}{cccc} a & c & 0 & tx \\\\ b & d & 0 & ty \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "(a1a2a3a4b1b2b3b4c1c2c3c4d1d2d3d4)\\left( \\begin{array}{cccc} a1 & a2 & a3 & a4 \\\\ b1 & b2 & b3 & b4 \\\\ c1 & c2 & c3 & c4 \\\\ d1 & d2 & d3 & d4 \\\\ \\end{array} \\right)"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "annotation": {
+        "tag": "annotation",
+        "total_occurrences": 116,
+        "self_closing": 0,
+        "non_self_closing": 116,
+        "direct_translatable": 100,
+        "direct_translatable_ratio": 0.862,
+        "all_translatable": 100,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 70,
+          "mn": 24,
+          "mi": 21,
+          "mtext": 1
+        },
+        "attributes_found": {
+          "encoding": 116
+        },
+        "direct_text_samples": [
+          "\\begin{pmatrix} a & c \\\\ b & d \\end{pmatrix}",
+          "\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "\\left( \\begin{array}{cccc} a & c & 0 & tx \\\\ b & d & 0 & ty \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "\\left( \\begin{array}{cccc} a1 & a2 & a3 & a4 \\\\ b1 & b2 & b3 & b4 \\\\ c1 & c2 & c3 & c4 \\\\ d1 & d2 & d3 & d4 \\\\ \\end{array} \\right)"
+        ],
+        "all_text_samples": [
+          "\\begin{pmatrix} a & c \\\\ b & d \\end{pmatrix}",
+          "\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "\\left( \\begin{array}{ccc} a & c & tx \\\\ b & d & ty \\\\ 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "\\left( \\begin{array}{cccc} a & c & 0 & tx \\\\ b & d & 0 & ty \\\\ 0 & 0 & 1 & 0 \\\\ 0 & 0 & 0 & 1 \\\\ \\end{array} \\right)",
+          "\\left( \\begin{array}{cccc} a1 & a2 & a3 & a4 \\\\ b1 & b2 & b3 & b4 \\\\ c1 & c2 & c3 & c4 \\\\ d1 & d2 & d3 & d4 \\\\ \\end{array} \\right)"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mtable": {
+        "tag": "mtable",
+        "total_occurrences": 67,
+        "self_closing": 0,
+        "non_self_closing": 67,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 19,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 64,
+          "semantics": 3
+        },
+        "attributes_found": {
+          "displaystyle": 5,
+          "columnalign": 3,
+          "columnspacing": 3,
+          "rowspacing": 2
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "cos(a)-sin(a)sin(a)cos(a)",
+          "cos(a)-sin(a)0sin(a)cos(a)0001",
+          "cos(a)-sin(a)0sin(a)cos(a)0001",
+          "cos(a)-sin(a)00sin(a)cos(a)0000100001",
+          "1000cos(a)-sin(a)0sin(a)cos(a)"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "msup": {
+        "tag": "msup",
+        "total_occurrences": 52,
+        "self_closing": 0,
+        "non_self_closing": 52,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 22,
+          "mrow": 16,
+          "mtext": 5,
+          "mn": 3,
+          "mfrac": 2,
+          "mi": 2,
+          "semantics": 2
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "text": {
+        "tag": "text",
+        "total_occurrences": 37,
+        "self_closing": 0,
+        "non_self_closing": 37,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 17,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "tspan": 20,
+          "polygon": 9,
+          "rect": 8
+        },
+        "attributes_found": {
+          "font-size": 37,
+          "x": 37,
+          "y": 37,
+          "style": 18
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "Logger flow",
+          "Create LogRecord",
+          "Logging call in user code, e.g.",
+          "logger.info(...)",
+          "Does a filter attached to logger reject the record?"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "g": {
+        "tag": "g",
+        "total_occurrences": 35,
+        "self_closing": 0,
+        "non_self_closing": 35,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 13,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "polygon": 17,
+          "tspan": 16,
+          "defs": 1,
+          "line": 1
+        },
+        "attributes_found": {
+          "id": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "Logger flow     Create LogRecord",
+          "Create LogRecord",
+          "Does a filter attached to logger reject the record?",
+          "Pass record to handlers of current logger",
+          "Is propagate true for current logger?"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mfrac": {
+        "tag": "mfrac",
+        "total_occurrences": 32,
+        "self_closing": 0,
+        "non_self_closing": 32,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 7,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 20,
+          "math": 5,
+          "semantics": 4,
+          "mn": 2,
+          "msqrt": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "<width>2+<height>22",
+          "<width>2+<height>22",
+          "<width>2+<height>22",
+          "<width>2+<height>22",
+          "miterLengthstroke-width"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "msub": {
+        "tag": "msub",
+        "total_occurrences": 32,
+        "self_closing": 0,
+        "non_self_closing": 32,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mtd": 12,
+          "mo": 11,
+          "mn": 8,
+          "mrow": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mtext": {
+        "tag": "mtext",
+        "total_occurrences": 28,
+        "self_closing": 0,
+        "non_self_closing": 28,
+        "direct_translatable": 23,
+        "direct_translatable_ratio": 0.821,
+        "all_translatable": 23,
+        "files_found_in": [
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 16,
+          "mi": 8,
+          "mn": 3,
+          "mrow": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "the unique",
+          "such that",
+          "the unique",
+          "such that",
+          "the unique"
+        ],
+        "all_text_samples": [
+          "the unique",
+          "such that",
+          "the unique",
+          "such that",
+          "the unique"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "polygon": {
+        "tag": "polygon",
+        "total_occurrences": 27,
+        "self_closing": 0,
+        "non_self_closing": 27,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "line": 12,
+          "polyline": 8,
+          "g": 7
+        },
+        "attributes_found": {
+          "fill-rule": 27,
+          "points": 27,
+          "class": 17
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "msqrt": {
+        "tag": "msqrt",
+        "total_occurrences": 17,
+        "self_closing": 0,
+        "non_self_closing": 17,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 5,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 7,
+          "mfrac": 5,
+          "mn": 5
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "<width>2+<height>2",
+          "<width>2+<height>2",
+          "<width>2+<height>2",
+          "<width>2+<height>2",
+          "<width>2+<height>2"
+        ],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "line": {
+        "tag": "line",
+        "total_occurrences": 13,
+        "self_closing": 0,
+        "non_self_closing": 13,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "g": 12,
+          "tspan": 1
+        },
+        "attributes_found": {
+          "style": 2
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mspace": {
+        "tag": "mspace",
+        "total_occurrences": 12,
+        "self_closing": 0,
+        "non_self_closing": 12,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 11,
+          "mn": 1
+        },
+        "attributes_found": {
+          "width": 12
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "rect": {
+        "tag": "rect",
+        "total_occurrences": 10,
+        "self_closing": 0,
+        "non_self_closing": 10,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "g": 8,
+          "rect": 2
+        },
+        "attributes_found": {
+          "x": 10,
+          "y": 10,
+          "width": 10,
+          "height": 10,
+          "rx": 10,
+          "ry": 10,
+          "style": 3
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "polyline": {
+        "tag": "polyline",
+        "total_occurrences": 8,
+        "self_closing": 0,
+        "non_self_closing": 8,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "g": 8
+        },
+        "attributes_found": {
+          "points": 8,
+          "style": 2
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "msubsup": {
+        "tag": "msubsup",
+        "total_occurrences": 4,
+        "self_closing": 0,
+        "non_self_closing": 4,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 2,
+          "mi": 1,
+          "mrow": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "munder": {
+        "tag": "munder",
+        "total_occurrences": 2,
+        "self_closing": 0,
+        "non_self_closing": 2,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mrow": 2
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "noscript": {
+        "tag": "noscript",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 1,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "h1": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "Please activate JavaScript to enable the search functionality."
+        ],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "svg": {
+        "tag": "svg",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 1,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 1
+        },
+        "attributes_found": {
+          "width": 1,
+          "height": 1,
+          "viewbox": 1,
+          "xmlns": 1,
+          "xlink": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "Logger flow     Create LogRecord            Logging call in user code, e.g.   logger.info(...)         Stop      Does a filter attached to logger reject the record?          Pass record to handlers of"
+        ],
+        "reason": "تگ فنی/کد - کل زیردرخت ترجمه نشود",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "defs": {
+        "tag": "defs",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "svg": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "mroot": {
+        "tag": "mroot",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mo": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      },
+      "munderover": {
+        "tag": "munderover",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "mrow": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ ریاضی/گرافیکی",
+        "translation_rule": "SKIP_SUBTREE"
+      }
+    },
+    "conditional": {
+      "em": {
+        "tag": "em",
+        "total_occurrences": 19469,
+        "self_closing": 0,
+        "non_self_closing": 19469,
+        "direct_translatable": 4206,
+        "direct_translatable_ratio": 0.216,
+        "all_translatable": 4303,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 5925,
+          "em": 5516,
+          "code": 4553,
+          "span": 1247,
+          "dd": 762,
+          "li": 476,
+          "a": 322,
+          "td": 299
+        },
+        "attributes_found": {
+          "class": 1867
+        },
+        "direct_text_samples": [
+          "even those not specified in the standard",
+          "empty string",
+          "form owner",
+          "source sizes",
+          "constraint validation"
+        ],
+        "all_text_samples": [
+          "even those not specified in the standard",
+          "empty string",
+          "form owner",
+          "source sizes",
+          "constraint validation"
+        ],
+        "reason": "شرطی: 22% متن مستقیم معنادار (4206/19469)",
+        "translation_rule": "CHECK_CONTENT - اگر متن مستقیم معنادار داشت ترجمه شود"
+      },
+      "strong": {
+        "tag": "strong",
+        "total_occurrences": 5561,
+        "self_closing": 0,
+        "non_self_closing": 5561,
+        "direct_translatable": 1442,
+        "direct_translatable_ratio": 0.259,
+        "all_translatable": 1559,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 2697,
+          "a": 1351,
+          "strong": 472,
+          "li": 358,
+          "code": 329,
+          "td": 213,
+          "pre": 86,
+          "em": 35
+        },
+        "attributes_found": {
+          "id": 235,
+          "class": 174
+        },
+        "direct_text_samples": [
+          "incredibly useful",
+          "This value is unsafe",
+          "source size",
+          "source size",
+          "content categories"
+        ],
+        "all_text_samples": [
+          "incredibly useful",
+          "This value is unsafe",
+          "source size",
+          "source size",
+          "content categories"
+        ],
+        "reason": "شرطی: 26% متن مستقیم معنادار (1442/5561)",
+        "translation_rule": "CHECK_CONTENT - اگر متن مستقیم معنادار داشت ترجمه شود"
+      }
+    },
+    "structural": {
+      "abbr": {
+        "tag": "abbr",
+        "total_occurrences": 41584,
+        "self_closing": 0,
+        "non_self_closing": 41584,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 4,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "td": 40049,
+          "summary": 1182,
+          "abbr": 280,
+          "code": 39,
+          "a": 12,
+          "span": 12,
+          "p": 6,
+          "em": 4
+        },
+        "attributes_found": {
+          "title": 41584,
+          "class": 25
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "Non-standard",
+          "Non-standard",
+          "Non-standard",
+          "Non-standard"
+        ],
+        "reason": "بدون متن مستقیم معنادار",
+        "translation_rule": "RECURSE_CHILDREN or SKIP"
+      },
+      "div": {
+        "tag": "div",
+        "total_occurrences": 36905,
+        "self_closing": 0,
+        "non_self_closing": 36905,
+        "direct_translatable": 6071,
+        "direct_translatable_ratio": 0.165,
+        "all_translatable": 34177,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "code": 9521,
+          "h2": 7506,
+          "pre": 3819,
+          "span": 3057,
+          "p": 2525,
+          "summary": 2086,
+          "h4": 2048,
+          "h3": 1692
+        },
+        "attributes_found": {
+          "class": 36903,
+          "id": 34,
+          "role": 4,
+          "style": 1
+        },
+        "direct_text_samples": [
+          "</th> , . </td> </tr>  . </td> </tr>  </tr>  , or any element that accepts . </td> </tr>  </td> </tr>  </tr>  </a> </td> </tr> </tbody> </table>",
+          "Presently, dynamically updating a page's title will not be automatically announced by screen readers. If you are going to update the page title to reflect significant changes to a page's state, then t",
+          "</th> . </td> </tr>  . </td> </tr>  should cause the browser to ignore the rest of the page. </td> </tr>  </a> element that contains no other element. </td> </tr>  </td> </tr>  permitted.</td> </tr>  ",
+          "Sites that automatically play audio (or videos with an audio track) can be an unpleasant experience for users, so should be avoided when possible. If you must offer autoplay functionality, you should ",
+          "Audio with the </a> attribute set will not start downloading and autoplaying until the controls for the media are near or within the viewport. Lazy-loaded audio without the attribute will not autoplay"
+        ],
+        "all_text_samples": [
+          "© 2005–2025 MDN contributors.Licensed under the Creative Commons Attribution-ShareAlike License v2.5 or later.\n    https://developer.mozilla.org/en-US/docs/Web/HTML",
+          "Baseline  Widely available",
+          "This feature is well established and works across many devices and browser versions. It’s been available across browsers since July 2015.    Learn more     See full compatibility     Report feedback",
+          "<p>\n  Add the <span class=\"ingredient\">basil</span>,\n  <span class=\"ingredient\">pine nuts</span> and\n  <span class=\"ingredient\">garlic</span> to a blender and blend into a paste.\n</p>\n\n<p>\n  Gradually",
+          "span.ingredient {\n  color: red;\n}"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "span": {
+        "tag": "span",
+        "total_occurrences": 29197,
+        "self_closing": 0,
+        "non_self_closing": 29197,
+        "direct_translatable": 11299,
+        "direct_translatable_ratio": 0.387,
+        "all_translatable": 14629,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "a": 9030,
+          "br": 5715,
+          "p": 4928,
+          "span": 2322,
+          "div": 2088,
+          "section": 1194,
+          "code": 1070,
+          "pre": 701
+        },
+        "attributes_found": {
+          "class": 27440,
+          "id": 5145,
+          "style": 23
+        },
+        "direct_text_samples": [
+          "Widely available",
+          "Widely available",
+          "Widely available",
+          "Widely available",
+          "Widely available"
+        ],
+        "all_text_samples": [
+          "Widely available",
+          "Widely available",
+          "Widely available",
+          "Widely available",
+          "Widely available"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "section": {
+        "tag": "section",
+        "total_occurrences": 28224,
+        "self_closing": 0,
+        "non_self_closing": 28224,
+        "direct_translatable": 13133,
+        "direct_translatable_ratio": 0.465,
+        "all_translatable": 26004,
+        "files_found_in": [
+          "CSS",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "code": 6876,
+          "pre": 4861,
+          "a": 4484,
+          "h2": 2173,
+          "br": 2043,
+          "p": 1724,
+          "td": 1340,
+          "iframe": 1174
+        },
+        "attributes_found": {
+          "class": 25430,
+          "aria-labelledby": 23034,
+          "id": 2794
+        },
+        "direct_text_samples": [
+          "to browse an of all of the standard properties, , , , and . You can also browse and a list of . Also included is a brief .</p>",
+          "Basic rule syntax</h2> >",
+          "</a>, </a>, and </em> below. The syntax for each specified depends on the data type defined for each specified .</p> </div> . Be aware that any error in a rule definition invalidates the entire rule. ",
+          "to find the syntax of the specific one you want.</p>",
+          "This index does not include SVG-exclusive presentation attributes, which can be used as CSS properties on elements.</p> </div> The property names in this index do include the JavaScript names which do"
+        ],
+        "all_text_samples": [
+          "Use this CSS reference to browse an alphabetical index of all of the standard CSS properties, pseudo-classes, pseudo-elements, data types, functional notations and at-rules. You can also browse key CS",
+          "Basic rule syntax >",
+          "Style rule syntax style-rule ::=\n    selectors-list {\n      properties-list\n    }\n Where: selectors-list ::=\n    selector[:pseudo-class] [::pseudo-element]\n    [, selectors-list]\n\nproperties-list ::=\n",
+          "At-rule syntax As the structure of at-rules varies widely, please see At-rule to find the syntax of the specific one you want.",
+          "Index  Note: This index does not include SVG-exclusive presentation attributes, which can be used as CSS properties on SVG elements.   Note: The property names in this index do not include the JavaScr"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "tr": {
+        "tag": "tr",
+        "total_occurrences": 24866,
+        "self_closing": 0,
+        "non_self_closing": 24866,
+        "direct_translatable": 1813,
+        "direct_translatable_ratio": 0.073,
+        "all_translatable": 18225,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "tbody": 5597,
+          "thead": 5150,
+          "td": 4646,
+          "code": 2443,
+          "th": 2338,
+          "abbr": 1551,
+          "p": 1523,
+          "a": 644
+        },
+        "attributes_found": {
+          "id": 4678,
+          "style": 36
+        },
+        "direct_text_samples": [
+          ", or any element that accepts . </td>",
+          "should cause the browser to ignore the rest of the page. </td>",
+          "</a> element that contains no other element. </td>",
+          "</th> , phrasing content, embedded content. If it has a </a> attribute: interactive content and palpable content. </td>",
+          "</a> attribute: zero or more </a> elements followed by transparent content that contains no or </a> media elements. </a> elements followed by zero or more </a> elements followed by transparent content"
+        ],
+        "all_text_samples": [
+          "Content categories   Flow content, phrasing content.",
+          "Permitted content  Phrasing content.",
+          "Tag omission None, both the starting and ending tag are mandatory.",
+          "Permitted parents  Any element that accepts phrasing content, or any element that accepts flow content.",
+          "Implicit ARIA role  No corresponding role"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "br": {
+        "tag": "br",
+        "total_occurrences": 18541,
+        "self_closing": 18541,
+        "non_self_closing": 0,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "a": 6478,
+          "br": 4609,
+          "span": 3936,
+          "p": 3100,
+          "code": 203,
+          "td": 194,
+          "em": 20,
+          "th": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ خودبسته",
+        "translation_rule": "SKIP (no content)"
+      },
+      "dl": {
+        "tag": "dl",
+        "total_occurrences": 13591,
+        "self_closing": 0,
+        "non_self_closing": 13591,
+        "direct_translatable": 9204,
+        "direct_translatable_ratio": 0.677,
+        "all_translatable": 13476,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "code": 4824,
+          "p": 2327,
+          "span": 1954,
+          "h3": 1503,
+          "em": 1034,
+          "h2": 444,
+          "pre": 379,
+          "td": 373
+        },
+        "attributes_found": {
+          "class": 10995,
+          "id": 139
+        },
+        "direct_text_samples": [
+          "</dt> </dd> </a></dt> </dd> </dt> </dd> </dt> </dd> </dt> </dd> </dt> </dd> </dt> </dd> </dt> </dd> </dt> </dd> </dt> </a> and </a> elements allow you to play audio and video media natively within you",
+          "</dt> </dd> </dt> attributes allow us to store extra information on standard, semantic HTML elements.</p> </dd> </dt> , such as </a> or </a>, have a attribute ( property), which lets you configure the",
+          "</dt> .</p> </dd> </dt> </dd> </dt> . This means that any non-standard elements must still permit these attributes, even though those elements make the document HTML5-noncompliant.</p> </dd>",
+          "</a></dt>  Sites that automatically play audio (or videos with an audio track) can be an unpleasant experience for users, so should be avoided when possible. If you must offer autoplay functionality, ",
+          "</a></dt> HTTP header without a cookie, X.509 certificate, or performing HTTP Basic authentication. If the server does not give credentials to the origin site (by not setting the HTTP header), the res"
+        ],
+        "all_text_samples": [
+          "Your first website: Creating the content  This article provides a brief tour of what HTML is and how to use it, aimed at people who are completely new to web development.  Structuring content with HTM",
+          "HTML cheatsheet for syntax and common tasks  Quick reference for common HTML syntax and tasks.  Using HTML comments <!-- … -->  HTML comments are used to add explanatory notes to the markup or to prev",
+          "Define terms with HTML  HTML provides several ways to convey description semantics, whether inline or as structured glossaries. This article shows how to properly mark up keywords when defining them. ",
+          "HTML elements  Reference for all HTML elements.  HTML attributes  Reference for all HTML attributes. Attributes are additional values that configure elements or adjust their behavior in various ways. ",
+          "Input types  Used to create interactive controls for web-based forms.  Script types  Indicates the type of script represented by the element.  meta name  Provides metadata in name-value pairs for the "
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "ul": {
+        "tag": "ul",
+        "total_occurrences": 11604,
+        "self_closing": 0,
+        "non_self_closing": 11604,
+        "direct_translatable": 2926,
+        "direct_translatable_ratio": 0.252,
+        "all_translatable": 10938,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 3022,
+          "h2": 2669,
+          "a": 2619,
+          "code": 1390,
+          "li": 1023,
+          "h3": 260,
+          "br": 213,
+          "em": 97
+        },
+        "attributes_found": {
+          "class": 735,
+          "id": 27
+        },
+        "direct_text_samples": [
+          ": Indicates that the audio should not be preloaded.</li> : Indicates that only audio metadata (e.g., length) is fetched.</li> : Indicates that the whole audio file can be downloaded, even if the user ",
+          "</a> attribute set will only apply the behavior once the audio controls are near or within the viewport.</li> attribute has precedence over . If is specified, the browser would obviously need to start",
+          "attribute, the audio player won't include the browser's default controls. You can, however, create your own custom controls using JavaScript and the </a> API.</li> s fire many different . This also pr",
+          "element should be used only when no other semantic element (such as </a> or </a>) is appropriate.</li>",
+          "</a>, </a>, </a>, </a>, </a>\n</li> </a> element for styling of phrasing content</li>"
+        ],
+        "all_text_samples": [
+          "Learn more     See full compatibility     Report feedback",
+          "HTML <div> element",
+          "Learn more     See full compatibility     Report feedback",
+          "Avoid one- or two-word titles. Use a descriptive phrase, or a term-definition pairing for glossary or reference-style pages. Search engines typically display about the first 55–60 characters of a page",
+          "MDN Understanding WCAG, Guideline 2.4 explanations Understanding Success Criterion 2.4.2 | W3C Understanding WCAG 2.1"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "table": {
+        "tag": "table",
+        "total_occurrences": 5904,
+        "self_closing": 0,
+        "non_self_closing": 5904,
+        "direct_translatable": 950,
+        "direct_translatable_ratio": 0.161,
+        "all_translatable": 5897,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "div": 5597,
+          "p": 105,
+          "code": 83,
+          "h2": 31,
+          "span": 25,
+          "em": 22,
+          "h4": 20,
+          "strong": 12
+        },
+        "attributes_found": {
+          "class": 1094,
+          "style": 28,
+          "id": 18,
+          "align": 3
+        },
+        "direct_text_samples": [
+          "</th> , . </td> </tr>  . </td> </tr>  </tr>  , or any element that accepts . </td> </tr>  </td> </tr>  </tr>  </a> </td> </tr> </tbody>",
+          "</th> . </td> </tr>  . </td> </tr>  should cause the browser to ignore the rest of the page. </td> </tr>  </a> element that contains no other element. </td> </tr>  </td> </tr>  permitted.</td> </tr>  ",
+          "</th> , phrasing content, embedded content. If it has a </a> attribute: interactive content and palpable content. </td> </tr>  </a> attribute: zero or more </a> elements followed by transparent conten",
+          "</tr>             </tr>\n</thead> </th> </td> </td> </summary>For Firefox to play audio, the server must serve the file using the correct MIME type.</details></td> </td> </td> </td> </summary>For Firef",
+          "</th> </tr>  </a> </a> document, or if title information is available from a higher level protocol (like the subject line in HTML email), zero or more elements of metadata content. </p> </a> element. "
+        ],
+        "all_text_samples": [
+          "Content categories   Flow content, phrasing content.    Permitted content  Phrasing content.    Tag omission None, both the starting and ending tag are mandatory.   Permitted parents  Any element that",
+          "Specification      HTML># the-span-element>",
+          "Desktop\nMobile\n\n\n\nChrome\nEdge\nFirefox\nOpera\nSafari\nChrome Android\nFirefox for Android\nOpera Android\nSafari on IOS\nSamsung Internet\nWebView Android\nWebView on iOS\n\n\n\nspan\n1\n12\n1\n15\n1\n18\n4\n14\n1\n1.0\n4.4\n",
+          "Content categories   Metadata content.    Permitted content  Text that is not inter-element whitespace.    Tag omission  Both opening and closing tags are required. Note that leaving off </title> shou",
+          "Specification      HTML># the-title-element>"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "tbody": {
+        "tag": "tbody",
+        "total_occurrences": 5597,
+        "self_closing": 0,
+        "non_self_closing": 5597,
+        "direct_translatable": 834,
+        "direct_translatable_ratio": 0.149,
+        "all_translatable": 4558,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "th": 4821,
+          "table": 676,
+          "code": 76,
+          "a": 22,
+          "caption": 1,
+          "strong": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "</th> , . </td> </tr>  . </td> </tr>  </tr>  , or any element that accepts . </td> </tr>  </td> </tr>  </tr>  </a> </td> </tr>",
+          "</th> . </td> </tr>  . </td> </tr>  should cause the browser to ignore the rest of the page. </td> </tr>  </a> element that contains no other element. </td> </tr>  </td> </tr>  permitted.</td> </tr>  ",
+          "</th> , phrasing content, embedded content. If it has a </a> attribute: interactive content and palpable content. </td> </tr>  </a> attribute: zero or more </a> elements followed by transparent conten",
+          "</th> </td> </td> </summary>For Firefox to play audio, the server must serve the file using the correct MIME type.</details></td> </td> </td> </td> </summary>For Firefox for Android to play audio, the",
+          "</th> </tr>  </a> </a> document, or if title information is available from a higher level protocol (like the subject line in HTML email), zero or more elements of metadata content. </p> </a> element. "
+        ],
+        "all_text_samples": [
+          "Content categories   Flow content, phrasing content.    Permitted content  Phrasing content.    Tag omission None, both the starting and ending tag are mandatory.   Permitted parents  Any element that",
+          "HTML># the-span-element>",
+          "Content categories   Metadata content.    Permitted content  Text that is not inter-element whitespace.    Tag omission  Both opening and closing tags are required. Note that leaving off </title> shou",
+          "HTML># the-title-element>",
+          "Content categories   Flow content, phrasing content, embedded content. If it has a controls attribute: interactive content and palpable content.    Permitted content  If the element has a src attribut"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "details": {
+        "tag": "details",
+        "total_occurrences": 5255,
+        "self_closing": 0,
+        "non_self_closing": 5255,
+        "direct_translatable": 3160,
+        "direct_translatable_ratio": 0.601,
+        "all_translatable": 5255,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "td": 2528,
+          "h1": 1910,
+          "abbr": 463,
+          "code": 274,
+          "a": 42,
+          "summary": 36,
+          "em": 1,
+          "p": 1
+        },
+        "attributes_found": {
+          "class": 2086,
+          "data-glean-toggle-open": 2086
+        },
+        "direct_text_samples": [
+          "</summary>For Firefox to play audio, the server must serve the file using the correct MIME type.",
+          "</summary>For Firefox for Android to play audio, the server must serve the file using the correct MIME type.",
+          "–74</summary>With , cookies aren't sent during seek. See .",
+          "–79</summary>With , cookies aren't sent during seek. See .",
+          "</summary>Defaults to in Chrome 64."
+        ],
+        "all_text_samples": [
+          "Baseline  Widely available       This feature is well established and works across many devices and browser versions. It’s been available across browsers since July 2015.    Learn more     See full co",
+          "Baseline  Widely available       This feature is well established and works across many devices and browser versions. It’s been available across browsers since July 2015.    Learn more     See full co",
+          "Baseline  Widely available  *      This feature is well established and works across many devices and browser versions. It’s been available across browsers since July 2015. * Some parts of this featur",
+          "3.5For Firefox to play audio, the server must serve the file using the correct MIME type.",
+          "4For Firefox for Android to play audio, the server must serve the file using the correct MIME type."
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "thead": {
+        "tag": "thead",
+        "total_occurrences": 5150,
+        "self_closing": 0,
+        "non_self_closing": 5150,
+        "direct_translatable": 5,
+        "direct_translatable_ratio": 0.001,
+        "all_translatable": 2805,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "table": 5133,
+          "code": 7,
+          "caption": 6,
+          "col": 2,
+          "span": 1,
+          "strong": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [
+          "value</th>  </a></th> </a> and </a>\n</th> </a></th> </tr>",
+          "value</th> value</th> </tr>",
+          "value</th> value</th> value</th> value</th> </tr>",
+          "or mode</th> -mode character classes</th> -mode character classes</th> </tr>      </tr>",
+          "return value</th> </tr>"
+        ],
+        "all_text_samples": [
+          "Desktop\nMobile\n\n\n\nChrome\nEdge\nFirefox\nOpera\nSafari\nChrome Android\nFirefox for Android\nOpera Android\nSafari on IOS\nSamsung Internet\nWebView Android\nWebView on iOS",
+          "Desktop\nMobile\n\n\n\nChrome\nEdge\nFirefox\nOpera\nSafari\nChrome Android\nFirefox for Android\nOpera Android\nSafari on IOS\nSamsung Internet\nWebView Android\nWebView on iOS",
+          "Desktop\nMobile\n\n\n\nChrome\nEdge\nFirefox\nOpera\nSafari\nChrome Android\nFirefox for Android\nOpera Android\nSafari on IOS\nSamsung Internet\nWebView Android\nWebView on iOS",
+          "Desktop\nMobile\n\n\n\nChrome\nEdge\nFirefox\nOpera\nSafari\nChrome Android\nFirefox for Android\nOpera Android\nSafari on IOS\nSamsung Internet\nWebView Android\nWebView on iOS",
+          "Desktop\nMobile\n\n\n\nChrome\nEdge\nFirefox\nOpera\nSafari\nChrome Android\nFirefox for Android\nOpera Android\nSafari on IOS\nSamsung Internet\nWebView Android\nWebView on iOS"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "figure": {
+        "tag": "figure",
+        "total_occurrences": 1035,
+        "self_closing": 0,
+        "non_self_closing": 1035,
+        "direct_translatable": 380,
+        "direct_translatable_ratio": 0.367,
+        "all_translatable": 1023,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "h2": 668,
+          "code": 166,
+          "p": 78,
+          "td": 57,
+          "a": 19,
+          "h3": 13,
+          "em": 13,
+          "annotation": 8
+        },
+        "attributes_found": {
+          "class": 1035
+        },
+        "direct_text_samples": [
+          "</th> , . </td> </tr>  . </td> </tr>  </tr>  , or any element that accepts . </td> </tr>  </td> </tr>  </tr>  </a> </td> </tr> </tbody> </table></div>",
+          "</th> . </td> </tr>  . </td> </tr>  should cause the browser to ignore the rest of the page. </td> </tr>  </a> element that contains no other element. </td> </tr>  </td> </tr>  permitted.</td> </tr>  ",
+          "</th> , phrasing content, embedded content. If it has a </a> attribute: interactive content and palpable content. </td> </tr>  </a> attribute: zero or more </a> elements followed by transparent conten",
+          "</th> </tr>  </a> </a> document, or if title information is available from a higher level protocol (like the subject line in HTML email), zero or more elements of metadata content. </p> </a> element. ",
+          "</th> , . </td> </tr>  . HTML): If the parent is a </a> element: one or more </a> elements followed by one or more </a> elements, optionally intermixed with </a> and </a> elements. </td> </tr>  </tr> "
+        ],
+        "all_text_samples": [
+          "Content categories   Flow content, phrasing content.    Permitted content  Phrasing content.    Tag omission None, both the starting and ending tag are mandatory.   Permitted parents  Any element that",
+          "Content categories   Metadata content.    Permitted content  Text that is not inter-element whitespace.    Tag omission  Both opening and closing tags are required. Note that leaving off </title> shou",
+          "Content categories   Flow content, phrasing content, embedded content. If it has a controls attribute: interactive content and palpable content.    Permitted content  If the element has a src attribut",
+          "Content categories  None.   Permitted content   If the document is an <iframe> srcdoc document, or if title information is available from a higher level protocol (like the subject line in HTML email),",
+          "Content categories   Flow content, palpable content.    Permitted content  Flow content.Or (in WHATWG HTML): If the parent is a <dl> element: one or more <dt> elements followed by one or more <dd> ele"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "footer": {
+        "tag": "footer",
+        "total_occurrences": 676,
+        "self_closing": 0,
+        "non_self_closing": 676,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 676,
+        "files_found_in": [
+          "CSS"
+        ],
+        "top_parent_tags": {
+          "br": 676
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "Sources: Compatibility Standard, CSS Backgrounds and Borders Module Level 3",
+          "Sources: Compatibility Standard, CSS Backgrounds and Borders Module Level 3",
+          "Sources: CSS Overflow Module Level 4",
+          "Sources: CSS Values and Units Module Level 4",
+          "Sources: CSS Values and Units Module Level 4"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "img": {
+        "tag": "img",
+        "total_occurrences": 313,
+        "self_closing": 313,
+        "non_self_closing": 0,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "td": 62,
+          "p": 2,
+          "code": 1
+        },
+        "attributes_found": {
+          "src": 313,
+          "alt": 308,
+          "loading": 286,
+          "width": 270,
+          "height": 263,
+          "class": 38,
+          "style": 30,
+          "id": 21,
+          "title": 3
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ خودبسته",
+        "translation_rule": "SKIP (no content)"
+      },
+      "ol": {
+        "tag": "ol",
+        "total_occurrences": 222,
+        "self_closing": 0,
+        "non_self_closing": 222,
+        "direct_translatable": 171,
+        "direct_translatable_ratio": 0.77,
+        "all_translatable": 221,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 113,
+          "code": 74,
+          "em": 13,
+          "a": 7,
+          "strong": 6,
+          "h4": 3,
+          "td": 2,
+          "span": 2
+        },
+        "attributes_found": {
+          "class": 107,
+          "start": 2,
+          "id": 1
+        },
+        "direct_text_samples": [
+          ", omitted for the last item in the list.</li>",
+          "to an image</li> ). It match the intrinsic width of the referenced image. The width descriptor is divided by the source size given in the attribute to calculate the effective pixel density. For exampl",
+          ", or U+002B) for time zones to the east of the prime meridian or the minus character ( , or U+002D) for time zones to the west of the prime meridian.</li> and .</li> ) character.</li> and .</li>",
+          "( )</li>  ( ) — note that this uses the unit, not as you might expect. An image's is its real size, which can be found by inspecting the image file on your computer (for example, on a Mac you can sele",
+          "( ) — you'll learn more about these in the , but for now let's just say that a media condition describes a possible state that the screen can be in. In this case, we are saying \"when the viewport widt"
+        ],
+        "all_text_samples": [
+          "A media condition, omitted for the last item in the list. A source size value.",
+          "A URL to an image Optionally, whitespace followed by one of:  A width descriptor (a positive integer directly followed by w). It must match the intrinsic width of the referenced image. The width descr",
+          "A character indicating the sign of the offset: the plus character (+, or U+002B) for time zones to the east of the prime meridian or the minus character (-, or U+002D) for time zones to the west of th",
+          "An image filename (elva-fairy-480w.jpg) A space The image's intrinsic width in pixels (480w) — note that this uses the w unit, not px as you might expect. An image's intrinsic size is its real size, w",
+          "A media condition ((width <= 600px)) — you'll learn more about these in the CSS topic, but for now let's just say that a media condition describes a possible state that the screen can be in. In this c"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "aside": {
+        "tag": "aside",
+        "total_occurrences": 184,
+        "self_closing": 0,
+        "non_self_closing": 184,
+        "direct_translatable": 94,
+        "direct_translatable_ratio": 0.511,
+        "all_translatable": 184,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "aside": 60,
+          "h4": 48,
+          "code": 30,
+          "p": 17,
+          "a": 11,
+          "em": 6,
+          "span": 4,
+          "h2": 2
+        },
+        "attributes_found": {
+          "class": 184,
+          "id": 111,
+          "role": 110
+        },
+        "direct_text_samples": [
+          "</span> , so that it does not conflict with a simultaneously installed Python 2.x executable.</p>",
+          "</span> , so that it does not conflict with a simultaneously installed Python 2.x executable.</p>",
+          "</span> has higher precedence than , will be interpreted as and thus result in . To avoid this and get , you can use .</p>",
+          "</span> has higher precedence than , will be interpreted as and thus result in . To avoid this and get , you can use .</p>",
+          "</span> have the same meaning with both single ( ) and double ( ) quotes. The only difference between the two is that within single quotes you don’t need to escape (but you have to escape ) and vice v"
+        ],
+        "all_text_samples": [
+          "[1] On Unix, the Python 3.x interpreter is by default not installed with the executable named python, so that it does not conflict with a simultaneously installed Python 2.x executable.",
+          "[1] On Unix, the Python 3.x interpreter is by default not installed with the executable named python, so that it does not conflict with a simultaneously installed Python 2.x executable.",
+          "[1] Since ** has higher precedence than -, -3**2 will be interpreted as -(3**2) and thus result in -9. To avoid this and get 9, you can use (-3)**2.",
+          "[1] Since ** has higher precedence than -, -3**2 will be interpreted as -(3**2) and thus result in -9. To avoid this and get 9, you can use (-3)**2.",
+          "[2] Unlike other languages, special characters such as \\n have the same meaning with both single ('...') and double (\"...\") quotes. The only difference between the two is that within single quotes you"
+        ],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "sup": {
+        "tag": "sup",
+        "total_occurrences": 166,
+        "self_closing": 0,
+        "non_self_closing": 166,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "code": 53,
+          "a": 37,
+          "p": 33,
+          "sup": 23,
+          "li": 11,
+          "em": 7,
+          "td": 2
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "بدون متن مستقیم معنادار",
+        "translation_rule": "RECURSE_CHILDREN or SKIP"
+      },
+      "sub": {
+        "tag": "sub",
+        "total_occurrences": 23,
+        "self_closing": 0,
+        "non_self_closing": 23,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Python"
+        ],
+        "top_parent_tags": {
+          "sub": 15,
+          "p": 4,
+          "td": 2,
+          "li": 1,
+          "code": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "بدون متن مستقیم معنادار",
+        "translation_rule": "RECURSE_CHILDREN or SKIP"
+      },
+      "col": {
+        "tag": "col",
+        "total_occurrences": 5,
+        "self_closing": 5,
+        "non_self_closing": 0,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML"
+        ],
+        "top_parent_tags": {
+          "col": 3,
+          "colgroup": 2
+        },
+        "attributes_found": {
+          "style": 1,
+          "span": 1,
+          "width": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ خودبسته",
+        "translation_rule": "SKIP (no content)"
+      },
+      "colgroup": {
+        "tag": "colgroup",
+        "total_occurrences": 2,
+        "self_closing": 0,
+        "non_self_closing": 2,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS",
+          "HTML"
+        ],
+        "top_parent_tags": {
+          "table": 2
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      },
+      "mstyle": {
+        "tag": "mstyle",
+        "total_occurrences": 2,
+        "self_closing": 0,
+        "non_self_closing": 2,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 1,
+        "files_found_in": [
+          "CSS",
+          "JavaScript"
+        ],
+        "top_parent_tags": {
+          "semantics": 1,
+          "mrow": 1
+        },
+        "attributes_found": {
+          "displaystyle": 1,
+          "mathvariant": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [
+          "stroke-miterlimit=miterLengthstroke-width=1sin(θ2)"
+        ],
+        "reason": "بدون متن مستقیم معنادار",
+        "translation_rule": "RECURSE_CHILDREN or SKIP"
+      },
+      "q": {
+        "tag": "q",
+        "total_occurrences": 2,
+        "self_closing": 0,
+        "non_self_closing": 2,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "CSS"
+        ],
+        "top_parent_tags": {
+          "p": 1,
+          "q": 1
+        },
+        "attributes_found": {},
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "بدون متن مستقیم معنادار",
+        "translation_rule": "RECURSE_CHILDREN or SKIP"
+      },
+      "input": {
+        "tag": "input",
+        "total_occurrences": 2,
+        "self_closing": 2,
+        "non_self_closing": 0,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "form": 1,
+          "input": 1
+        },
+        "attributes_found": {
+          "type": 2,
+          "value": 2,
+          "name": 1,
+          "aria-labelledby": 1,
+          "autocomplete": 1,
+          "autocorrect": 1,
+          "autocapitalize": 1,
+          "spellcheck": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ خودبسته",
+        "translation_rule": "SKIP (no content)"
+      },
+      "form": {
+        "tag": "form",
+        "total_occurrences": 1,
+        "self_closing": 0,
+        "non_self_closing": 1,
+        "direct_translatable": 0,
+        "direct_translatable_ratio": 0.0,
+        "all_translatable": 0,
+        "files_found_in": [
+          "Python"
+        ],
+        "top_parent_tags": {
+          "p": 1
+        },
+        "attributes_found": {
+          "action": 1,
+          "method": 1
+        },
+        "direct_text_samples": [],
+        "all_text_samples": [],
+        "reason": "تگ پوششی - فرزندان بر اساس قوانین خودشان",
+        "translation_rule": "RECURSE_CHILDREN"
+      }
+    }
+  },
+  "attribute_rules": {
+    "title": {
+      "total_found": 68716,
+      "samples_collected": 30,
+      "meaningful_count": 30,
+      "should_translate": true,
+      "samples": [
+        "Example 1 sample",
+        "Example 2 sample",
+        "Release date: 2008-12-11",
+        "Release date: 2015-07-29",
+        "Release date: 2004-11-09",
+        "Release date: 2013-07-02",
+        "Release date: 2003-06-23",
+        "Release date: 2012-06-27"
+      ]
+    },
+    "alt": {
+      "total_found": 441,
+      "samples_collected": 30,
+      "meaningful_count": 30,
+      "should_translate": true,
+      "samples": [
+        "An intimidating leopard.",
+        "Grapefruit slice atop a pile of other slices",
+        "My image file description",
+        "Kettlebell Swing",
+        "image",
+        "A Penguin on a beach.",
+        "next page",
+        "arrow right"
+      ]
+    },
+    "aria-label": {
+      "total_found": 20,
+      "samples_collected": 20,
+      "meaningful_count": 20,
+      "should_translate": true,
+      "samples": [
+        "Content loading…",
+        "Current language is English. Choose your preferred language.",
+        "ASCII COW",
+        "Search through site content",
+        "Area code",
+        "First part of number",
+        "Second part of number",
+        "3-digit area code"
+      ]
+    },
+    "aria-description": {
+      "total_found": 0,
+      "samples_collected": 0,
+      "meaningful_count": 0,
+      "should_translate": false,
+      "samples": []
+    },
+    "placeholder": {
+      "total_found": 56,
+      "samples_collected": 30,
+      "meaningful_count": 24,
+      "should_translate": true,
+      "samples": [
+        "Input inside Shadow DOM",
+        "Input inside Shadow DOM",
+        "Lower case, all one word",
+        "Lower case, all one word",
+        "Username",
+        "https://example.com",
+        "http://www.example.com",
+        "sophie@example.com"
+      ]
+    },
+    "content": {
+      "total_found": 47,
+      "samples_collected": 30,
+      "meaningful_count": 29,
+      "should_translate": true,
+      "samples": [
+        "width=device-width",
+        "width=device-width",
+        "USD",
+        "The HTML reference describes all elements and attributes of HTML, including global attributes that apply to all elements.",
+        "Weather Wizard",
+        "Mago del Clima",
+        "https://example.com/thumbnail.jpg",
+        "The HTML reference describes all elements and attributes of HTML, including global attributes that apply to all elements."
+      ]
+    },
+    "value": {
+      "total_found": 442,
+      "samples_collected": 30,
+      "meaningful_count": 10,
+      "should_translate": true,
+      "samples": [
+        "Chocolate",
+        "Coconut",
+        "Mint",
+        "Strawberry",
+        "Vanilla",
+        "Chrome",
+        "Firefox",
+        "Opera"
+      ]
+    },
+    "label": {
+      "total_found": 62,
+      "samples_collected": 30,
+      "meaningful_count": 24,
+      "should_translate": true,
+      "samples": [
+        "0%",
+        "Minimum Tip",
+        "Standard",
+        "Generous",
+        "Very Generous",
+        "Content loading…",
+        "Current language is English. Choose your preferred language.",
+        "ASCII COW"
+      ]
+    },
+    "data-tooltip": {
+      "total_found": 0,
+      "samples_collected": 0,
+      "meaningful_count": 0,
+      "should_translate": false,
+      "samples": []
+    },
+    "longdesc": {
+      "total_found": 0,
+      "samples_collected": 0,
+      "meaningful_count": 0,
+      "should_translate": false,
+      "samples": []
+    }
+  },
+  "code_embedded_translatable": {
+    "comments": [],
+    "string_literals": []
+  }
+}

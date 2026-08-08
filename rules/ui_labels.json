@@ -1,0 +1,1006 @@
+{
+  "description": "برچسب‌های رابط کاربری - ترجمه یکسان و ثابت",
+  "total_labels": 398,
+  "labels": [
+    {
+      "text": "See also",
+      "count": 2568,
+      "chars": 8
+    },
+    {
+      "text": "Specifications",
+      "count": 2372,
+      "chars": 14
+    },
+    {
+      "text": "Examples",
+      "count": 2348,
+      "chars": 8
+    },
+    {
+      "text": "Specification",
+      "count": 2337,
+      "chars": 13
+    },
+    {
+      "text": "Firefox",
+      "count": 2328,
+      "chars": 7
+    },
+    {
+      "text": "Safari",
+      "count": 2328,
+      "chars": 6
+    },
+    {
+      "text": "Chrome",
+      "count": 2327,
+      "chars": 6
+    },
+    {
+      "text": "Opera",
+      "count": 2327,
+      "chars": 5
+    },
+    {
+      "text": "Firefox for Android",
+      "count": 2327,
+      "chars": 19
+    },
+    {
+      "text": "Desktop",
+      "count": 2326,
+      "chars": 7
+    },
+    {
+      "text": "Mobile",
+      "count": 2326,
+      "chars": 6
+    },
+    {
+      "text": "Edge",
+      "count": 2326,
+      "chars": 4
+    },
+    {
+      "text": "Chrome Android",
+      "count": 2326,
+      "chars": 14
+    },
+    {
+      "text": "Opera Android",
+      "count": 2326,
+      "chars": 13
+    },
+    {
+      "text": "Safari on IOS",
+      "count": 2326,
+      "chars": 13
+    },
+    {
+      "text": "Samsung Internet",
+      "count": 2326,
+      "chars": 16
+    },
+    {
+      "text": "WebView Android",
+      "count": 2326,
+      "chars": 15
+    },
+    {
+      "text": "WebView on iOS",
+      "count": 2326,
+      "chars": 14
+    },
+    {
+      "text": "Browser compatibility",
+      "count": 2268,
+      "chars": 21
+    },
+    {
+      "text": "Syntax",
+      "count": 1779,
+      "chars": 6
+    },
+    {
+      "text": "Try it",
+      "count": 1179,
+      "chars": 6
+    },
+    {
+      "text": "Server",
+      "count": 1152,
+      "chars": 6
+    },
+    {
+      "text": "Deno",
+      "count": 1152,
+      "chars": 4
+    },
+    {
+      "text": "Node.js",
+      "count": 1152,
+      "chars": 7
+    },
+    {
+      "text": "Result",
+      "count": 1009,
+      "chars": 6
+    },
+    {
+      "text": "HTML",
+      "count": 973,
+      "chars": 4
+    },
+    {
+      "text": "Description",
+      "count": 940,
+      "chars": 11
+    },
+    {
+      "text": "Parameters",
+      "count": 825,
+      "chars": 10
+    },
+    {
+      "text": "Return value",
+      "count": 727,
+      "chars": 12
+    },
+    {
+      "text": "Formal syntax",
+      "count": 689,
+      "chars": 13
+    },
+    {
+      "text": "Values",
+      "count": 616,
+      "chars": 6
+    },
+    {
+      "text": "Formal definition",
+      "count": 537,
+      "chars": 17
+    },
+    {
+      "text": "Computed value",
+      "count": 517,
+      "chars": 14
+    },
+    {
+      "text": "Initial value",
+      "count": 516,
+      "chars": 13
+    },
+    {
+      "text": "Applies To",
+      "count": 486,
+      "chars": 10
+    },
+    {
+      "text": "Inherited",
+      "count": 484,
+      "chars": 9
+    },
+    {
+      "text": "Animation type",
+      "count": 484,
+      "chars": 14
+    },
+    {
+      "text": "Exceptions",
+      "count": 274,
+      "chars": 10
+    },
+    {
+      "text": "Percentages",
+      "count": 149,
+      "chars": 11
+    },
+    {
+      "text": "Value",
+      "count": 142,
+      "chars": 5
+    },
+    {
+      "text": "Technical summary",
+      "count": 138,
+      "chars": 17
+    },
+    {
+      "text": "Message",
+      "count": 133,
+      "chars": 7
+    },
+    {
+      "text": "Error type",
+      "count": 131,
+      "chars": 10
+    },
+    {
+      "text": "What went wrong?",
+      "count": 131,
+      "chars": 16
+    },
+    {
+      "text": "Attributes",
+      "count": 126,
+      "chars": 10
+    },
+    {
+      "text": "DOM interface",
+      "count": 123,
+      "chars": 13
+    },
+    {
+      "text": "Content categories",
+      "count": 115,
+      "chars": 18
+    },
+    {
+      "text": "Permitted content",
+      "count": 114,
+      "chars": 17
+    },
+    {
+      "text": "Tag omission",
+      "count": 114,
+      "chars": 12
+    },
+    {
+      "text": "Permitted ARIA roles",
+      "count": 114,
+      "chars": 20
+    },
+    {
+      "text": "Permitted parents",
+      "count": 113,
+      "chars": 17
+    },
+    {
+      "text": "Implicit ARIA role",
+      "count": 111,
+      "chars": 18
+    },
+    {
+      "text": "Results",
+      "count": 108,
+      "chars": 7
+    },
+    {
+      "text": "auto",
+      "count": 105,
+      "chars": 4
+    },
+    {
+      "text": "Accessibility",
+      "count": 104,
+      "chars": 13
+    },
+    {
+      "text": "none",
+      "count": 87,
+      "chars": 4
+    },
+    {
+      "text": "Usage notes",
+      "count": 82,
+      "chars": 11
+    },
+    {
+      "text": "Constituent properties",
+      "count": 81,
+      "chars": 22
+    },
+    {
+      "text": "JavaScript",
+      "count": 80,
+      "chars": 10
+    },
+    {
+      "text": "Constructor",
+      "count": 76,
+      "chars": 11
+    },
+    {
+      "text": "Example",
+      "count": 72,
+      "chars": 7
+    },
+    {
+      "text": "Reference",
+      "count": 71,
+      "chars": 9
+    },
+    {
+      "text": "Instance methods",
+      "count": 71,
+      "chars": 16
+    },
+    {
+      "text": "Instance properties",
+      "count": 69,
+      "chars": 19
+    },
+    {
+      "text": "Meaning",
+      "count": 66,
+      "chars": 7
+    },
+    {
+      "text": "Basic example",
+      "count": 64,
+      "chars": 13
+    },
+    {
+      "text": "Guides",
+      "count": 60,
+      "chars": 6
+    },
+    {
+      "text": "Related concepts",
+      "count": 59,
+      "chars": 16
+    },
+    {
+      "text": "Properties",
+      "count": 54,
+      "chars": 10
+    },
+    {
+      "text": "Invalid cases",
+      "count": 53,
+      "chars": 13
+    },
+    {
+      "text": "Static methods",
+      "count": 51,
+      "chars": 14
+    },
+    {
+      "text": "Footnotes",
+      "count": 50,
+      "chars": 9
+    },
+    {
+      "text": "Valid cases",
+      "count": 50,
+      "chars": 11
+    },
+    {
+      "text": "normal",
+      "count": 45,
+      "chars": 6
+    },
+    {
+      "text": "Notes",
+      "count": 44,
+      "chars": 5
+    },
+    {
+      "text": "toString",
+      "count": 42,
+      "chars": 8
+    },
+    {
+      "text": "name",
+      "count": 41,
+      "chars": 4
+    },
+    {
+      "text": "Functions",
+      "count": 37,
+      "chars": 9
+    },
+    {
+      "text": "Basic usage",
+      "count": 36,
+      "chars": 11
+    },
+    {
+      "text": "anchor-size",
+      "count": 35,
+      "chars": 11
+    },
+    {
+      "text": "Related at-rule",
+      "count": 31,
+      "chars": 15
+    },
+    {
+      "text": "Static properties",
+      "count": 30,
+      "chars": 17
+    },
+    {
+      "text": "valueOf",
+      "count": 30,
+      "chars": 7
+    },
+    {
+      "text": "toLocaleString",
+      "count": 28,
+      "chars": 14
+    },
+    {
+      "text": "Size",
+      "count": 27,
+      "chars": 4
+    },
+    {
+      "text": "type",
+      "count": 25,
+      "chars": 4
+    },
+    {
+      "text": "width",
+      "count": 24,
+      "chars": 5
+    },
+    {
+      "text": "Data types",
+      "count": 24,
+      "chars": 10
+    },
+    {
+      "text": "left",
+      "count": 23,
+      "chars": 4
+    },
+    {
+      "text": "right",
+      "count": 23,
+      "chars": 5
+    },
+    {
+      "text": "From",
+      "count": 23,
+      "chars": 4
+    },
+    {
+      "text": "Validation",
+      "count": 21,
+      "chars": 10
+    },
+    {
+      "text": "with",
+      "count": 21,
+      "chars": 4
+    },
+    {
+      "text": "Element",
+      "count": 21,
+      "chars": 7
+    },
+    {
+      "text": "Cartesian coordinates on ℝ^2",
+      "count": 21,
+      "chars": 28
+    },
+    {
+      "text": "Homogeneous coordinates on ℝℙ^2",
+      "count": 21,
+      "chars": 31
+    },
+    {
+      "text": "Cartesian coordinates on ℝ^3",
+      "count": 21,
+      "chars": 28
+    },
+    {
+      "text": "Homogeneous coordinates on ℝℙ^3",
+      "count": 21,
+      "chars": 31
+    },
+    {
+      "text": "Additional attributes",
+      "count": 20,
+      "chars": 21
+    },
+    {
+      "text": "list",
+      "count": 19,
+      "chars": 4
+    },
+    {
+      "text": "Index",
+      "count": 18,
+      "chars": 5
+    },
+    {
+      "text": "Using options",
+      "count": 18,
+      "chars": 13
+    },
+    {
+      "text": "form",
+      "count": 18,
+      "chars": 4
+    },
+    {
+      "text": "round",
+      "count": 18,
+      "chars": 5
+    },
+    {
+      "text": "toJSON",
+      "count": 18,
+      "chars": 6
+    },
+    {
+      "text": "resolvedOptions",
+      "count": 18,
+      "chars": 15
+    },
+    {
+      "text": "supportedLocalesOf",
+      "count": 18,
+      "chars": 18
+    },
+    {
+      "text": "Deprecated attributes",
+      "count": 17,
+      "chars": 21
+    },
+    {
+      "text": "fit-content",
+      "count": 17,
+      "chars": 11
+    },
+    {
+      "text": "Interfaces",
+      "count": 17,
+      "chars": 10
+    },
+    {
+      "text": "max-content",
+      "count": 17,
+      "chars": 11
+    },
+    {
+      "text": "min-content",
+      "count": 17,
+      "chars": 11
+    },
+    {
+      "text": "Constant",
+      "count": 17,
+      "chars": 8
+    },
+    {
+      "text": "Using toString()",
+      "count": 17,
+      "chars": 16
+    },
+    {
+      "text": "align",
+      "count": 17,
+      "chars": 5
+    },
+    {
+      "text": "Format",
+      "count": 17,
+      "chars": 6
+    },
+    {
+      "text": "Resulting state",
+      "count": 17,
+      "chars": 15
+    },
+    {
+      "text": "height",
+      "count": 16,
+      "chars": 6
+    },
+    {
+      "text": "Color",
+      "count": 16,
+      "chars": 5
+    },
+    {
+      "text": "Attribute",
+      "count": 16,
+      "chars": 9
+    },
+    {
+      "text": "anchor",
+      "count": 16,
+      "chars": 6
+    },
+    {
+      "text": "option",
+      "count": 16,
+      "chars": 6
+    },
+    {
+      "text": "compare",
+      "count": 16,
+      "chars": 7
+    },
+    {
+      "text": "Accessibility concerns",
+      "count": 15,
+      "chars": 22
+    },
+    {
+      "text": "readonly",
+      "count": 15,
+      "chars": 8
+    },
+    {
+      "text": "disabled",
+      "count": 15,
+      "chars": 8
+    },
+    {
+      "text": "subtract",
+      "count": 15,
+      "chars": 8
+    },
+    {
+      "text": "fit-content_function",
+      "count": 14,
+      "chars": 20
+    },
+    {
+      "text": "equals",
+      "count": 14,
+      "chars": 6
+    },
+    {
+      "text": "Interceptions",
+      "count": 13,
+      "chars": 13
+    },
+    {
+      "text": "Invariants",
+      "count": 13,
+      "chars": 10
+    },
+    {
+      "text": "Keyword",
+      "count": 13,
+      "chars": 7
+    },
+    {
+      "text": "Creates stacking context",
+      "count": 13,
+      "chars": 24
+    },
+    {
+      "text": "iterable_allowed",
+      "count": 13,
+      "chars": 16
+    },
+    {
+      "text": "Interpolation",
+      "count": 12,
+      "chars": 13
+    },
+    {
+      "text": "Using toLocaleString()",
+      "count": 12,
+      "chars": 22
+    },
+    {
+      "text": "Iteration using for...of loop",
+      "count": 12,
+      "chars": 29
+    },
+    {
+      "text": "grid_context",
+      "count": 12,
+      "chars": 12
+    },
+    {
+      "text": "display-internal",
+      "count": 12,
+      "chars": 16
+    },
+    {
+      "text": "mixed_type_parameters",
+      "count": 12,
+      "chars": 21
+    },
+    {
+      "text": "relative_syntax",
+      "count": 12,
+      "chars": 15
+    },
+    {
+      "text": "length",
+      "count": 12,
+      "chars": 6
+    },
+    {
+      "text": "locales_parameter",
+      "count": 12,
+      "chars": 17
+    },
+    {
+      "text": "since",
+      "count": 12,
+      "chars": 5
+    },
+    {
+      "text": "until",
+      "count": 12,
+      "chars": 5
+    },
+    {
+      "text": "Summary",
+      "count": 11,
+      "chars": 7
+    },
+    {
+      "text": "placeholder",
+      "count": 11,
+      "chars": 11
+    },
+    {
+      "text": "At-rules",
+      "count": 11,
+      "chars": 8
+    },
+    {
+      "text": "bottom",
+      "count": 11,
+      "chars": 6
+    },
+    {
+      "text": "center",
+      "count": 11,
+      "chars": 6
+    },
+    {
+      "text": "flex_context",
+      "count": 11,
+      "chars": 12
+    },
+    {
+      "text": "path",
+      "count": 11,
+      "chars": 4
+    },
+    {
+      "text": "slice",
+      "count": 11,
+      "chars": 5
+    },
+    {
+      "text": "Operation",
+      "count": 11,
+      "chars": 9
+    },
+    {
+      "text": "options_parameter",
+      "count": 11,
+      "chars": 17
+    },
+    {
+      "text": "step",
+      "count": 10,
+      "chars": 4
+    },
+    {
+      "text": "maxlength",
+      "count": 10,
+      "chars": 9
+    },
+    {
+      "text": "minlength",
+      "count": 10,
+      "chars": 9
+    },
+    {
+      "text": "pattern",
+      "count": 10,
+      "chars": 7
+    },
+    {
+      "text": "contain",
+      "count": 10,
+      "chars": 7
+    },
+    {
+      "text": "Descriptors",
+      "count": 10,
+      "chars": 11
+    },
+    {
+      "text": "Introduction",
+      "count": 10,
+      "chars": 12
+    },
+    {
+      "text": "Flag",
+      "count": 10,
+      "chars": 4
+    },
+    {
+      "text": "Module Contents",
+      "count": 10,
+      "chars": 15
+    },
+    {
+      "text": "Constants",
+      "count": 10,
+      "chars": 9
+    },
+    {
+      "text": "Explanation",
+      "count": 10,
+      "chars": 11
+    },
+    {
+      "text": "Using locales",
+      "count": 10,
+      "chars": 13
+    },
+    {
+      "text": "delete",
+      "count": 10,
+      "chars": 6
+    },
+    {
+      "text": "Using the third argument of callbackFn",
+      "count": 10,
+      "chars": 38
+    },
+    {
+      "text": "crossorigin",
+      "count": 10,
+      "chars": 11
+    },
+    {
+      "text": "Unit",
+      "count": 10,
+      "chars": 4
+    },
+    {
+      "text": "entries",
+      "count": 10,
+      "chars": 7
+    },
+    {
+      "text": "keys",
+      "count": 10,
+      "chars": 4
+    },
+    {
+      "text": "Instant",
+      "count": 10,
+      "chars": 7
+    },
+    {
+      "text": "forEach",
+      "count": 10,
+      "chars": 7
+    },
+    {
+      "text": "formatToParts",
+      "count": 10,
+      "chars": 13
+    },
+    {
+      "text": "constructor_without_parameters",
+      "count": 10,
+      "chars": 30
+    },
+    {
+      "text": "calendarId",
+      "count": 10,
+      "chars": 10
+    },
+    {
+      "text": "monthCode",
+      "count": 10,
+      "chars": 9
+    },
+    {
+      "text": "Events",
+      "count": 9,
+      "chars": 6
+    },
+    {
+      "text": "content",
+      "count": 9,
+      "chars": 7
+    },
+    {
+      "text": "filter",
+      "count": 9,
+      "chars": 6
+    },
+    {
+      "text": "Text",
+      "count": 9,
+      "chars": 4
+    },
+    {
+      "text": "border-box",
+      "count": 9,
+      "chars": 10
+    },
+    {
+      "text": "content-box",
+      "count": 9,
+      "chars": 11
+    },
+    {
+      "text": "shape",
+      "count": 9,
+      "chars": 5
+    },
+    {
+      "text": "Function",
+      "count": 9,
+      "chars": 8
+    },
+    {
+      "text": "Iterator",
+      "count": 9,
+      "chars": 8
+    },
+    {
+      "text": "Symbol.iterator",
+      "count": 9,
+      "chars": 15
+    },
+    {
+      "text": "Symbol.species",
+      "count": 9,
+      "chars": 14
+    },
+    {
+      "text": "Using toJSON()",
+      "count": 9,
+      "chars": 14
+    },
+    {
+      "text": "Using supportedLocalesOf()",
+      "count": 9,
+      "chars": 26
+    },
+    {
+      "text": "bgcolor",
+      "count": 9,
+      "chars": 7
+    },
+    {
+      "text": "hidden",
+      "count": 9,
+      "chars": 6
+    },
+    {
+      "text": "month",
+      "count": 9,
+      "chars": 5
+    },
+    {
+      "text": "stretch",
+      "count": 9,
+      "chars": 7
+    },
+    {
+      "text": "Year",
+      "count": 9,
+      "chars": 4
+    },
+    {
+      "text": "Arguments",
+      "count": 9,
+      "chars": 9
+    },
+    {
+      "text": "Styling with CSS",
+      "count": 8,
+      "chars": 16
+    },
+    {
+      "text": "Overview",
+      "count": 8,
+      "chars": 8
+    }
+  ]
+}
