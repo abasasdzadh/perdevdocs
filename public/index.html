@@ -191,11 +191,11 @@
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <div class="card p-5 md:p-6">
-              <h3 className="text-sm font-medium mb-4" style="color: var(--text-main)">Cache Performance</h3>
+              <h3 class="text-sm font-medium mb-4" style="color: var(--text-main)">Cache Performance</h3>
               <div class="chart-container"><canvas id="chart-cache"></canvas></div>
             </div>
             <div class="card p-5 md:p-6">
-              <h3 className="text-sm font-medium mb-4" style="color: var(--text-main)">API Usage History</h3>
+              <h3 class="text-sm font-medium mb-4" style="color: var(--text-main)">API Usage History</h3>
               <div class="chart-container"><canvas id="chart-usage"></canvas></div>
             </div>
           </div>
@@ -216,30 +216,29 @@
         <!-- TAB: KEYS -->
         <div id="tab-keys" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
-            <div class="flex flex-wrap justify-between items-center mb-6 gap-2">
+            <div class="flex flex-wrap justify-between items-center mb-6 gap-2 border-b border-[var(--border-color)] pb-4">
               <div>
-                <h3 className="text-base font-semibold" style="color: var(--text-main)">AI Model Cascade</h3>
-                <p class="text-xs mt-1" style="color: var(--text-muted)">If primary fails, engine switches automatically.</p>
+                <h3 class="text-base font-semibold" style="color: var(--text-main)">AI Model Cascade</h3>
+                <p class="text-xs mt-1" style="color: var(--text-muted)">Strictly using Flash-Lite models for high token limits.</p>
               </div>
-              <button onclick="addModelSlot()" class="btn btn-ghost text-xs">Add Model</button>
             </div>
             <div id="model-cascade-container" class="space-y-3"></div>
             <button onclick="saveCascade()" class="btn btn-accent mt-6 w-full">Save Cascade Configuration</button>
           </div>
           <div class="card p-5 md:p-6">
-            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">API Keys (Gemini)</h3>
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">API Keys (Gemini)</h3>
             <div class="flex flex-col sm:flex-row gap-2 mb-6">
               <input type="text" id="new-key-input" placeholder="AIza..." class="input flex-1 font-mono" />
               <button onclick="addKey()" class="btn btn-primary">Add Key</button>
             </div>
-            <div id="keys-list" className="space-y-2"></div>
+            <div id="keys-list" class="space-y-2"></div>
           </div>
         </div>
 
         <!-- TAB: DOCSETS -->
         <div id="tab-docsets" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
-            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">Register New Docset</h3>
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Register New Docset</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <input type="text" id="doc-id" placeholder="ID (e.g., react)" class="input font-mono" />
               <input type="text" id="doc-name" placeholder="Name (e.g., React)" class="input" />
@@ -251,94 +250,97 @@
 
         <!-- TAB: RULES & ENGINE -->
         <div id="tab-rules" class="hidden space-y-6">
-          <div className="card p-6">
-            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">آمار قوانین Bypass</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
-                <span className="text-sm" style="color: var(--text-muted)">کلمات مستثنی شده (هرگز ترجمه نشود):</span>
-                <span id="rules-never-translate" className="font-mono text-sm" style="color: var(--danger)">0</span>
+          <div class="card p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">آمار قوانین Bypass</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+                <span class="text-sm" style="color: var(--text-muted)">کلمات مستثنی شده (هرگز ترجمه نشود):</span>
+                <span id="rules-never-translate" class="font-mono text-sm" style="color: var(--danger)">0</span>
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
-                <span className="text-sm" style="color: var(--text-muted)">متون تکراری (کش یک‌بار مصرف):</span>
-                <span id="rules-cache-once" className="font-mono text-sm" style="color: var(--success)">0</span>
+              <div class="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+                <span class="text-sm" style="color: var(--text-muted)">متون تکراری (کش یک‌بار مصرف):</span>
+                <span id="rules-cache-once" class="font-mono text-sm" style="color: var(--success)">0</span>
               </div>
-              <div className="flex flex-col gap-2 p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
-                <span className="text-sm mb-2" style="color: var(--text-muted)">تگ‌های مستثنی شده (SKIP_SUBTREE):</span>
-                <div id="rules-ignored-tags" className="flex flex-wrap gap-2"></div>
+              <div class="flex flex-col gap-2 p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
+                <span class="text-sm mb-2" style="color: var(--text-muted)">تگ‌های مستثنی شده (SKIP_SUBTREE):</span>
+                <div id="rules-ignored-tags" class="flex flex-wrap gap-2"></div>
               </div>
             </div>
-            <button onclick="reloadRules()" className="btn btn-accent mt-6 w-full">🔄 بارگذاری مجدد فایل‌های JSON</button>
+            <button onclick="reloadRules()" class="btn btn-accent mt-6 w-full">🔄 بارگذاری مجدد فایل‌های JSON</button>
           </div>
-          <div className="card p-6">
-            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">استراتژی درخواست به هوش مصنوعی</h3>
-            <p className="text-xs mb-4" style="color: var(--text-muted)">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
-            <div className="space-y-4">
+          <div class="card p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">استراتژی درخواست به هوش مصنوعی</h3>
+            <p class="text-xs mb-4" style="color: var(--text-muted)">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
+            <div class="space-y-4">
               <div>
-                <label className="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">حداکثر کاراکتر هر درخواست</label>
-                <div className="flex gap-2">
-                  <input type="number" id="chunk-size-input" min="1000" max="500000" step="1000" value="100000" className="input flex-1 font-mono" />
-                  <button onclick="saveChunkSize()" className="btn btn-primary">ذخیره</button>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">حداکثر کاراکتر هر درخواست</label>
+                <div class="flex gap-2">
+                  <input type="number" id="chunk-size-input" min="1000" max="500000" step="1000" value="100000" class="input flex-1 font-mono" />
+                  <button onclick="saveChunkSize()" class="btn btn-primary">ذخیره</button>
                 </div>
-                <p className="text-[10px] mt-2" style="color: var(--text-dim)">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن)</p>
+                <p class="text-[10px] mt-2" style="color: var(--text-dim)">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن)</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- TAB: ERRORS -->
-        <div id="tab-errors" class="hidden space-y-4">
-          <div className="card p-5 md:p-6">
-            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">Failed Translations</h3>
-            <div id="failed-list" className="space-y-2"></div>
+        <div id="tab-errors" class="hidden space-y-6">
+          <div class="card p-5 md:p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Failed Translations</h3>
+            <div id="failed-list" class="space-y-2"></div>
           </div>
         </div>
 
         <!-- TAB: PREVIEW -->
-        <div id="tab-preview" class="hidden space-y-4">
-          <div className="card p-4 flex justify-between items-center">
-            <h3 className="text-base font-semibold" style="color: var(--text-main)">Live HTML Preview</h3>
-            <button onclick="loadPreview()" class="btn btn-ghost text-xs">Refresh</button>
+        <div id="tab-preview" class="hidden space-y-6">
+          <div class="card p-4">
+            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
+              <h3 class="text-base font-semibold" style="color: var(--text-main)">Live HTML Preview</h3>
+              <button onclick="loadPreview()" class="btn btn-ghost text-xs">Refresh</button>
+            </div>
+            <iframe id="preview-frame" class="w-full min-h-[600px] rounded-lg border border-[var(--border-color)]" style="background-color: white"></iframe>
           </div>
-          <iframe id="preview-frame" className="card w-full min-h-[600px] bg-white rounded-xl" sandbox="allow-same-origin"></iframe>
         </div>
 
         <!-- TAB: GLOSSARY -->
-        <div id="tab-glossary" class="hidden space-y-4">
-          <div className="card p-5 md:p-6 space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-base font-semibold" style="color: var(--text-main)">Technical Glossary</h3>
-              <button onclick="saveGlossary()" className="btn btn-success text-xs">Save Changes</button>
+        <div id="tab-glossary" class="hidden space-y-6">
+          <div class="card p-5 md:p-6">
+            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-4 mb-4">
+              <h3 class="text-base font-semibold" style="color: var(--text-main)">Technical Glossary</h3>
+              <button onclick="saveGlossary()" class="btn btn-success text-xs">Save Changes</button>
             </div>
-            <textarea id="glossary-json" rows="15" className="input font-mono text-xs !bg-[var(--bg-main)]" style="color: var(--success)" dir="ltr" placeholder='{"Word": "Translation"}'></textarea>
+            <textarea id="glossary-json" rows="15" class="input font-mono text-xs !bg-[var(--bg-main)]" style="color: var(--success)" dir="ltr" placeholder='{"Word": "Translation"}'></textarea>
           </div>
         </div>
 
         <!-- TAB: CACHE -->
-        <div id="tab-cache" class="hidden space-y-4">
-          <div className="card p-4 flex flex-col sm:flex-row gap-2">
-            <input type="text" id="cache-search-input" placeholder="Search translation memory..." className="input" onkeydown="if(event.key==='Enter') searchCache()" />
-            <button onclick="searchCache()" className="btn btn-primary sm:w-auto w-full">Search</button>
-          </div>
-          <div className="card overflow-hidden">
-            <div class="overflow-x-auto">
-              <table className="w-full text-xs text-right min-w-[400px]">
-                <thead className="border-b border-[var(--border-color)]" style="background-color: var(--bg-surface); color: var(--text-dim)">
+        <div id="tab-cache" class="hidden space-y-6">
+          <div class="card p-5 md:p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Translation Memory (SQLite)</h3>
+            <div class="flex flex-col sm:flex-row gap-2 mb-4">
+              <input type="text" id="cache-search-input" placeholder="Search translation memory..." class="input" onkeydown="if(event.key==='Enter') searchCache()" />
+              <button onclick="searchCache()" class="btn btn-primary sm:w-auto w-full">Search</button>
+            </div>
+            <div class="overflow-x-auto rounded-lg border border-[var(--border-color)]">
+              <table class="w-full text-xs text-right min-w-[400px]">
+                <thead class="border-b border-[var(--border-color)]" style="background-color: var(--bg-surface); color: var(--text-dim)">
                   <tr>
-                    <th className="p-4 font-medium">Original Text</th>
-                    <th className="p-4 font-medium">Translated Text</th>
+                    <th class="p-4 font-medium">Original Text</th>
+                    <th class="p-4 font-medium">Translated Text</th>
                   </tr>
                 </thead>
-                <tbody id="cache-table-body" className="divide-y divide-[var(--border-color)]"></tbody>
+                <tbody id="cache-table-body" class="divide-y divide-[var(--border-color)]"></tbody>
               </table>
             </div>
           </div>
         </div>
 
         <!-- TAB: DOWNLOADS -->
-        <div id="tab-download" class="hidden space-y-4">
-          <div className="card p-5 md:p-6">
-            <h3 className="text-base font-semibold mb-4" style="color: var(--text-main)">Generated Output Files</h3>
-            <div id="downloads-list" className="space-y-2"></div>
+        <div id="tab-download" class="hidden space-y-6">
+          <div class="card p-5 md:p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Generated Output Files</h3>
+            <div id="downloads-list" class="space-y-2"></div>
           </div>
         </div>
 
@@ -349,8 +351,10 @@
   <script>
     const terminal = document.getElementById('terminal');
     let cacheChart, usageChart;
-    let liveModelsList = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
-    let currentCascade = ['gemini-2.5-flash', 'gemini-2.0-flash'];
+    
+    // سخت‌گیرانه محدود شده به فقط فلش‌لایت‌ها
+    const liveModelsList = ['gemini-1.5-flash-latest', 'gemini-2.0-flash-latest'];
+    let currentCascade = ['gemini-1.5-flash-latest', 'gemini-2.0-flash-latest'];
 
     const svgIcons = {
       dashboard: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h5v8H4V5zM14 4h5a1 1 0 011 1v7h-6V4zM14 13h6v5a1 1 0 01-1 1h-5v-6zM4 13h6v6H5a1 1 0 01-1-1v-5z" /></svg>',
@@ -505,7 +509,6 @@
       document.getElementById('rules-never-translate').innerText = data.neverTranslateCount.toLocaleString('en-US');
       document.getElementById('rules-cache-once').innerText = data.cacheOnceCount.toLocaleString('en-US');
       
-      // Render tags as badges
       const tagsContainer = document.getElementById('rules-ignored-tags');
       const tags = data.ignoredTags.split(',').map(t => t.trim()).filter(Boolean);
       tagsContainer.innerHTML = tags.map(t => `<span class="badge">${t}</span>`).join('');
@@ -529,8 +532,6 @@
     // --- Models & Keys ---
     async function initKeysTab() {
       await loadKeys();
-      const fetchedModels = await api('/api/models/live');
-      if (fetchedModels && fetchedModels.length > 0) liveModelsList = fetchedModels;
       renderCascadeSlots();
     }
 
@@ -538,33 +539,26 @@
       const container = document.getElementById('model-cascade-container');
       container.innerHTML = '';
       currentCascade.forEach((modelName, idx) => {
-        const isCustom = !liveModelsList.includes(modelName);
         const slot = document.createElement('div');
-        slot.className = 'flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 p-3 rounded-lg border border-[var(--border-color)]';
+        slot.className = 'flex items-center gap-3 p-3 rounded-lg border border-[var(--border-color)]';
         slot.style.backgroundColor = 'var(--bg-main)';
+        
         let optionsHtml = liveModelsList.map(m => `<option value="${m}" ${m === modelName ? 'selected' : ''}>${m}</option>`).join('');
+        
         slot.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold w-8 font-mono" style="color: var(--text-dim)">${idx + 1}.</span>
-            <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] font-mono" style="color: var(--success)">
-              ${optionsHtml}
-              <option value="__custom__" ${isCustom ? 'selected' : ''}>Custom Model</option>
-            </select>
-          </div>
-          <input type="text" placeholder="custom-model-name" value="${isCustom ? modelName : ''}" onchange="updateSlotValue(${idx}, this.value)" class="${isCustom ? '' : 'hidden'} input w-full sm:w-48 !bg-[var(--bg-card)] font-mono" style="color: var(--warning)" id="custom-input-${idx}" />
+          <span class="text-xs font-bold w-8 font-mono" style="color: var(--text-dim)">${idx + 1}.</span>
+          <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] font-mono" style="color: var(--success)">
+            ${optionsHtml}
+          </select>
           ${currentCascade.length > 1 ? `<button onclick="removeModelSlot(${idx})" class="btn btn-danger !p-2"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" /></svg></button>` : ''}
         `;
         container.appendChild(slot);
       });
     }
 
-    function addModelSlot() { currentCascade.push(liveModelsList[0] || 'gemini-2.5-flash'); renderCascadeSlots(); }
+    function addModelSlot() { currentCascade.push(liveModelsList[0]); renderCascadeSlots(); }
     function removeModelSlot(idx) { currentCascade.splice(idx, 1); renderCascadeSlots(); }
-    function updateSlotValue(idx, val) {
-      const customInput = document.getElementById(`custom-input-${idx}`);
-      if (val === '__custom__') { customInput.classList.remove('hidden'); currentCascade[idx] = customInput.value || 'gemini-custom'; }
-      else { if (customInput) customInput.classList.add('hidden'); currentCascade[idx] = val; }
-    }
+    function updateSlotValue(idx, val) { currentCascade[idx] = val; }
 
     async function saveCascade() {
       const res = await api('/api/settings/cascade', 'POST', { cascade: currentCascade });
@@ -768,7 +762,6 @@
 
     // --- Init ---
     window.onload = () => {
-      // Theme Init
       const savedTheme = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
       document.getElementById('icon-sun').classList.toggle('hidden', savedTheme === 'dark');
