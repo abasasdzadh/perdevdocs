@@ -16,7 +16,6 @@ const pipeline = new PipelineManager();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// دریافت لیست زنده مدل‌ها مستقیم از Google API
 app.get('/api/models/live', async (req, res) => {
   const keysRaw = process.env.GEMINI_API_KEYS || '';
   const firstKey = keysRaw.split(',')[0]?.trim();
@@ -24,7 +23,6 @@ app.get('/api/models/live', async (req, res) => {
   res.json(models);
 });
 
-// تنظیم زنجیره چند سطحی مدل‌ها
 app.post('/api/settings/cascade', (req, res) => {
   const { cascade } = req.body;
   if (Array.isArray(cascade)) {
@@ -33,7 +31,22 @@ app.post('/api/settings/cascade', (req, res) => {
   res.json({ success: true, modelCascade: pipeline.modelCascade });
 });
 
-// آمار کلی
+// --- New API Endpoints for Rules ---
+app.get('/api/rules/stats', (req, res) => {
+  res.json(pipeline.getRulesStats());
+});
+
+app.post('/api/settings/chunk-size', (req, res) => {
+  pipeline.setChunkSize(req.body.size);
+  res.json({ success: true });
+});
+
+app.post('/api/rules/reload', (req, res) => {
+  pipeline.reloadRules();
+  res.json({ success: true });
+});
+// ---------------------------------
+
 app.get('/api/stats', (req, res) => {
   let dailyUsage = { date: '', count: 0 };
   try {
@@ -57,7 +70,6 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
-// کلیدهای API
 app.get('/api/keys', (req, res) => {
   const keysRaw = process.env.GEMINI_API_KEYS || '';
   const keys = keysRaw.split(',').map(k => k.trim()).filter(Boolean);

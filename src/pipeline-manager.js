@@ -5,6 +5,7 @@ import { HtmlParser } from './parsers/html-parser.js';
 import { TextExtractor } from './extractor/text-extractor.js';
 import { StaticDictionary } from './cache/static-dictionary.js';
 import { TranslationMemory } from './cache/translation-memory.js';
+import { RuleEngine } from './cache/rule-engine.js';
 import { GeminiTranslator } from './translators/gemini-translator.js';
 import { TranslationQueue } from './queue/translation-queue.js';
 import { TranslationValidator } from './validators/translation-validator.js';
@@ -26,6 +27,8 @@ export class PipelineManager extends EventEmitter {
     this.stats = { cacheHits: 0, aiCalls: 0 };
     this.failedPages = [];
     this.tm = null;
+    this.ruleEngine = new RuleEngine();
+    this.maxCharsPerBatch = 100000;
   }
 
   log(message, type = 'info') {
@@ -33,6 +36,24 @@ export class PipelineManager extends EventEmitter {
     const logData = { timestamp, message, type };
     console.log(`[${timestamp}] ${message}`);
     this.emit('log', logData);
+  }
+
+  getRulesStats() {
+    return {
+      neverTranslateCount: this.ruleEngine.neverTranslate.size,
+      cacheOnceCount: this.ruleEngine.cacheOnce.size,
+      ignoredTags: this.ruleEngine.getNeverTranslateTags()
+    };
+  }
+
+  setChunkSize(size) {
+    this.maxCharsPerBatch = Math.max(1000, parseInt(size) || 100000);
+    this.log(`⚙️ سقف کاراکتر برای هر درخواست به ${this.maxCharsPerBatch} تغییر یافت.`);
+  }
+
+  reloadRules() {
+    this.ruleEngine.loadRules();
+    this.log('🔄 قوانین موتور با موفقیت مجدداً بارگذاری شدند.');
   }
 
   setModelCascade(cascadeArray) {
@@ -130,6 +151,7 @@ export class PipelineManager extends EventEmitter {
             const unCachedNodes = [];
 
             for (const node of nodes) {
+              // ۱. بررسی دیکشنری استاتیک
               const staticMatch = StaticDictionary.get(node.maskedText);
               if (staticMatch) {
                 node.translatedText = staticMatch;
@@ -137,6 +159,14 @@ export class PipelineManager extends EventEmitter {
                 continue;
               }
 
+              // ۲. بررسی موتور قوانین (Bypass)
+              if (this.ruleEngine.isNeverTranslate(node.maskedText)) {
+                node.translatedText = node.maskedText;
+                this.stats.cacheHits++;
+                continue;
+              }
+
+              // ۳. بررسی دیتابیس SQLite
               const cached = await this.tm.get(node.maskedText);
               if (cached) {
                 node.translatedText = cached;
@@ -152,8 +182,8 @@ export class PipelineManager extends EventEmitter {
               hasAiCalls = true;
               this.stats.aiCalls += unCachedNodes.length;
 
-              const smartChunks = TextExtractor.createSmartChunks(unCachedNodes, 5000);
-              this.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در قالب ${smartChunks.length} چنک)...`);
+              const smartChunks = TextExtractor.createSmartChunks(unCachedNodes, this.maxCharsPerBatch);
+              this.log(`  🌐 پاراگراف‌های جدید: ${unCachedNodes.length} (در قالب ${smartChunks.length} درخواست یکپارچه)...`);
 
               for (let chunkIdx = 0; chunkIdx < smartChunks.length; chunkIdx++) {
                 if (this.shouldStop) break;
@@ -177,12 +207,18 @@ export class PipelineManager extends EventEmitter {
                 }
               }
             } else {
-              this.log(`  ⚡ تمام پاراگراف‌ها از کش محلی خوانده شد (0ms)`);
+              this.log(`  ⚡ تمام پاراگراف‌ها از کش یا قوانین خوانده شد (0ms)`);
             }
 
+            // بازسازی DOM صفحه با امنیت کامل
             for (const node of nodes) {
-              const finalBlockHtml = TextReplacer.unmask(node.translatedText || node.maskedText, node.placeholders);
-              node.$block.html(finalBlockHtml);
+              let finalHtml;
+              if (node.translatedText) {
+                finalHtml = TextReplacer.unmask(node.translatedText, node.placeholders);
+              } else {
+                finalHtml = TextReplacer.unmask(node.maskedText, node.placeholders);
+              }
+              node.$block.html(finalHtml);
             }
 
             this.currentPageHtml = $.html();

@@ -2,201 +2,313 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>داشبورد پیشرفته PerDevDocs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PerDevDocs Engine | Enterprise Control Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Vazirmatn', sans-serif; }
-    .term-scroll::-webkit-scrollbar { width: 5px; }
-    .term-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    :root {
+      --bg-main: #000000;
+      --bg-surface: #0a0a0a;
+      --bg-card: #111111;
+      --bg-hover: #1a1a1a;
+      --border-color: #1f1f1f;
+      --border-active: #2a2a2a;
+      --text-main: #ffffff;
+      --text-muted: #888888;
+      --text-dim: #555555;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.1);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Vazirmatn', 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); background-image: radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 40%); overflow-x: hidden; }
+    .font-mono { font-family: 'Inter', monospace; font-feature-settings: "tnum"; }
+    .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; transition: border-color 0.2s ease; }
+    .card:hover { border-color: var(--border-active); }
+    .btn { transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.875rem; cursor: pointer; border: 1px solid transparent; font-family: 'Inter', sans-serif; white-space: nowrap; }
+    .btn-primary { background-color: #fff; color: #000; }
+    .btn-primary:hover { background-color: #eee; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+    .btn-accent { background-color: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
+    .btn-accent:hover { background-color: #2563eb; }
+    .btn-success { background-color: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2); }
+    .btn-success:hover { background-color: rgba(16, 185, 129, 0.2); }
+    .btn-danger { background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+    .btn-danger:hover { background-color: rgba(239, 68, 68, 0.2); }
+    .btn-ghost { background-color: transparent; color: var(--text-muted); border-color: var(--border-color); }
+    .btn-ghost:hover { background-color: var(--bg-hover); color: var(--text-main); }
+    .input { background-color: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.875rem; width: 100%; transition: all 0.2s; }
+    .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: all 0.15s ease; cursor: pointer; border: 1px solid transparent; }
+    .nav-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
+    .nav-item.active { background-color: var(--bg-hover); color: var(--text-main); border-color: var(--border-color); }
+    .nav-item svg { width: 18px; height: 18px; stroke-width: 1.5; flex-shrink: 0; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-running { background-color: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
+    .status-paused { background-color: var(--warning); }
+    .status-stopped { background-color: var(--danger); }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+    .term-scroll::-webkit-scrollbar { width: 4px; }
+    .term-scroll::-webkit-scrollbar-track { background: transparent; }
+    .term-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .toast { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .chart-container { position: relative; height: 220px; width: 100%; }
+    #sidebar { transition: transform 0.3s ease-in-out; }
+    @media (max-width: 767px) {
+      #sidebar { position: fixed; top: 0; right: 0; bottom: 0; transform: translateX(100%); z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+      #sidebar.open { transform: translateX(0); }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col md:flex-row">
-
-  <!-- Sidebar -->
-  <aside class="w-full md:w-64 bg-slate-900 border-l border-slate-800 p-4 flex flex-col justify-between shrink-0">
-    <div class="space-y-6">
-      <div class="flex items-center gap-3 px-2">
-        <span class="text-2xl">⚡</span>
-        <div>
-          <h1 class="font-black text-emerald-400 text-lg">PerDevDocs</h1>
-          <p class="text-[10px] text-slate-400">پنل فوق پیشرفته ترجمه</p>
-        </div>
-      </div>
-
-      <nav class="space-y-1 text-xs font-medium">
-        <button onclick="switchTab('dashboard')" id="side-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-bold">📊 داشبورد و آمار</button>
-        <button onclick="switchTab('keys')" id="side-keys" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">🤖 زنجیره مدل‌ها و کلیدها</button>
-        <button onclick="switchTab('docsets')" id="side-docsets" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">📚 مدیریت داک‌ست‌ها</button>
-        <button onclick="switchTab('errors')" id="side-errors" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">⚠️ خطاهای ترجمه</button>
-        <button onclick="switchTab('preview')" id="side-preview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">👁️ پیش‌نمایش زنده</button>
-        <button onclick="switchTab('glossary')" id="side-glossary" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">📖 واژه‌نامه تخصصی</button>
-        <button onclick="switchTab('cache')" id="side-cache" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">🗄️ جستجوی کش</button>
-        <button onclick="switchTab('download')" id="side-download" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800">📥 دانلود خروجی‌ها</button>
-      </nav>
-    </div>
-
-    <div class="p-3 bg-slate-950/50 rounded-xl border border-slate-800 text-[11px] space-y-1">
-      <div class="flex justify-between text-slate-400"><span>وضعیت:</span><span id="status-badge" class="text-rose-400 font-bold">متوقف</span></div>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="flex-1 p-4 md:p-6 overflow-y-auto space-y-6">
-
-    <!-- TAB 1: DASHBOARD -->
-    <div id="tab-dashboard" class="space-y-6">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-3 w-full md:w-auto">
-          <label class="text-xs text-slate-400">داک‌ست هدف:</label>
-          <select id="doc-select" class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-3 py-2 text-white w-full md:w-60">
-            <option value="">همه داک‌ست‌ها</option>
-          </select>
-        </div>
-        <div class="flex gap-2 w-full md:w-auto">
-          <button id="btn-start" onclick="control('start')" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs">🚀 شروع</button>
-          <button id="btn-pause" onclick="control('pause')" disabled class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white opacity-50 cursor-not-allowed rounded-lg font-bold text-xs">⏸️ مکث</button>
-          <button id="btn-stop" onclick="control('stop')" disabled class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white opacity-50 cursor-not-allowed rounded-lg font-bold text-xs">🛑 توقف</button>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-xs text-slate-400">سهمیه API امروز</div>
-          <div id="stat-usage" class="text-xl font-bold text-indigo-400">0 از 400</div>
-          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden"><div id="stat-usage-bar" class="bg-indigo-500 h-full w-0"></div></div>
-        </div>
-
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-xs text-slate-400">پیشرفت صفحات</div>
-          <div id="stat-progress-text" class="text-xl font-bold text-emerald-400">0%</div>
-          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden"><div id="stat-progress-bar" class="bg-emerald-500 h-full w-0"></div></div>
-        </div>
-
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-xs text-slate-400">تاخیر API بین صفحات</div>
-          <div class="flex items-center gap-2">
-            <input type="number" id="delay-input" min="0" max="300" value="90" onchange="updateDelay()" class="w-16 bg-slate-950 border border-slate-800 rounded px-2 py-1 text-center font-bold text-amber-400 text-xs" />
-            <span class="text-xs text-slate-400">ثانیه</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 h-64 flex flex-col justify-between">
-          <span class="text-xs font-bold text-slate-400">صرفه‌جویی کش محلی (0ms)</span>
-          <div class="flex-1 relative flex items-center justify-center"><canvas id="chart-cache"></canvas></div>
-        </div>
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 h-64 flex flex-col justify-between">
-          <span class="text-xs font-bold text-slate-400">تعداد درخواست‌های API</span>
-          <div class="flex-1 relative"><canvas id="chart-usage"></canvas></div>
-        </div>
-      </div>
-
-      <!-- Terminal -->
-      <div class="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
-        <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center text-xs">
-          <span class="text-slate-400 font-mono">کنسول زنده لاگ‌ها</span>
-          <button onclick="document.getElementById('terminal').innerHTML=''" class="text-slate-500">پاکسازی</button>
-        </div>
-        <div id="terminal" class="p-4 font-mono text-xs h-64 overflow-y-auto space-y-1 text-slate-300 term-scroll">
-          <div class="text-slate-600">[موتور آماده است...]</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 2: KEYS & MULTI-MODEL CASCADE -->
-    <div id="tab-keys" class="hidden space-y-6">
-      <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
-        <div class="flex justify-between items-center">
+<body class="min-h-screen flex">
+  <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] space-y-3 w-[90%] max-w-sm"></div>
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden md:hidden" onclick="toggleSidebar()"></div>
+  <div class="flex w-full">
+    <aside id="sidebar" class="w-[260px] shrink-0 border-l border-[var(--border-color)] flex flex-col h-screen md:sticky top-0 p-4 bg-[var(--bg-surface)]/95 backdrop-blur-xl">
+      <div class="flex items-center justify-between gap-3 px-2 py-4 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-white flex items-center justify-center text-black font-bold text-lg">P</div>
           <div>
-            <h3 class="text-sm font-bold text-slate-200">🔗 زنجیره اولویت مدل‌ها (Fallback Cascade)</h3>
-            <p class="text-xs text-slate-400 mt-1">اگر مدل اول با خطا مواجه شود، موتور به‌طور خودکار روی مدل دوم و بعدی سوئیچ می‌کند.</p>
+            <h1 class="font-bold text-sm text-white tracking-tight">PerDevDocs</h1>
+            <p class="text-[10px] text-[var(--text-dim)] font-mono">Engine v1.0.0</p>
           </div>
-          <button onclick="addModelSlot()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white rounded-lg flex items-center gap-1">
-            ➕ افزودن مدل پشتیبان
-          </button>
         </div>
-
-        <div id="model-cascade-container" class="space-y-3">
-          <!-- اسلات‌های مدل در این بخش با JS ساخته می‌شوند -->
-        </div>
-
-        <button onclick="saveCascade()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white rounded-lg">
-          💾 ذخیره زنجیره مدل‌ها
+        <button class="md:hidden text-[var(--text-muted)]" onclick="toggleSidebar()">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
-
-      <!-- API Keys -->
-      <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-4">
-        <h3 class="text-sm font-bold text-slate-200">🔑 کلیدهای API فعال (GEMINI_API_KEYS)</h3>
-        <div class="flex gap-2">
-          <input type="text" id="new-key-input" placeholder="کلید جدید API را وارد کنید..." class="flex-1 bg-slate-950 border border-slate-800 text-xs px-3 py-2 rounded-lg text-white font-mono" />
-          <button onclick="addKey()" class="px-4 py-2 bg-emerald-600 text-xs font-bold text-white rounded-lg">افزودن کلید</button>
+      <nav id="nav-menu" class="flex-1 space-y-1 overflow-y-auto term-scroll"></nav>
+      <div class="mt-auto p-3 border border-[var(--border-color)] rounded-xl bg-[var(--bg-surface)]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-[var(--text-dim)]">Engine Status</span>
+          <div class="flex items-center gap-2">
+            <span id="status-dot" class="status-dot status-stopped"></span>
+            <span id="status-text" class="text-xs font-medium text-[var(--text-muted)]">Idle</span>
+          </div>
         </div>
-        <div id="keys-list" class="space-y-2"></div>
+        <div class="text-[10px] text-[var(--text-dim)] font-mono truncate" id="current-page-info">No active task</div>
       </div>
-    </div>
-
-    <!-- OTHER TABS -->
-    <div id="tab-docsets" class="hidden space-y-6">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-4">
-        <h3 class="text-sm font-bold text-slate-300">افزودن داک‌ست جدید</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input type="text" id="doc-id" placeholder="شناسه (مثلاً: react)" class="bg-slate-950 border border-slate-800 text-xs p-2.5 rounded-lg text-white" />
-          <input type="text" id="doc-name" placeholder="نام نمایش (مثلاً: React)" class="bg-slate-950 border border-slate-800 text-xs p-2.5 rounded-lg text-white" />
-          <input type="text" id="doc-url" placeholder="لینک مستقیم db.json گیت‌هاب" class="bg-slate-950 border border-slate-800 text-xs p-2.5 rounded-lg text-white" />
+    </aside>
+    <main class="flex-1 min-h-screen flex flex-col w-full">
+      <header class="h-16 border-b border-[var(--border-color)] flex items-center justify-between px-4 md:px-8 gap-2 sticky top-0 bg-[var(--bg-main)]/80 backdrop-blur-xl z-40">
+        <div class="flex items-center gap-3 min-w-0">
+          <button onclick="toggleSidebar()" class="md:hidden btn btn-ghost !p-2 !border-[var(--border-color)]">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+          <h2 id="page-title" class="text-base md:text-lg font-semibold text-white truncate">داشبورد عملکرد</h2>
         </div>
-        <button onclick="addDocset()" class="px-5 py-2 bg-indigo-600 text-xs font-bold text-white rounded-lg">ذخیره داک‌ست</button>
-      </div>
-    </div>
+        <div class="flex items-center gap-2 md:gap-3">
+          <select id="doc-select" class="input w-28 md:w-48 !py-2 text-xs hidden sm:block">
+            <option value="">All Docsets</option>
+          </select>
+          <button id="btn-start" onclick="control('start')" class="btn btn-success !py-2 !px-3 md:!px-4">Start</button>
+          <button id="btn-pause" onclick="control('pause')" disabled class="btn btn-ghost !py-2 !px-3 md:!px-4 hidden sm:flex">Pause</button>
+          <button id="btn-stop" onclick="control('stop')" disabled class="btn btn-danger !py-2 !px-3 md:!px-4">Stop</button>
+        </div>
+      </header>
+      <div class="flex-1 p-4 md:p-8 overflow-y-auto w-full">
+        
+        <!-- TAB: DASHBOARD -->
+        <div id="tab-dashboard" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div class="card p-5 md:p-6">
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-xs text-[var(--text-dim)] uppercase tracking-wider">API Quota</span>
+                <span class="text-[var(--accent)] text-xs font-mono">DAILY LIMIT</span>
+              </div>
+              <div class="flex items-end gap-2 mb-3">
+                <span id="stat-usage" class="text-2xl md:text-3xl font-bold text-white font-mono">0</span>
+                <span class="text-sm text-[var(--text-muted)] mb-1">/ 400</span>
+              </div>
+              <div class="w-full bg-[var(--bg-hover)] h-1.5 rounded-full overflow-hidden">
+                <div id="stat-usage-bar" class="bg-[var(--accent)] h-full w-0 transition-all duration-500 rounded-full"></div>
+              </div>
+            </div>
+            <div class="card p-5 md:p-6">
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-xs text-[var(--text-dim)] uppercase tracking-wider">Translation Progress</span>
+                <span class="text-[var(--success)] text-xs font-mono">ACTIVE</span>
+              </div>
+              <div class="flex items-end gap-2 mb-3">
+                <span id="stat-progress-text" class="text-2xl md:text-3xl font-bold text-white font-mono">0%</span>
+              </div>
+              <div class="w-full bg-[var(--bg-hover)] h-1.5 rounded-full overflow-hidden">
+                <div id="stat-progress-bar" class="bg-[var(--success)] h-full w-0 transition-all duration-500 rounded-full"></div>
+              </div>
+            </div>
+            <div class="card p-5 md:p-6 sm:col-span-2 lg:col-span-1">
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-xs text-[var(--text-dim)] uppercase tracking-wider">Page Delay</span>
+                <span class="text-[var(--warning)] text-xs font-mono">RATE LIMIT</span>
+              </div>
+              <div class="flex items-center gap-2 mb-3">
+                <input type="number" id="delay-input" min="0" max="300" value="90" onchange="updateDelay()" class="input w-20 text-center font-mono !text-lg !py-1" />
+                <span class="text-sm text-[var(--text-muted)]">Seconds</span>
+              </div>
+              <p class="text-[10px] text-[var(--text-dim)]">Prevents API block & simulates human</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div class="card p-5 md:p-6">
+              <h3 className="text-sm font-medium text-white mb-4">Cache Performance</h3>
+              <div class="chart-container"><canvas id="chart-cache"></canvas></div>
+            </div>
+            <div class="card p-5 md:p-6">
+              <h3 className="text-sm font-medium text-white mb-4">API Usage History</h3>
+              <div class="chart-container"><canvas id="chart-usage"></canvas></div>
+            </div>
+          </div>
+          <div class="card overflow-hidden">
+            <div class="bg-[var(--bg-surface)] px-5 py-3 border-b border-[var(--border-color)] flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-white">Live Logs</span>
+                <span class="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse"></span>
+              </div>
+              <button onclick="document.getElementById('terminal').innerHTML=''" class="text-[10px] text-[var(--text-dim)] hover:text-white transition">Clear</button>
+            </div>
+            <div id="terminal" class="p-4 font-mono text-xs h-64 md:h-72 overflow-y-auto space-y-1 text-[var(--text-muted)] term-scroll bg-[var(--bg-main)]">
+              <div class="text-[var(--text-dim)]">[System] Engine ready. Waiting for commands...</div>
+            </div>
+          </div>
+        </div>
 
-    <div id="tab-errors" class="hidden space-y-4">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-        <h3 class="text-sm font-bold text-slate-300 mb-3">صفحات دارای خطا</h3>
-        <div id="failed-list" class="space-y-2"></div>
-      </div>
-    </div>
+        <!-- TAB: KEYS -->
+        <div id="tab-keys" class="hidden space-y-6">
+          <div class="card p-5 md:p-6">
+            <div class="flex flex-wrap justify-between items-center mb-6 gap-2">
+              <div>
+                <h3 className="text-base font-semibold text-white">AI Model Cascade</h3>
+                <p class="text-xs text-[var(--text-muted)] mt-1">If primary fails, engine switches automatically.</p>
+              </div>
+              <button onclick="addModelSlot()" class="btn btn-ghost text-xs">Add Model</button>
+            </div>
+            <div id="model-cascade-container" class="space-y-3"></div>
+            <button onclick="saveCascade()" class="btn btn-accent mt-6 w-full">Save Cascade Configuration</button>
+          </div>
+          <div class="card p-5 md:p-6">
+            <h3 className="text-base font-semibold text-white mb-4">API Keys (Gemini)</h3>
+            <div class="flex flex-col sm:flex-row gap-2 mb-6">
+              <input type="text" id="new-key-input" placeholder="AIza..." class="input flex-1 font-mono" />
+              <button onclick="addKey()" class="btn btn-primary">Add Key</button>
+            </div>
+            <div id="keys-list" className="space-y-2"></div>
+          </div>
+        </div>
 
-    <div id="tab-preview" class="hidden space-y-4">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
-        <span class="text-xs text-slate-300">پیش‌نمایش زنده صفحه ترجمه‌شده</span>
-        <button onclick="loadPreview()" class="px-3 py-1 bg-indigo-600 text-xs text-white rounded">🔄 بروزرسانی</button>
-      </div>
-      <div id="preview-frame" class="bg-white text-black p-6 rounded-xl min-h-[400px] max-h-[600px] overflow-y-auto"></div>
-    </div>
+        <!-- TAB: DOCSETS -->
+        <div id="tab-docsets" class="hidden space-y-6">
+          <div class="card p-5 md:p-6">
+            <h3 className="text-base font-semibold text-white mb-4">Register New Docset</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <input type="text" id="doc-id" placeholder="ID (e.g., react)" class="input font-mono" />
+              <input type="text" id="doc-name" placeholder="Name (e.g., React)" class="input" />
+              <input type="text" id="doc-url" placeholder="Raw GitHub URL to db.json" class="input font-mono" />
+            </div>
+            <button onclick="addDocset()" class="btn btn-accent">Save Docset</button>
+          </div>
+        </div>
 
-    <div id="tab-glossary" class="hidden space-y-4">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
-        <span class="text-xs font-bold text-slate-300">ویرایش واژه‌نامه (glossary.json)</span>
-        <button onclick="saveGlossary()" class="px-4 py-2 bg-emerald-600 text-xs font-bold text-white rounded-lg">💾 ذخیره</button>
-      </div>
-      <textarea id="glossary-json" rows="15" class="w-full bg-slate-950 border border-slate-800 font-mono text-xs p-4 rounded-xl text-emerald-400" dir="ltr"></textarea>
-    </div>
+        <!-- TAB: RULES & ENGINE -->
+        <div id="tab-rules" class="hidden space-y-6">
+          <div className="card p-6">
+            <h3 className="text-base font-semibold text-white mb-4">آمار قوانین Bypass</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
+                <span className="text-sm text-[var(--text-muted)]">کلمات مستثنی شده (هرگز ترجمه نشود):</span>
+                <span id="rules-never-translate" className="font-mono text-sm text-[var(--danger)]">0</span>
+              </div>
+              <div className="flex justify-between items-center bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
+                <span className="text-sm text-[var(--text-muted)]">متون تکراری (کش یک‌بار مصرف):</span>
+                <span id="rules-cache-once" className="font-mono text-sm text-[var(--success)]">0</span>
+              </div>
+              <div className="flex flex-col gap-2 bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
+                <span className="text-sm text-[var(--text-muted)]">تگ‌های مستثنی شده (SKIP_SUBTREE):</span>
+                <span id="rules-ignored-tags" className="font-mono text-[10px] text-[var(--warning)] break-all"></span>
+              </div>
+            </div>
+            <button onclick="reloadRules()" className="btn btn-accent mt-6 w-full">🔄 بارگذاری مجدد فایل‌های JSON</button>
+          </div>
+          <div className="card p-6">
+            <h3 className="text-base font-semibold text-white mb-4">استراتژی درخواست به هوش مصنوعی</h3>
+            <p className="text-xs text-[var(--text-muted)] mb-4">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs text-[var(--text-dim)] uppercase tracking-wider mb-2 block">حداکثر کاراکتر هر درخواست</label>
+                <div className="flex gap-2">
+                  <input type="number" id="chunk-size-input" min="1000" max="500000" step="1000" value="100000" className="input flex-1 font-mono" />
+                  <button onclick="saveChunkSize()" className="btn btn-primary">ذخیره</button>
+                </div>
+                <p className="text-[10px] text-[var(--text-dim)] mt-2">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن)</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div id="tab-cache" class="hidden space-y-4">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex gap-2">
-        <input type="text" id="cache-search-input" placeholder="جستجو در SQLite..." class="flex-1 bg-slate-950 border border-slate-800 text-xs px-4 py-2 rounded-lg text-white" />
-        <button onclick="searchCache()" class="px-5 py-2 bg-indigo-600 text-xs font-bold text-white rounded-lg">جستجو</button>
-      </div>
-      <table class="w-full text-xs text-right bg-slate-900 rounded-xl overflow-hidden">
-        <thead class="bg-slate-950 text-slate-400"><tr><th class="p-3">متن اصلی</th><th class="p-3">ترجمه</th></tr></thead>
-        <tbody id="cache-table-body"></tbody>
-      </table>
-    </div>
+        <!-- TAB: ERRORS -->
+        <div id="tab-errors" class="hidden space-y-4">
+          <div className="card p-5 md:p-6">
+            <h3 className="text-base font-semibold text-white mb-4">Failed Translations</h3>
+            <div id="failed-list" className="space-y-2"></div>
+          </div>
+        </div>
 
-    <div id="tab-download" class="hidden space-y-4">
-      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-        <h3 class="text-sm font-bold text-slate-300 mb-3">دانلود خروجی‌ها</h3>
-        <div id="downloads-list" class="space-y-2"></div>
-      </div>
-    </div>
+        <!-- TAB: PREVIEW -->
+        <div id="tab-preview" class="hidden space-y-4">
+          <div className="card p-4 flex justify-between items-center">
+            <h3 className="text-base font-semibold text-white">Live HTML Preview</h3>
+            <button onclick="loadPreview()" class="btn btn-ghost text-xs">Refresh</button>
+          </div>
+          <iframe id="preview-frame" className="card w-full min-h-[600px] bg-white rounded-xl" sandbox="allow-same-origin"></iframe>
+        </div>
 
-  </main>
+        <!-- TAB: GLOSSARY -->
+        <div id="tab-glossary" class="hidden space-y-4">
+          <div className="card p-5 md:p-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-base font-semibold text-white">Technical Glossary</h3>
+              <button onclick="saveGlossary()" className="btn btn-success text-xs">Save Changes</button>
+            </div>
+            <textarea id="glossary-json" rows="15" className="input font-mono text-xs text-[var(--success)] !bg-[var(--bg-main)]" dir="ltr" placeholder='{"Word": "Translation"}'></textarea>
+          </div>
+        </div>
+
+        <!-- TAB: CACHE -->
+        <div id="tab-cache" class="hidden space-y-4">
+          <div className="card p-4 flex flex-col sm:flex-row gap-2">
+            <input type="text" id="cache-search-input" placeholder="Search translation memory..." className="input" onkeydown="if(event.key==='Enter') searchCache()" />
+            <button onclick="searchCache()" className="btn btn-primary sm:w-auto w-full">Search</button>
+          </div>
+          <div className="card overflow-hidden">
+            <div class="overflow-x-auto">
+              <table className="w-full text-xs text-right min-w-[400px]">
+                <thead className="bg-[var(--bg-surface)] text-[var(--text-dim)] border-b border-[var(--border-color)]">
+                  <tr>
+                    <th className="p-4 font-medium">Original Text</th>
+                    <th className="p-4 font-medium">Translated Text</th>
+                  </tr>
+                </thead>
+                <tbody id="cache-table-body" className="divide-y divide-[var(--border-color)]"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: DOWNLOADS -->
+        <div id="tab-download" class="hidden space-y-4">
+          <div className="card p-5 md:p-6">
+            <h3 className="text-base font-semibold text-white mb-4">Generated Output Files</h3>
+            <div id="downloads-list" className="space-y-2"></div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
 
   <script>
     const terminal = document.getElementById('terminal');
@@ -204,143 +316,195 @@
     let liveModelsList = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
     let currentCascade = ['gemini-2.5-flash', 'gemini-2.0-flash'];
 
+    const svgIcons = {
+      dashboard: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h5v8H4V5zM14 4h5a1 1 0 011 1v7h-6V4zM14 13h6v5a1 1 0 01-1 1h-5v-6zM4 13h6v6H5a1 1 0 01-1-1v-5z" /></svg>',
+      keys: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a4 4 0 11-8 0 4 4 0 018 0zM12 14v7m-3-3h6" /></svg>',
+      docsets: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>',
+      rules: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>',
+      errors: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>',
+      preview: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>',
+      glossary: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>',
+      cache: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>',
+      download: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>'
+    };
+
+    const menuItems = [
+      { id: 'dashboard', label: 'داشبورد', title: 'داشبورد عملکرد' },
+      { id: 'keys', label: 'مدیریت هوش مصنوعی', title: 'زنجیره مدل‌ها و کلیدها' },
+      { id: 'docsets', label: 'مستندات', title: 'مدیریت داک‌ست‌ها' },
+      { id: 'rules', label: 'موتور و قوانین', title: 'تنظیمات موتور هوشمند و Bypass' },
+      { id: 'errors', label: 'خطاها', title: 'صفحات دارای خطا' },
+      { id: 'preview', label: 'پیش‌نمایش', title: 'پیش‌نمایش زنده HTML' },
+      { id: 'glossary', label: 'واژه‌نامه', title: 'دیکشنری تخصصی' },
+      { id: 'cache', label: 'حافظه کش', title: 'پایگاه داده SQLite' },
+      { id: 'download', label: 'خروجی‌ها', title: 'فایل‌های آماده دانلود' }
+    ];
+
+    function renderMenu() {
+      const nav = document.getElementById('nav-menu');
+      nav.innerHTML = menuItems.map(m => `
+        <div onclick="switchTab('${m.id}')" id="side-${m.id}" class="nav-item">
+          ${svgIcons[m.id]} <span>${m.label}</span>
+        </div>
+      `).join('');
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('hidden');
+    }
+
+    function showToast(msg, type = 'success') {
+      const colors = { success: 'bg-emerald-500', error: 'bg-rose-500', warning: 'bg-amber-500', info: 'bg-blue-500' };
+      const toast = document.createElement('div');
+      toast.className = `toast ${colors[type]} text-white px-5 py-3 rounded-lg shadow-2xl flex items-center justify-center gap-3 text-sm font-medium text-center`;
+      toast.innerHTML = `<span>${msg}</span>`;
+      document.getElementById('toast-container').appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    async function api(url, method = 'GET', body = null) {
+      try {
+        const opts = { method, headers: { 'Content-Type': 'application/json' } };
+        if (body) opts.body = JSON.stringify(body);
+        const res = await fetch(url, opts);
+        if (!res.ok) throw new Error(`Server Error: ${res.status}`);
+        return await res.json();
+      } catch (err) {
+        showToast('خطا در ارتباط با سرور', 'error');
+        return null;
+      }
+    }
+
     function initCharts() {
       const ctxCache = document.getElementById('chart-cache').getContext('2d');
       cacheChart = new Chart(ctxCache, {
         type: 'doughnut',
-        data: { labels: ['کش محلی (0ms)', 'درخواست AI'], datasets: [{ data: [1, 0], backgroundColor: ['#10b981', '#6366f1'] }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'Vazirmatn' } } } } }
+        data: { labels: ['Cache Hits', 'AI Calls'], datasets: [{ data: [1, 0], backgroundColor: ['#10b981', '#3b82f6'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#888', font: { family: 'Inter' } } } } }
       });
 
       const ctxUsage = document.getElementById('chart-usage').getContext('2d');
       usageChart = new Chart(ctxUsage, {
         type: 'line',
-        data: { labels: ['امروز'], datasets: [{ label: 'درخواست‌ها', data: [0], borderColor: '#6366f1', tension: 0.3 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        data: { labels: ['Today'], datasets: [{ label: 'Requests', data: [0], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#1a1a1a' }, ticks: { color: '#555' } }, x: { grid: { display: false }, ticks: { color: '#555' } } } }
       });
     }
 
     function switchTab(tabName) {
-      ['dashboard', 'keys', 'docsets', 'errors', 'preview', 'glossary', 'cache', 'download'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.add('hidden');
-        document.getElementById(`side-${t}`).className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800';
+      menuItems.forEach(t => {
+        const tab = document.getElementById(`tab-${t.id}`);
+        const side = document.getElementById(`side-${t.id}`);
+        if (tab) tab.classList.add('hidden');
+        if (side) side.classList.remove('active');
       });
-
-      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-      document.getElementById(`side-${tabName}`).className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-bold';
+      
+      const activeTab = document.getElementById(`tab-${tabName}`);
+      const activeSide = document.getElementById(`side-${tabName}`);
+      const menuItem = menuItems.find(m => m.id === tabName);
+      
+      activeTab.classList.remove('hidden');
+      activeSide.classList.add('active');
+      document.getElementById('page-title').innerText = menuItem.title;
+      
+      if (window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.add('hidden');
+      }
 
       if (tabName === 'keys') initKeysTab();
+      if (tabName === 'rules') loadRulesStats();
       if (tabName === 'errors') loadFailed();
       if (tabName === 'preview') loadPreview();
       if (tabName === 'glossary') loadGlossary();
       if (tabName === 'download') loadDownloads();
     }
 
-    // 🌐 لود زنده مدل‌ها از Google API
+    // --- Rules & Engine ---
+    async function loadRulesStats() {
+      const data = await api('/api/rules/stats');
+      if (!data) return;
+      document.getElementById('rules-never-translate').innerText = data.neverTranslateCount.toLocaleString('en-US');
+      document.getElementById('rules-cache-once').innerText = data.cacheOnceCount.toLocaleString('en-US');
+      document.getElementById('rules-ignored-tags').innerText = data.ignoredTags;
+    }
+
+    async function reloadRules() {
+      showToast('در حال بارگذاری مجدد قوانین...', 'info');
+      const res = await api('/api/rules/reload', 'POST');
+      if (res) {
+        showToast('قوانین با موفقیت آپدیت شدند.', 'success');
+        loadRulesStats();
+      }
+    }
+
+    async function saveChunkSize() {
+      const size = document.getElementById('chunk-size-input').value;
+      const res = await api('/api/settings/chunk-size', 'POST', { size });
+      if (res) showToast('سقف کاراکتر بروزرسانی شد.', 'success');
+    }
+
+    // --- Models & Keys ---
     async function initKeysTab() {
       await loadKeys();
-      try {
-        const res = await fetch('/api/models/live');
-        const fetchedModels = await res.json();
-        if (fetchedModels && fetchedModels.length > 0) {
-          liveModelsList = fetchedModels;
-        }
-      } catch (e) {}
-
+      const fetchedModels = await api('/api/models/live');
+      if (fetchedModels && fetchedModels.length > 0) liveModelsList = fetchedModels;
       renderCascadeSlots();
     }
 
     function renderCascadeSlots() {
       const container = document.getElementById('model-cascade-container');
       container.innerHTML = '';
-
       currentCascade.forEach((modelName, idx) => {
-        const slot = document.createElement('div');
-        slot.className = 'flex items-center gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800';
-        
-        let optionsHtml = liveModelsList.map(m => `<option value="${m}" ${m === modelName ? 'selected' : ''}>${m}</option>`).join('');
         const isCustom = !liveModelsList.includes(modelName);
-
+        const slot = document.createElement('div');
+        slot.className = 'flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]';
+        let optionsHtml = liveModelsList.map(m => `<option value="${m}" ${m === modelName ? 'selected' : ''}>${m}</option>`).join('');
         slot.innerHTML = `
-          <span class="text-xs font-bold text-slate-500 w-16">اولیت ${idx + 1}:</span>
-          <select onchange="updateSlotValue(${idx}, this.value)" class="bg-slate-900 text-xs border border-slate-800 rounded-lg p-2 text-emerald-400 font-mono flex-1">
-            ${optionsHtml}
-            <option value="__custom__" ${isCustom ? 'selected' : ''}>-- مدل سفارشی (تایپ دستی) --</option>
-          </select>
-          <input type="text" placeholder="نام مدل اختصاصی..." value="${isCustom ? modelName : ''}" onchange="updateSlotValue(${idx}, this.value)" class="${isCustom ? '' : 'hidden'} bg-slate-900 border border-slate-800 text-xs p-2 rounded text-amber-400 font-mono w-48" id="custom-input-${idx}" />
-          ${currentCascade.length > 1 ? `<button onclick="removeModelSlot(${idx})" class="text-rose-500 hover:text-rose-400 p-2">🗑️</button>` : ''}
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-[var(--text-dim)] w-8 font-mono">${idx + 1}.</span>
+            <select onchange="updateSlotValue(${idx}, this.value)" class="input flex-1 !bg-[var(--bg-card)] text-[var(--success)] font-mono">
+              ${optionsHtml}
+              <option value="__custom__" ${isCustom ? 'selected' : ''}>Custom Model</option>
+            </select>
+          </div>
+          <input type="text" placeholder="custom-model-name" value="${isCustom ? modelName : ''}" onchange="updateSlotValue(${idx}, this.value)" class="${isCustom ? '' : 'hidden'} input w-full sm:w-48 !bg-[var(--bg-card)] text-[var(--warning)] font-mono" id="custom-input-${idx}" />
+          ${currentCascade.length > 1 ? `<button onclick="removeModelSlot(${idx})" class="btn btn-danger !p-2"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" /></svg></button>` : ''}
         `;
         container.appendChild(slot);
       });
     }
 
-    function addModelSlot() {
-      currentCascade.push(liveModelsList[0] || 'gemini-2.5-flash');
-      renderCascadeSlots();
-    }
-
-    function removeModelSlot(idx) {
-      currentCascade.splice(idx, 1);
-      renderCascadeSlots();
-    }
-
+    function addModelSlot() { currentCascade.push(liveModelsList[0] || 'gemini-2.5-flash'); renderCascadeSlots(); }
+    function removeModelSlot(idx) { currentCascade.splice(idx, 1); renderCascadeSlots(); }
     function updateSlotValue(idx, val) {
       const customInput = document.getElementById(`custom-input-${idx}`);
-      if (val === '__custom__') {
-        customInput.classList.remove('hidden');
-        currentCascade[idx] = customInput.value || 'gemini-custom';
-      } else {
-        if (customInput) customInput.classList.add('hidden');
-        currentCascade[idx] = val;
-      }
+      if (val === '__custom__') { customInput.classList.remove('hidden'); currentCascade[idx] = customInput.value || 'gemini-custom'; }
+      else { if (customInput) customInput.classList.add('hidden'); currentCascade[idx] = val; }
     }
 
     async function saveCascade() {
-      await fetch('/api/settings/cascade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cascade: currentCascade })
-      });
-      alert('زنجیره مدل‌ها ذخیره شد!');
-    }
-
-    async function updateStats() {
-      try {
-        const res = await fetch('/api/stats');
-        const data = await res.json();
-
-        document.getElementById('stat-usage').innerText = `${data.dailyUsageCount} از ${data.maxDailyLimit}`;
-        document.getElementById('stat-usage-bar').style.width = `${(data.dailyUsageCount / data.maxDailyLimit) * 100}%`;
-
-        if (data.progress.total > 0) {
-          const pct = Math.round((data.progress.current / data.progress.total) * 100);
-          document.getElementById('stat-progress-text').innerText = `${pct}٪ (${data.progress.current} از ${data.progress.total})`;
-          document.getElementById('stat-progress-bar').style.width = `${pct}%`;
-        }
-
-        if (data.modelCascade) currentCascade = data.modelCascade;
-
-        if (cacheChart && data.stats) {
-          cacheChart.data.datasets[0].data = [data.stats.cacheHits || 1, data.stats.aiCalls || 0];
-          cacheChart.update();
-        }
-        if (usageChart) {
-          usageChart.data.datasets[0].data = [data.dailyUsageCount];
-          usageChart.update();
-        }
-      } catch (e) {}
+      const res = await api('/api/settings/cascade', 'POST', { cascade: currentCascade });
+      if (res) showToast('Model cascade saved successfully', 'success');
     }
 
     async function loadKeys() {
-      const res = await fetch('/api/keys');
-      const keys = await res.json();
+      const keys = await api('/api/keys');
       const container = document.getElementById('keys-list');
+      if (!keys) return;
       container.innerHTML = keys.map(k => `
-        <div class="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
-          <span class="font-mono text-xs text-emerald-400">${k.masked}</span>
-          <div class="flex gap-2">
-            <button onclick="testKey('${k.key}')" class="px-3 py-1 bg-indigo-600 text-[10px] text-white rounded">تست سلامتی</button>
-            <button onclick="deleteKey('${k.key}')" class="px-3 py-1 bg-rose-600 text-[10px] text-white rounded">حذف</button>
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 bg-[var(--bg-main)] p-3 rounded-lg border border-[var(--border-color)]">
+          <span class="font-mono text-xs text-[var(--success)] truncate">${k.masked}</span>
+          <div class="flex gap-2 shrink-0">
+            <button onclick="testKey('${k.key}')" class="btn btn-ghost text-[10px] !py-1.5 !px-3 flex-1 sm:flex-none">Test</button>
+            <button onclick="deleteKey('${k.key}')" class="btn btn-danger text-[10px] !py-1.5 !px-3 flex-1 sm:flex-none">Delete</button>
           </div>
         </div>
       `).join('');
@@ -348,65 +512,76 @@
 
     async function addKey() {
       const key = document.getElementById('new-key-input').value;
-      if (!key) return;
-      await fetch('/api/keys/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
-      document.getElementById('new-key-input').value = '';
-      loadKeys();
+      if (!key) return showToast('Please enter a key', 'warning');
+      const res = await api('/api/keys/add', 'POST', { key });
+      if (res) { document.getElementById('new-key-input').value = ''; loadKeys(); showToast('Key added', 'success'); }
     }
 
     async function testKey(key) {
-      alert('در حال تست کلید...');
-      const res = await fetch('/api/keys/test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
-      const data = await res.json();
-      if (data.success) alert('✅ کلید فعال است!');
-      else alert('❌ خطا: ' + data.error);
+      showToast('Testing key...', 'info');
+      const res = await api('/api/keys/test', 'POST', { key });
+      if (res && res.success) showToast('Key is active!', 'success');
+      else showToast('Key failed', 'error');
     }
 
     async function deleteKey(key) {
-      await fetch('/api/keys/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) });
-      loadKeys();
+      const res = await api('/api/keys/delete', 'POST', { key });
+      if (res) { loadKeys(); showToast('Key deleted', 'success'); }
     }
 
-    async function updateDelay() {
-      const seconds = document.getElementById('delay-input').value;
-      await fetch('/api/settings/delay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ seconds }) });
-    }
+    // --- Stats & Logs ---
+    async function updateStats() {
+      const data = await api('/api/stats');
+      if (!data) return;
 
-    async function addDocset() {
-      const id = document.getElementById('doc-id').value;
-      const name = document.getElementById('doc-name').value;
-      const contentUrl = document.getElementById('doc-url').value;
-      await fetch('/api/docsets/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, name, contentUrl }) });
-      alert('داک‌ست اضافه شد.');
-    }
-
-    async function loadFailed() {
-      const res = await fetch('/api/failed-pages');
-      const list = await res.json();
-      const container = document.getElementById('failed-list');
-      if (list.length === 0) {
-        container.innerHTML = '<div class="text-xs text-slate-500">هیچ خطایی ثبت نشده است.</div>';
-        return;
+      const statusDot = document.getElementById('status-dot');
+      const statusText = document.getElementById('status-text');
+      
+      if (data.isRunning) {
+        statusDot.className = 'status-dot ' + (data.isPaused ? 'status-paused' : 'status-running');
+        statusText.innerText = data.isPaused ? 'Paused' : 'Running';
+        statusText.style.color = data.isPaused ? 'var(--warning)' : 'var(--success)';
+      } else {
+        statusDot.className = 'status-dot status-stopped';
+        statusText.innerText = 'Idle';
+        statusText.style.color = 'var(--text-muted)';
       }
-      container.innerHTML = list.map(item => `
-        <div class="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
-          <div>
-            <span class="font-bold text-xs text-amber-400">${item.docName} - ${item.pageKey}</span>
-            <div class="text-[10px] text-rose-400">${item.error}</div>
-          </div>
-          <button onclick="retryFailed('${item.docId}', '${item.pageKey}')" class="px-3 py-1 bg-emerald-600 text-xs text-white rounded">بازترجمه مجدد</button>
-        </div>
-      `).join('');
-    }
 
-    async function retryFailed(docId, pageKey) {
-      await fetch('/api/retry-failed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ docId, pageKey }) });
-      switchTab('dashboard');
-    }
+      document.getElementById('current-page-info').innerText = data.currentPage || 'No active task';
 
-    async function control(action) {
-      const docId = document.getElementById('doc-select').value;
-      await fetch('/api/control', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, docId }) });
+      document.getElementById('stat-usage').innerText = data.dailyUsageCount;
+      document.getElementById('stat-usage-bar').style.width = `${(data.dailyUsageCount / data.maxDailyLimit) * 100}%`;
+
+      if (data.progress.total > 0) {
+        const pct = Math.round((data.progress.current / data.progress.total) * 100);
+        document.getElementById('stat-progress-text').innerText = `${pct}%`;
+        document.getElementById('stat-progress-bar').style.width = `${pct}%`;
+      } else {
+        document.getElementById('stat-progress-text').innerText = `0%`;
+        document.getElementById('stat-progress-bar').style.width = `0%`;
+      }
+
+      if (data.modelCascade) currentCascade = data.modelCascade;
+
+      const btnStart = document.getElementById('btn-start');
+      const btnPause = document.getElementById('btn-pause');
+      const btnStop = document.getElementById('btn-stop');
+      
+      btnStart.disabled = data.isRunning;
+      btnStart.classList.toggle('opacity-30', data.isRunning);
+      btnPause.disabled = !data.isRunning;
+      btnPause.classList.toggle('opacity-30', !data.isRunning);
+      btnStop.disabled = !data.isRunning;
+      btnStop.classList.toggle('opacity-30', !data.isRunning);
+
+      if (cacheChart && data.stats) {
+        cacheChart.data.datasets[0].data = [data.stats.cacheHits || 1, data.stats.aiCalls || 0];
+        cacheChart.update('none');
+      }
+      if (usageChart) {
+        usageChart.data.datasets[0].data = [data.dailyUsageCount];
+        usageChart.update('none');
+      }
     }
 
     function initLogStream() {
@@ -414,25 +589,116 @@
       evtSource.onmessage = (e) => {
         const log = JSON.parse(e.data);
         const line = document.createElement('div');
-        line.className = 'text-slate-300 flex gap-2';
-        line.innerHTML = `<span class="text-slate-600">[${log.timestamp}]</span> <span>${log.message}</span>`;
+        const color = log.type === 'error' ? 'text-rose-400' : log.type === 'success' ? 'text-emerald-400' : log.type === 'warn' ? 'text-amber-400' : 'text-slate-400';
+        line.className = `flex gap-2 ${color}`;
+        line.innerHTML = `<span class="text-slate-700 shrink-0">[${log.timestamp}]</span> <span class="break-words">${log.message}</span>`;
         terminal.appendChild(line);
         terminal.scrollTop = terminal.scrollHeight;
       };
     }
 
+    // --- Misc ---
     async function loadDocsets() {
-      const res = await fetch('/api/docsets');
-      const docsets = await res.json();
+      const docsets = await api('/api/docsets');
       const select = document.getElementById('doc-select');
-      docsets.forEach(d => { select.innerHTML += `<option value="${d.id}">${d.name}</option>`; });
+      if (docsets) {
+        docsets.forEach(d => { select.innerHTML += `<option value="${d.id}">${d.name}</option>`; });
+      }
     }
 
+    async function updateDelay() {
+      const seconds = document.getElementById('delay-input').value;
+      await api('/api/settings/delay', 'POST', { seconds });
+      showToast('Delay updated', 'info');
+    }
+
+    async function addDocset() {
+      const id = document.getElementById('doc-id').value;
+      const name = document.getElementById('doc-name').value;
+      const contentUrl = document.getElementById('doc-url').value;
+      const res = await api('/api/docsets/add', 'POST', { id, name, contentUrl });
+      if (res) showToast('Docset added successfully', 'success');
+    }
+
+    async function loadFailed() {
+      const list = await api('/api/failed-pages');
+      const container = document.getElementById('failed-list');
+      if (!list || list.length === 0) { container.innerHTML = '<div class="text-sm text-[var(--text-dim)] text-center py-8">No errors found. Everything is clean.</div>'; return; }
+      container.innerHTML = list.map(item => `
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 bg-[var(--bg-main)] p-4 rounded-lg border border-[var(--border-color)]">
+          <div class="min-w-0">
+            <span class="font-medium text-sm text-white font-mono break-all">${item.docName} / ${item.pageKey}</span>
+            <div class="text-[10px] text-rose-400 mt-1 font-mono break-all">${item.error}</div>
+          </div>
+          <button onclick="retryFailed('${item.docId}', '${item.pageKey}')" class="btn btn-ghost text-xs shrink-0">Retry</button>
+        </div>
+      `).join('');
+    }
+
+    async function retryFailed(docId, pageKey) {
+      await api('/api/retry-failed', 'POST', { docId, pageKey });
+      showToast('Retry initiated', 'success');
+      switchTab('dashboard');
+    }
+
+    async function control(action) {
+      const docId = document.getElementById('doc-select').value;
+      const res = await api('/api/control', 'POST', { action, docId });
+      if (res) showToast(`Engine ${action} command sent`, 'info');
+    }
+
+    async function loadPreview() {
+      const data = await api('/api/preview/current');
+      if (data && data.html) {
+        document.getElementById('preview-frame').srcdoc = data.html;
+      }
+    }
+
+    async function loadGlossary() {
+      const data = await api('/api/glossary');
+      if (data) document.getElementById('glossary-json').value = JSON.stringify(data, null, 2);
+    }
+
+    async function saveGlossary() {
+      try {
+        const json = JSON.parse(document.getElementById('glossary-json').value);
+        const res = await api('/api/glossary', 'POST', json);
+        if (res) showToast('Glossary saved', 'success');
+      } catch (e) { showToast('Invalid JSON format', 'error'); }
+    }
+
+    async function searchCache() {
+      const q = document.getElementById('cache-search-input').value;
+      const rows = await api(`/api/cache/search?q=${encodeURIComponent(q)}`);
+      const tbody = document.getElementById('cache-table-body');
+      if (!rows || rows.length === 0) { tbody.innerHTML = '<tr><td colspan="2" class="p-8 text-center text-[var(--text-dim)]">No results found</td></tr>'; return; }
+      tbody.innerHTML = rows.map(r => `<tr class="hover:bg-[var(--bg-surface)] transition"><td class="p-4 text-[var(--text-muted)] font-mono break-words">${r.original_text}</td><td class="p-4 text-[var(--success)] font-mono break-words">${r.translated_text}</td></tr>`).join('');
+    }
+
+    async function loadDownloads() {
+      const list = await api('/api/downloads');
+      const container = document.getElementById('downloads-list');
+      if (!list || list.length === 0) { container.innerHTML = '<div class="text-sm text-[var(--text-dim)] text-center py-8">No output files generated yet.</div>'; return; }
+      container.innerHTML = list.map(f => `
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 bg-[var(--bg-main)] p-4 rounded-lg border border-[var(--border-color)]">
+          <div>
+            <span class="font-medium text-sm text-white font-mono break-all">${f.id}/db.json</span>
+            <div class="text-[10px] text-[var(--text-dim)] mt-1 font-mono">Size: ${f.sizeMb} MB | Updated: ${f.updatedAt}</div>
+          </div>
+          <a href="/api/download/${f.id}" class="btn btn-accent text-xs shrink-0">Download</a>
+        </div>
+      `).join('');
+    }
+
+    // --- Init ---
     window.onload = () => {
+      renderMenu();
       initCharts();
       loadDocsets();
       initLogStream();
       setInterval(updateStats, 2000);
+      updateStats();
+      switchTab('dashboard');
     };
   </script>
 </body>
