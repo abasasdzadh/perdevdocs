@@ -2,8 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 export class TranslationQueue {
-  constructor() {
-    this.minDelayMs = 6000; 
+  constructor(minDelayMs = 6000, maxRetries = 3) {
+    this.minDelayMs = minDelayMs; 
+    this.maxRetries = maxRetries;
     this.maxDailyRequests = 400;
     this.trackerPath = './data/usage_tracker.json';
     this.lastRequestTime = 0;
@@ -28,7 +29,7 @@ export class TranslationQueue {
     fs.writeFileSync(this.trackerPath, JSON.stringify(usage, null, 2), 'utf8');
   }
 
-  async executeBatchWithRetry(translator, textsArray, maxRetries = 3) {
+  async executeBatchWithRetry(translator, textsArray) {
     const usage = this.loadUsage();
     if (usage.count >= this.maxDailyRequests) {
       throw new Error("🛑 سقف مجاز روزانه (400 درخواست) پر شده است. موتور متوقف شد.");
@@ -44,7 +45,7 @@ export class TranslationQueue {
     let attempt = 0;
     let lastError = null;
     
-    while (attempt < maxRetries) {
+    while (attempt < this.maxRetries) {
       try {
         this.lastRequestTime = Date.now();
         const result = await translator.translateBatch(textsArray);
@@ -63,12 +64,12 @@ export class TranslationQueue {
           throw new Error(`خطای غیرقابل بازیابی API: ${err.message}`);
         }
 
-        if (attempt < maxRetries) {
+        if (attempt < this.maxRetries) {
           await new Promise(res => setTimeout(res, 3000));
         }
       }
     }
 
-    throw new Error(`❌ تلاش ناموفق پس از ۳ بار: ${lastError.message}`);
+    throw new Error(`❌ تلاش ناموفق پس از ${this.maxRetries} بار: ${lastError.message}`);
   }
 }

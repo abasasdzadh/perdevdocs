@@ -10,7 +10,7 @@ export class GeminiTranslator {
     this.geminiKeys = [];
     this.activeKeyIndex = 0;
     this.useKeyRotation = useKeyRotation;
-    this.aiConfig = aiConfig; // تنظیمات پیشرفته AI
+    this.aiConfig = aiConfig;
     this.reloadKeys();
   }
 
@@ -104,7 +104,6 @@ export class GeminiTranslator {
 ${JSON.stringify(textsArray)}
     `;
 
-    // اعمال تنظیمات پیشرفته در درخواست
     const generationConfig = {
       responseMimeType: "application/json",
       temperature: this.aiConfig.temperature ?? 0.2,
@@ -120,7 +119,11 @@ ${JSON.stringify(textsArray)}
     });
 
     const rawText = response.text.trim();
-    return JSON.parse(rawText);
+    
+    // تمیز کردن کاراکترهای خراب کننده JSON
+    const cleanText = rawText.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '');
+    
+    return JSON.parse(cleanText);
   }
 
   async translateBatch(textsArray) {

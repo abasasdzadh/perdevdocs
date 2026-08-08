@@ -50,13 +50,16 @@ app.post('/api/settings/key-rotation', (req, res) => {
   res.json({ success: true });
 });
 
-// مسیرهای جدید برای تنظیمات AI
 app.post('/api/settings/ai-config', (req, res) => {
   pipeline.setAiConfig(req.body);
   res.json({ success: true });
 });
 
-// مسیرهای جدید برای مدیریت کش
+app.post('/api/settings/queue', (req, res) => {
+  pipeline.setQueueSettings(req.body);
+  res.json({ success: true });
+});
+
 app.post('/api/cache/clear', async (req, res) => {
   try {
     await pipeline.clearCache();
@@ -86,7 +89,9 @@ app.get('/api/stats', (req, res) => {
     maxCharsPerBatch: pipeline.maxCharsPerBatch,
     modelCascade: pipeline.modelCascade,
     useKeyRotation: pipeline.useKeyRotation,
-    aiConfig: pipeline.aiConfig, // اضافه شدن تنظیمات AI
+    aiConfig: pipeline.aiConfig,
+    minDelayMs: pipeline.minDelayMs,
+    maxRetries: pipeline.maxRetries,
     currentDoc: pipeline.currentDoc,
     currentPage: pipeline.currentPage,
     progress: pipeline.progress,

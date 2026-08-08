@@ -48,12 +48,10 @@ export class TranslationMemory {
     );
   }
 
-  // متد جدید برای پاکسازی کل دیتابیس
   async clearAll() {
     await this.db.run('DELETE FROM memory');
   }
 
-  // متد جدید برای حذف یک رکورد خاص
   async delete(originalText) {
     const hash = TranslationMemory.hashText(originalText);
     await this.db.run('DELETE FROM memory WHERE hash = ?', hash);

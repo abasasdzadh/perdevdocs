@@ -249,6 +249,21 @@
           </div>
 
           <div class="card p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">تنظیمات صف و نرخ درخواست (Rate Limiting)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">تاخیر بین درخواست‌های AI (میلی‌ثانیه)</label>
+                <input type="number" id="queue-delay-input" min="0" step="500" value="6000" class="input font-mono" />
+              </div>
+              <div>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">تعداد دفعات تلاش مجدد (Retry)</label>
+                <input type="number" id="queue-retries-input" min="1" max="10" value="3" class="input font-mono" />
+              </div>
+            </div>
+            <button onclick="saveQueueSettings()" class="btn btn-accent mt-4 w-full">ذخیره تنظیمات صف</button>
+          </div>
+
+          <div class="card p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">استراتژی کلیدهای API</h3>
             <div class="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
               <div>
@@ -496,6 +511,15 @@
       if (res) showToast('تنظیمات پیشرفته AI ذخیره شد.', 'success');
     }
 
+    async function saveQueueSettings() {
+      const settings = {
+        minDelayMs: document.getElementById('queue-delay-input').value,
+        maxRetries: document.getElementById('queue-retries-input').value
+      };
+      const res = await api('/api/settings/queue', 'POST', settings);
+      if (res) showToast('تنظیمات صف ذخیره شد.', 'success');
+    }
+
     async function toggleKeyRotation() {
       const current = document.getElementById('rotation-status').innerText === 'فعال';
       const newState = !current;
@@ -606,16 +630,20 @@
       }
 
       if (data.modelCascade) currentCascade = data.modelCascade;
-      if (data.apiDelaySeconds !== undefined) document.getElementById('delay-input').value = data.apiDelaySeconds;
-      if (data.maxCharsPerBatch !== undefined) document.getElementById('chunk-size-input').value = data.maxCharsPerBatch;
+      
+      // رفع باگ پاک شدن اعداد هنگام تایپ
+      const active = document.activeElement.id;
+      if (data.apiDelaySeconds !== undefined && active !== 'delay-input') document.getElementById('delay-input').value = data.apiDelaySeconds;
+      if (data.maxCharsPerBatch !== undefined && active !== 'chunk-size-input') document.getElementById('chunk-size-input').value = data.maxCharsPerBatch;
+      if (data.minDelayMs !== undefined && active !== 'queue-delay-input') document.getElementById('queue-delay-input').value = data.minDelayMs;
+      if (data.maxRetries !== undefined && active !== 'queue-retries-input') document.getElementById('queue-retries-input').value = data.maxRetries;
       if (data.useKeyRotation !== undefined) updateRotationUI(data.useKeyRotation);
       
-      // آپدیت کردن فیلدهای تنظیمات AI
       if (data.aiConfig) {
-        document.getElementById('ai-temperature').value = data.aiConfig.temperature;
-        document.getElementById('ai-max-output').value = data.aiConfig.maxOutputTokens;
-        document.getElementById('ai-top-p').value = data.aiConfig.topP;
-        document.getElementById('ai-top-k').value = data.aiConfig.topK;
+        if (active !== 'ai-temperature') document.getElementById('ai-temperature').value = data.aiConfig.temperature;
+        if (active !== 'ai-max-output') document.getElementById('ai-max-output').value = data.aiConfig.maxOutputTokens;
+        if (active !== 'ai-top-p') document.getElementById('ai-top-p').value = data.aiConfig.topP;
+        if (active !== 'ai-top-k') document.getElementById('ai-top-k').value = data.aiConfig.topK;
       }
 
       const btnStart = document.getElementById('btn-start');

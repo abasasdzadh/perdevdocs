@@ -31,7 +31,8 @@ export class PipelineManager extends EventEmitter {
     this.maxCharsPerBatch = 100000;
     this.useKeyRotation = false;
     
-    // تنظیمات پیشرفته AI
+    this.minDelayMs = 6000;
+    this.maxRetries = 3;
     this.aiConfig = {
       temperature: 0.2,
       maxOutputTokens: 8192,
@@ -53,6 +54,8 @@ export class PipelineManager extends EventEmitter {
         this.maxCharsPerBatch = s.maxCharsPerBatch ?? this.maxCharsPerBatch;
         this.useKeyRotation = s.useKeyRotation ?? this.useKeyRotation;
         this.aiConfig = s.aiConfig ?? this.aiConfig;
+        this.minDelayMs = s.minDelayMs ?? this.minDelayMs;
+        this.maxRetries = s.maxRetries ?? this.maxRetries;
         this.geminiKeys = s.geminiKeys ?? [];
         process.env.GEMINI_API_KEYS = this.geminiKeys.join(',');
       }
@@ -67,6 +70,8 @@ export class PipelineManager extends EventEmitter {
         maxCharsPerBatch: this.maxCharsPerBatch,
         useKeyRotation: this.useKeyRotation,
         aiConfig: this.aiConfig,
+        minDelayMs: this.minDelayMs,
+        maxRetries: this.maxRetries,
         geminiKeys: this.geminiKeys
       };
       fs.writeFileSync(this.settingsPath, JSON.stringify(s, null, 2), 'utf8');
@@ -127,6 +132,13 @@ export class PipelineManager extends EventEmitter {
     };
     this.saveSettings();
     this.log(`⚙️ تنظیمات پیشرفته AI ذخیره شد.`);
+  }
+
+  setQueueSettings(settings) {
+    this.minDelayMs = Math.max(0, parseInt(settings.minDelayMs) || 6000);
+    this.maxRetries = Math.max(1, parseInt(settings.maxRetries) || 3);
+    this.saveSettings();
+    this.log(`⚙️ تنظیمات صف بروزرسانی شد (تاخیر: ${this.minDelayMs}ms, تلاش مجدد: ${this.maxRetries}).`);
   }
 
   async clearCache() {
@@ -191,9 +203,8 @@ export class PipelineManager extends EventEmitter {
       this.tm = new TranslationMemory();
       await this.tm.init();
 
-      // ارسال تنظیمات AI به مترجم
       const translator = new GeminiTranslator(this.modelCascade, this.useKeyRotation, this.aiConfig);
-      const queue = new TranslationQueue();
+      const queue = new TranslationQueue(this.minDelayMs, this.maxRetries);
 
       const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
       let docsets = JSON.parse(docsetsRaw);
