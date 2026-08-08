@@ -2,11 +2,11 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 
 export class GeminiTranslator {
-  constructor(modelCascade = ['gemini-3.5-flash-Lite', 'gemini-3.1-flash-Lite']) {
+  constructor(modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']) {
     this.glossary = this.loadGlossary();
     this.modelCascade = Array.isArray(modelCascade) && modelCascade.length > 0 
       ? modelCascade 
-      : ['gemini-3.5-flash-Lite', 'gemini-3.1-flash-Lite'];
+      : ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
     this.geminiKeys = [];
     this.activeKeyIndex = 0;
     this.reloadKeys();
@@ -68,14 +68,14 @@ export class GeminiTranslator {
       console.warn('⚠️ خطا در دریافت زنده مدل‌ها:', err.message);
     }
     // لیست پیش‌فرض در صورت عدم دسترسی شبکه
-    return ['gemini-3.5-flash-Lite', 'gemini-3.1-flash-Lite', 'Gemini-Flash-Latest', 'Gemini-Flash-Lite-Latest'];
+    return ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
   }
 
   static async testKey(apiKey) {
     try {
       const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash-Lite',
+        model: 'gemini-3.5-flash-lite',
         contents: 'سلام، تست ارتباط API'
       });
       return { success: true, text: response.text };

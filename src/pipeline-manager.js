@@ -19,7 +19,7 @@ export class PipelineManager extends EventEmitter {
     this.isPaused = false;
     this.shouldStop = false;
     this.apiDelaySeconds = 90;
-    this.modelCascade = ['gemini-3.5-flash-Lite', 'gemini-3.1-flash-Lite'];
+    this.modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
     this.currentDoc = null;
     this.currentPage = '';
     this.currentPageHtml = '';
