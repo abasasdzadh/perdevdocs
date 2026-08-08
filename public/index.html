@@ -223,6 +223,31 @@
             </div>
             <button onclick="reloadRules()" class="btn btn-accent mt-6 w-full">🔄 بارگذاری مجدد فایل‌های JSON</button>
           </div>
+          
+          <div class="card p-6">
+            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">تنظیمات پیشرفته هوش مصنوعی (AI Config)</h3>
+            <p class="text-xs mb-4" style="color: var(--text-muted)">با کاهش Temperature، هوش مصنوعی کمتر خلاقیت می‌کند و ترجمه‌های فنی‌تر و دقیق‌تری ارائه می‌دهد.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">Temperature (خلاقیت: ۰ تا ۲)</label>
+                <input type="number" id="ai-temperature" step="0.1" min="0" max="2" value="0.2" class="input font-mono" />
+              </div>
+              <div>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">Max Output Tokens (حداکثر توکن خروجی)</label>
+                <input type="number" id="ai-max-output" step="100" min="100" value="8192" class="input font-mono" />
+              </div>
+              <div>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">Top-P (تنوع کلمات: ۰ تا ۱)</label>
+                <input type="number" id="ai-top-p" step="0.01" min="0" max="1" value="0.95" class="input font-mono" />
+              </div>
+              <div>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">Top-K (انتخاب از بین K کلمه محتمل)</label>
+                <input type="number" id="ai-top-k" step="1" min="1" value="40" class="input font-mono" />
+              </div>
+            </div>
+            <button onclick="saveAiConfig()" class="btn btn-accent mt-6 w-full">ذخیره تنظیمات پیشرفته AI</button>
+          </div>
+
           <div class="card p-6">
             <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">استراتژی کلیدهای API</h3>
             <div class="flex justify-between items-center p-3 rounded-lg border border-[var(--border-color)]" style="background-color: var(--bg-main)">
@@ -240,12 +265,12 @@
             <p class="text-xs mb-4" style="color: var(--text-muted)">موتور سعی می‌کند کل متن یونیک یک صفحه را در یک درخواست بفرستد. اگر صفحه‌ای از این سقف بزرگتر بود، در چند درخواست تقسیم می‌شود (بدون بریدن وسط کدها).</p>
             <div class="space-y-4">
               <div>
-                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">حداکثر کاراکتر هر درخواست</label>
+                <label class="text-xs uppercase tracking-wider mb-2 block" style="color: var(--text-dim)">حداکثر کاراکتر هر درخواست (کنترل توکن ورودی)</label>
                 <div class="flex gap-2">
                   <input type="number" id="chunk-size-input" min="1000" max="500000" step="1000" value="100000" class="input flex-1 font-mono" />
                   <button onclick="saveChunkSize()" class="btn btn-primary">ذخیره</button>
                 </div>
-                <p class="text-[10px] mt-2" style="color: var(--text-dim)">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن)</p>
+                <p class="text-[10px] mt-2" style="color: var(--text-dim)">پیش‌فرض امن: ۱۰۰,۰۰۰ (معادل حدود ۲۵ هزار توکن ورودی)</p>
               </div>
             </div>
           </div>
@@ -280,7 +305,10 @@
 
         <div id="tab-cache" class="hidden space-y-6">
           <div class="card p-5 md:p-6">
-            <h3 class="text-base font-semibold mb-4 border-b border-[var(--border-color)] pb-4" style="color: var(--text-main)">Translation Memory (SQLite)</h3>
+            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-4 mb-4">
+              <h3 class="text-base font-semibold" style="color: var(--text-main)">Translation Memory (SQLite)</h3>
+              <button onclick="clearCache()" class="btn btn-danger text-xs">Clear All Cache</button>
+            </div>
             <div class="flex flex-col sm:flex-row gap-2 mb-4">
               <input type="text" id="cache-search-input" placeholder="Search translation memory..." class="input" onkeydown="if(event.key==='Enter') searchCache()" />
               <button onclick="searchCache()" class="btn btn-primary sm:w-auto w-full">Search</button>
@@ -288,7 +316,11 @@
             <div class="overflow-x-auto rounded-lg border border-[var(--border-color)]">
               <table class="w-full text-xs text-right min-w-[400px]">
                 <thead class="border-b border-[var(--border-color)]" style="background-color: var(--bg-surface); color: var(--text-dim)">
-                  <tr><th class="p-4 font-medium">Original Text</th><th class="p-4 font-medium">Translated Text</th></tr>
+                  <tr>
+                    <th class="p-4 font-medium">Original Text</th>
+                    <th class="p-4 font-medium">Translated Text</th>
+                    <th class="p-4 font-medium">Action</th>
+                  </tr>
                 </thead>
                 <tbody id="cache-table-body" class="divide-y divide-[var(--border-color)]"></tbody>
               </table>
@@ -453,6 +485,17 @@
       if (res) showToast('سقف کاراکتر بروزرسانی شد.', 'success');
     }
 
+    async function saveAiConfig() {
+      const config = {
+        temperature: document.getElementById('ai-temperature').value,
+        maxOutputTokens: document.getElementById('ai-max-output').value,
+        topP: document.getElementById('ai-top-p').value,
+        topK: document.getElementById('ai-top-k').value
+      };
+      const res = await api('/api/settings/ai-config', 'POST', config);
+      if (res) showToast('تنظیمات پیشرفته AI ذخیره شد.', 'success');
+    }
+
     async function toggleKeyRotation() {
       const current = document.getElementById('rotation-status').innerText === 'فعال';
       const newState = !current;
@@ -566,6 +609,14 @@
       if (data.apiDelaySeconds !== undefined) document.getElementById('delay-input').value = data.apiDelaySeconds;
       if (data.maxCharsPerBatch !== undefined) document.getElementById('chunk-size-input').value = data.maxCharsPerBatch;
       if (data.useKeyRotation !== undefined) updateRotationUI(data.useKeyRotation);
+      
+      // آپدیت کردن فیلدهای تنظیمات AI
+      if (data.aiConfig) {
+        document.getElementById('ai-temperature').value = data.aiConfig.temperature;
+        document.getElementById('ai-max-output').value = data.aiConfig.maxOutputTokens;
+        document.getElementById('ai-top-p').value = data.aiConfig.topP;
+        document.getElementById('ai-top-k').value = data.aiConfig.topK;
+      }
 
       const btnStart = document.getElementById('btn-start');
       const btnPause = document.getElementById('btn-pause');
@@ -656,8 +707,26 @@
       const q = document.getElementById('cache-search-input').value;
       const rows = await api(`/api/cache/search?q=${encodeURIComponent(q)}`);
       const tbody = document.getElementById('cache-table-body');
-      if (!rows || rows.length === 0) { tbody.innerHTML = `<tr><td colspan="2" class="p-8 text-center" style="color: var(--text-dim)">No results found</td></tr>`; return; }
-      tbody.innerHTML = rows.map(r => `<tr class="transition" style="background-color: var(--bg-card)"><td class="p-4 font-mono break-words" style="color: var(--text-muted)">${r.original_text}</td><td class="p-4 font-mono break-words" style="color: var(--success)">${r.translated_text}</td></tr>`).join('');
+      if (!rows || rows.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center" style="color: var(--text-dim)">No results found</td></tr>`; return; }
+      tbody.innerHTML = rows.map(r => `
+        <tr class="transition" style="background-color: var(--bg-card)">
+          <td class="p-4 font-mono break-words" style="color: var(--text-muted)">${r.original_text}</td>
+          <td class="p-4 font-mono break-words" style="color: var(--success)">${r.translated_text}</td>
+          <td class="p-4"><button onclick="deleteCacheItem('${r.original_text.replace(/'/g, "\\'")}')" class="btn btn-danger text-[10px] !py-1 !px-2">Delete</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function deleteCacheItem(text) {
+      const res = await api('/api/cache/delete', 'POST', { original_text: text });
+      if (res) { showToast('Item deleted from cache', 'success'); searchCache(); }
+    }
+
+    async function clearCache() {
+      if (confirm('آیا از پاکسازی کامل دیتابیس کش مطمئن هستید؟ این کار قابل بازگشت نیست.')) {
+        const res = await api('/api/cache/clear', 'POST');
+        if (res) { showToast('Cache cleared successfully', 'success'); searchCache(); }
+      }
     }
 
     async function loadDownloads() {

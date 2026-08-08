@@ -2,14 +2,15 @@ import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 
 export class GeminiTranslator {
-  constructor(modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'], useKeyRotation = false) {
+  constructor(modelCascade = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'], useKeyRotation = false, aiConfig = {}) {
     this.glossary = this.loadGlossary();
     this.modelCascade = Array.isArray(modelCascade) && modelCascade.length > 0 
       ? modelCascade 
       : ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
     this.geminiKeys = [];
     this.activeKeyIndex = 0;
-    this.useKeyRotation = useKeyRotation; // قابلیت چرخش کلیدها
+    this.useKeyRotation = useKeyRotation;
+    this.aiConfig = aiConfig; // تنظیمات پیشرفته AI
     this.reloadKeys();
   }
 
@@ -103,10 +104,19 @@ export class GeminiTranslator {
 ${JSON.stringify(textsArray)}
     `;
 
+    // اعمال تنظیمات پیشرفته در درخواست
+    const generationConfig = {
+      responseMimeType: "application/json",
+      temperature: this.aiConfig.temperature ?? 0.2,
+      maxOutputTokens: this.aiConfig.maxOutputTokens ?? 8192,
+      topP: this.aiConfig.topP ?? 0.95,
+      topK: this.aiConfig.topK ?? 40
+    };
+
     const response = await this.ai.models.generateContent({
       model: modelName,
       contents: prompt,
-      config: { responseMimeType: "application/json" }
+      config: generationConfig
     });
 
     const rawText = response.text.trim();
@@ -116,14 +126,12 @@ ${JSON.stringify(textsArray)}
   async translateBatch(textsArray) {
     if (!textsArray || textsArray.length === 0) return [];
 
-    // ۱. چرخش پیش‌فعال کلید (Load Balancing)
     if (this.useKeyRotation && this.geminiKeys.length > 1) {
       this.activeKeyIndex = (this.activeKeyIndex + 1) % this.geminiKeys.length;
       this.initGemini();
       console.log(`🔄 چرخش کلید: استفاده از کلید شماره ${this.activeKeyIndex + 1}/${this.geminiKeys.length}`);
     }
 
-    // گردش روی تک تک مدل‌های زنجیره
     for (let mIdx = 0; mIdx < this.modelCascade.length; mIdx++) {
       const currentModel = this.modelCascade[mIdx];
       try {
@@ -134,7 +142,6 @@ ${JSON.stringify(textsArray)}
       }
     }
 
-    // چرخش کلید در صورت ناموفق بودن تمام مدل‌ها
     let attempts = 0;
     while (attempts < this.geminiKeys.length * 2) {
       attempts++;

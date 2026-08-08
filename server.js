@@ -50,6 +50,27 @@ app.post('/api/settings/key-rotation', (req, res) => {
   res.json({ success: true });
 });
 
+// مسیرهای جدید برای تنظیمات AI
+app.post('/api/settings/ai-config', (req, res) => {
+  pipeline.setAiConfig(req.body);
+  res.json({ success: true });
+});
+
+// مسیرهای جدید برای مدیریت کش
+app.post('/api/cache/clear', async (req, res) => {
+  try {
+    await pipeline.clearCache();
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: 'خطا در پاکسازی کش' }); }
+});
+
+app.post('/api/cache/delete', async (req, res) => {
+  try {
+    await pipeline.deleteCacheItem(req.body.original_text);
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: 'خطا در حذف آیتم' }); }
+});
+
 app.get('/api/stats', (req, res) => {
   let dailyUsage = { date: '', count: 0 };
   try {
@@ -64,7 +85,8 @@ app.get('/api/stats', (req, res) => {
     apiDelaySeconds: pipeline.apiDelaySeconds,
     maxCharsPerBatch: pipeline.maxCharsPerBatch,
     modelCascade: pipeline.modelCascade,
-    useKeyRotation: pipeline.useKeyRotation, // اضافه شدن وضعیت چرخش کلیدها
+    useKeyRotation: pipeline.useKeyRotation,
+    aiConfig: pipeline.aiConfig, // اضافه شدن تنظیمات AI
     currentDoc: pipeline.currentDoc,
     currentPage: pipeline.currentPage,
     progress: pipeline.progress,
@@ -174,7 +196,7 @@ app.get('/api/logs/stream', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('X-Accel-Buffering', 'no'); // رفع مشکل تاخیر در چاپ لاگ‌ها
+  res.setHeader('X-Accel-Buffering', 'no');
   
   const onLog = (data) => res.write(`data: ${JSON.stringify(data)}\n\n`);
   pipeline.on('log', onLog);

@@ -4,9 +4,6 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
-/**
- * دیتابیس حافظه ترجمه محلی جهت پیش‌ترجمه آنی (۰ میلی‌ثانیه و بدون هزینه API)
- */
 export class TranslationMemory {
   constructor() {
     this.db = null;
@@ -49,5 +46,16 @@ export class TranslationMemory {
       'INSERT OR REPLACE INTO memory (hash, original_text, translated_text) VALUES (?, ?, ?)',
       [hash, originalText, translatedText]
     );
+  }
+
+  // متد جدید برای پاکسازی کل دیتابیس
+  async clearAll() {
+    await this.db.run('DELETE FROM memory');
+  }
+
+  // متد جدید برای حذف یک رکورد خاص
+  async delete(originalText) {
+    const hash = TranslationMemory.hashText(originalText);
+    await this.db.run('DELETE FROM memory WHERE hash = ?', hash);
   }
 }

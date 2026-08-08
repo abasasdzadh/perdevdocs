@@ -29,7 +29,15 @@ export class PipelineManager extends EventEmitter {
     this.tm = null;
     this.ruleEngine = new RuleEngine();
     this.maxCharsPerBatch = 100000;
-    this.useKeyRotation = false; // قابلیت چرخش کلیدها
+    this.useKeyRotation = false;
+    
+    // تنظیمات پیشرفته AI
+    this.aiConfig = {
+      temperature: 0.2,
+      maxOutputTokens: 8192,
+      topP: 0.95,
+      topK: 40
+    };
     
     this.settingsPath = './settings.json';
     this.geminiKeys = [];
@@ -44,6 +52,7 @@ export class PipelineManager extends EventEmitter {
         this.modelCascade = s.modelCascade ?? this.modelCascade;
         this.maxCharsPerBatch = s.maxCharsPerBatch ?? this.maxCharsPerBatch;
         this.useKeyRotation = s.useKeyRotation ?? this.useKeyRotation;
+        this.aiConfig = s.aiConfig ?? this.aiConfig;
         this.geminiKeys = s.geminiKeys ?? [];
         process.env.GEMINI_API_KEYS = this.geminiKeys.join(',');
       }
@@ -57,6 +66,7 @@ export class PipelineManager extends EventEmitter {
         modelCascade: this.modelCascade,
         maxCharsPerBatch: this.maxCharsPerBatch,
         useKeyRotation: this.useKeyRotation,
+        aiConfig: this.aiConfig,
         geminiKeys: this.geminiKeys
       };
       fs.writeFileSync(this.settingsPath, JSON.stringify(s, null, 2), 'utf8');
@@ -108,6 +118,31 @@ export class PipelineManager extends EventEmitter {
     this.log(`⚙️ چرخش کلیدها (Load Balancing) ${this.useKeyRotation ? 'فعال شد' : 'غیرفعال شد'}.`);
   }
 
+  setAiConfig(config) {
+    this.aiConfig = {
+      temperature: parseFloat(config.temperature) || 0.2,
+      maxOutputTokens: parseInt(config.maxOutputTokens) || 8192,
+      topP: parseFloat(config.topP) || 0.95,
+      topK: parseInt(config.topK) || 40
+    };
+    this.saveSettings();
+    this.log(`⚙️ تنظیمات پیشرفته AI ذخیره شد.`);
+  }
+
+  async clearCache() {
+    if (this.tm) {
+      await this.tm.clearAll();
+      this.log('🗑️ حافظه کش (SQLite) به طور کامل پاکسازی شد.', 'warn');
+    }
+  }
+
+  async deleteCacheItem(originalText) {
+    if (this.tm) {
+      await this.tm.delete(originalText);
+      this.log('🗑️ یک ترجمه از کش حذف شد.', 'warn');
+    }
+  }
+
   reloadRules() {
     this.ruleEngine.loadRules();
     this.log('🔄 قوانین موتور با موفقیت مجدداً بارگذاری شدند.');
@@ -156,7 +191,8 @@ export class PipelineManager extends EventEmitter {
       this.tm = new TranslationMemory();
       await this.tm.init();
 
-      const translator = new GeminiTranslator(this.modelCascade, this.useKeyRotation);
+      // ارسال تنظیمات AI به مترجم
+      const translator = new GeminiTranslator(this.modelCascade, this.useKeyRotation, this.aiConfig);
       const queue = new TranslationQueue();
 
       const docsetsRaw = fs.readFileSync('./docsets.json', 'utf8');
