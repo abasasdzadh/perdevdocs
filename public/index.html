@@ -461,15 +461,15 @@
       const ctxCache = document.getElementById('chart-cache').getContext('2d');
       cacheChart = new Chart(ctxCache, {
         type: 'doughnut',
-        data: { labels: ['Cache Hits', 'AI Calls'], datasets: [{ data: [1, 0], backgroundColor: ['#10b981', '#3b82f6'], borderWidth: 0 }] },
+        data: { labels: ['Cache Hits', 'AI Calls'], datasets: [{ data: [0, 0], backgroundColor: ['#10b981', '#3b82f6'], borderWidth: 0 }] },
         options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: colors.text, font: { family: 'Inter' } } } } }
       });
 
       const ctxUsage = document.getElementById('chart-usage').getContext('2d');
       usageChart = new Chart(ctxUsage, {
         type: 'line',
-        data: { labels: ['Today'], datasets: [{ label: 'Requests', data: [0], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { color: colors.text } }, x: { grid: { display: false }, ticks: { color: colors.text } } } }
+        data: { labels: [], datasets: [{ label: 'API Requests', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 2 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { color: colors.text, precision: 0 } }, x: { grid: { display: false }, ticks: { color: colors.text } } } }
       });
     }
 
@@ -643,13 +643,38 @@
       btnStop.disabled = !data.isRunning;
       btnStop.classList.toggle('opacity-30', !data.isRunning);
 
+      // آپدیت نمودار حلقوی کش
       if (cacheChart && data.stats) {
-        cacheChart.data.datasets[0].data = [data.stats.cacheHits || 1, data.stats.aiCalls || 0];
-        cacheChart.update('none');
+        const hits = data.stats.cacheHits || 0;
+        const calls = data.stats.aiCalls || 0;
+        
+        // جلوگیری از خطای چارت وقتی هر دو صفر هستند
+        cacheChart.data.datasets[0].data = [hits === 0 && calls === 0 ? 1 : hits, calls];
+        cacheChart.update();
       }
+      
+      // آپدیت نمودار خطی API (اضافه کردن تاریخچه)
       if (usageChart) {
-        usageChart.data.datasets[0].data = [data.dailyUsageCount];
-        usageChart.update('none');
+        const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const currentCount = data.dailyUsageCount;
+        
+        // اگر در حال اجراست، یک نقطه جدید به نمودار اضافه کن
+        if (data.isRunning) {
+          const lastDataPoint = usageChart.data.datasets[0].data[usageChart.data.datasets[0].data.length - 1];
+          
+          // فقط اگر درخواست جدیدی رفته باشد نقطه اضافه کن
+          if (lastDataPoint !== currentCount || usageChart.data.labels.length === 0) {
+            usageChart.data.labels.push(now);
+            usageChart.data.datasets[0].data.push(currentCount);
+            
+            // فقط 15 نقطه آخر را نگه دار تا نمودار شلوغ نشود
+            if (usageChart.data.labels.length > 15) {
+              usageChart.data.labels.shift();
+              usageChart.data.datasets[0].data.shift();
+            }
+            usageChart.update();
+          }
+        }
       }
     }
 
